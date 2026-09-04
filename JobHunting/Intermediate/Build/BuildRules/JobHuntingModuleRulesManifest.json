@@ -1,0 +1,13 @@
+{
+	"SourceFiles": [
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4UCaptureEditor\\VRM4UCaptureEditor.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4UCapture\\VRM4UCapture.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4UEditor\\VRM4UEditor.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4UImporter\\VRM4UImporter.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4ULoader\\VRM4ULoader.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4UMisc\\VRM4UMisc.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4URender\\VRM4URender.Build.cs",
+		"C:\\Git\\Job-hunting-portfolio-piece\\JobHunting\\Plugins\\VRM4U\\Source\\VRM4U\\VRM4U.Build.cs"
+	],
+	"EngineVersion": "5.6.1"
+}
