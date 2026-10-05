@@ -440,14 +440,7 @@ ASALocalRun/
 /Sample/Sample_24/Game/Assets/modelData/preset
 /Sample/Sample_24/Game/Assets/shader
 
-JobHunting/Intermediate/CachedAssetRegistry_0.bin
-JobHunting/Intermediate/CachedAssetRegistryDiscovery.bin
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-00D047244E6B26331329AEAE6E7F0737/CrashReportClient.ini
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-0DDF319C43CEE24183CF0285466CF5E2/CrashReportClient.ini
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-23FD68434F042CB08E0911B0B9B54F0F/CrashReportClient.ini
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-5AB857B946A81E1B9BBC41BE7D0D6A41/CrashReportClient.ini
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-6E0B72E44A6AF1F330564A84E235FB5E/CrashReportClient.ini
-JobHunting/Saved/Config/CrashReportClient/UECC-Windows-E1B8008C40B7B266C752D7974B8B2FD2/CrashReportClient.ini
-JobHunting/Saved/Config/WindowsEditor/EditorPerProjectUserSettings.ini
-JobHunting/Saved/SourceControl/UncontrolledChangelists.json
-JobHunting/Saved/AutoScreenshot.png
+JobHunting/Intermediate/
+JobHunting/Saved/
+JobHunting/Binaries/
+JobHunting/DerivedDataCache/
