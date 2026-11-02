@@ -18,6 +18,10 @@
 		{
 			"Name": "OSC",
 			"Enabled": true
+		},
+		{
+			"Name": "Effekseer",
+			"Enabled": true
 		}
 	]
 }
