@@ -9,6 +9,9 @@ FLOOR_MATERIAL = "/Game/LevelPrototyping/Materials/MI_PrototypeGrid_Gray"
 SPACING = 800.0
 ITEM_HEIGHT = 100.0
 ROTATING_FLOOR_HEIGHT = 60.0
+# Half its 20 cm thickness down and half its 300 cm width past the 1600 cm wide ground: flush with the edge.
+FALLING_FLOOR_HEIGHT = -10.0
+FALLING_FLOOR_Y = 950.0
 
 # (label, blueprint, height above the floor), in walking order from the PlayerStart.
 ROW = [
@@ -20,6 +23,8 @@ ROW = [
     ("Door", "/Game/LevelPrototyping/Interactable/Door/BP_DoorFrame", 0.0),
     ("Wobble Target", "/Game/LevelPrototyping/Interactable/Target/BP_WobbleTarget", ITEM_HEIGHT),
     ("Rotating Floor", "/Game/ThirdPerson/Blueprints/BP_RotatingFloor", ROTATING_FLOOR_HEIGHT),
+    # Off the edge of the ground (optional 4th value: Y) so there is open space to see it fall into.
+    ("Falling Floor", "/Game/ThirdPerson/Blueprints/BP_FallingFloor", FALLING_FLOOR_HEIGHT, FALLING_FLOOR_Y),
     # The goal stays last: taking it ends the game, so everything else gets tested first.
     ("Goal", "/Game/ThirdPerson/Blueprints/BP_GoalItem", ITEM_HEIGHT),
 ]
@@ -42,9 +47,9 @@ def spawn(actor_class, location, label, yaw=0.0, pitch=0.0):
     return actor
 
 
-def spawn_label(text, x):
+def spawn_label(text, x, y):
     # Yaw 180 turns the text toward the PlayerStart side of the row.
-    actor = spawn(unreal.TextRenderActor, unreal.Vector(x, 0.0, 320.0), "Label " + text, yaw=180.0)
+    actor = spawn(unreal.TextRenderActor, unreal.Vector(x, y, 320.0), "Label " + text, yaw=180.0)
     component = actor.get_editor_property("text_render")
     component.set_text(unreal.Text(text))
     component.set_editor_property("world_size", 50.0)
@@ -71,13 +76,15 @@ spawn(unreal.PlayerStart, unreal.Vector(-SPACING, 0.0, 100.0), "PlayerStart")
 system = unreal.load_asset("/Effekseer/BluePrints/BP_EffekseerSystem")
 spawn(system.generated_class(), unreal.Vector(0.0, 0.0, 0.0), "Effekseer System")
 
-for index, (label, path, height) in enumerate(ROW):
+for index, entry in enumerate(ROW):
+    label, path, height = entry[:3]
+    y = entry[3] if len(entry) > 3 else 0.0
     x = SPACING * index
     blueprint = unreal.load_asset(path)
     if not blueprint:
         raise RuntimeError("Missing blueprint: " + path)
-    spawn(blueprint.generated_class(), unreal.Vector(x, 0.0, height), label)
-    spawn_label(label, x)
+    spawn(blueprint.generated_class(), unreal.Vector(x, y, height), label)
+    spawn_label(label, x, y)
 
 if not unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).save_current_level():
     raise RuntimeError("Could not save " + LEVEL_PATH)
