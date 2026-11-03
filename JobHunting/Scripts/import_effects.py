@@ -7,17 +7,18 @@ import unreal
 EFFECT_DIR = "/Game/FX/Effekseer"
 TEXTURE_DIR = EFFECT_DIR + "/Texture"
 PROJECT_DIR = os.path.abspath(unreal.Paths.project_dir())
-MY_EFFECTS = os.path.join(os.path.expanduser("~"), "Desktop", "Effekseer160Win", "MyEffects")
+# Kept outside Content: the editor auto-imports source files it finds under Content.
+SOURCE_DIR = os.path.join(PROJECT_DIR, "SourceArt", "Effects")
 
 TEXTURES = [
-    os.path.join(MY_EFFECTS, "FootRingSmoke", "Texture", "Smoke.png"),
-    os.path.join(MY_EFFECTS, "FeatherGold", "Texture", "Feather.png"),
-    os.path.join(MY_EFFECTS, "FeatherGold", "Texture", "Particle_Soft.png"),
-    os.path.join(MY_EFFECTS, "FeatherGold", "Texture", "Star.png"),
+    os.path.join(SOURCE_DIR, "FootRingSmoke", "Texture", "Smoke.png"),
+    os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Feather.png"),
+    os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Particle_Soft.png"),
+    os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Star.png"),
 ]
 EFFECTS = [
-    os.path.join(PROJECT_DIR, "Scripts", "bp_export", "NS_JumpPuff.efk"),
-    os.path.join(PROJECT_DIR, "Scripts", "bp_export", "NS_DoubleJumpFeather.efk"),
+    os.path.join(SOURCE_DIR, "FootRingSmoke", "NS_JumpPuff.efk"),
+    os.path.join(SOURCE_DIR, "FeatherGold", "NS_DoubleJumpFeather.efk"),
 ]
 
 
