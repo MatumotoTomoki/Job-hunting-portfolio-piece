@@ -8,6 +8,7 @@ FLOOR_MESH = "/Engine/BasicShapes/Cube"
 FLOOR_MATERIAL = "/Game/LevelPrototyping/Materials/MI_PrototypeGrid_Gray"
 SPACING = 800.0
 ITEM_HEIGHT = 100.0
+ROTATING_FLOOR_HEIGHT = 60.0
 
 # (label, blueprint, height above the floor), in walking order from the PlayerStart.
 ROW = [
@@ -18,6 +19,8 @@ ROW = [
     ("Jump Pad", "/Game/LevelPrototyping/Interactable/JumpPad/BP_JumpPad", 0.0),
     ("Door", "/Game/LevelPrototyping/Interactable/Door/BP_DoorFrame", 0.0),
     ("Wobble Target", "/Game/LevelPrototyping/Interactable/Target/BP_WobbleTarget", ITEM_HEIGHT),
+    ("Rotating Floor", "/Game/ThirdPerson/Blueprints/BP_RotatingFloor", ROTATING_FLOOR_HEIGHT),
+    # The goal stays last: taking it ends the game, so everything else gets tested first.
     ("Goal", "/Game/ThirdPerson/Blueprints/BP_GoalItem", ITEM_HEIGHT),
 ]
 
