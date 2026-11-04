@@ -15,11 +15,14 @@ TEXTURES = [
     os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Feather.png"),
     os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Particle_Soft.png"),
     os.path.join(SOURCE_DIR, "FeatherGold", "Texture", "Star.png"),
+    os.path.join(SOURCE_DIR, "StatUp", "Texture", "Chevron.png"),
 ]
 EFFECTS = [
     os.path.join(SOURCE_DIR, "FootRingSmoke", "NS_JumpPuff.efk"),
     os.path.join(SOURCE_DIR, "FeatherGold", "NS_DoubleJumpFeather.efk"),
     os.path.join(SOURCE_DIR, "FootSmoke", "FootSmoke.efk"),
+    os.path.join(SOURCE_DIR, "StatUp", "StatUp.efk"),
+    os.path.join(SOURCE_DIR, "StatUp", "StatUpTealForward.efk"),
 ]
 
 
@@ -47,7 +50,7 @@ report = []
 report.append("textures: " + str(import_files(TEXTURES, TEXTURE_DIR)))
 report.append("effects: " + str(import_files(EFFECTS, EFFECT_DIR)))
 
-for name in ("NS_JumpPuff", "NS_DoubleJumpFeather", "FootSmoke"):
+for name in ("NS_JumpPuff", "NS_DoubleJumpFeather", "FootSmoke", "StatUp", "StatUpTealForward"):
     effect = unreal.load_asset(EFFECT_DIR + "/" + name)
     report.append("%s: %s" % (name, effect))
     if effect:
