@@ -19,6 +19,7 @@ TEXTURES = [
 EFFECTS = [
     os.path.join(SOURCE_DIR, "FootRingSmoke", "NS_JumpPuff.efk"),
     os.path.join(SOURCE_DIR, "FeatherGold", "NS_DoubleJumpFeather.efk"),
+    os.path.join(SOURCE_DIR, "FootSmoke", "FootSmoke.efk"),
 ]
 
 
@@ -27,6 +28,10 @@ def import_files(paths, destination):
     for path in paths:
         if not os.path.isfile(path):
             raise RuntimeError("Missing file: " + path)
+        # Only new files: re-saving assets that are already imported just adds noise to commits.
+        asset_path = destination + "/" + os.path.splitext(os.path.basename(path))[0]
+        if unreal.EditorAssetLibrary.does_asset_exist(asset_path):
+            continue
         task = unreal.AssetImportTask()
         task.filename = path
         task.destination_path = destination
@@ -42,7 +47,7 @@ report = []
 report.append("textures: " + str(import_files(TEXTURES, TEXTURE_DIR)))
 report.append("effects: " + str(import_files(EFFECTS, EFFECT_DIR)))
 
-for name in ("NS_JumpPuff", "NS_DoubleJumpFeather"):
+for name in ("NS_JumpPuff", "NS_DoubleJumpFeather", "FootSmoke"):
     effect = unreal.load_asset(EFFECT_DIR + "/" + name)
     report.append("%s: %s" % (name, effect))
     if effect:
