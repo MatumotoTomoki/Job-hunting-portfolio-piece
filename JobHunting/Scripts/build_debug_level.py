@@ -18,13 +18,13 @@ ROW = [
     ("Item: Speed", "/Game/ThirdPerson/Item/BP_Item", ITEM_HEIGHT),
     ("Item: Jump Power", "/Game/ThirdPerson/Item/BP_Item2", ITEM_HEIGHT),
     ("Item: Double Jump", "/Game/ThirdPerson/Item/BP_2jump", ITEM_HEIGHT),
-    ("Elevator", "/Game/ThirdPerson/Blueprints/BP_Elevator", 0.0),
+    ("Elevator", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_Elevator", 0.0),
     ("Jump Pad", "/Game/LevelPrototyping/Interactable/JumpPad/BP_JumpPad", 0.0),
     ("Door", "/Game/LevelPrototyping/Interactable/Door/BP_DoorFrame", 0.0),
     ("Wobble Target", "/Game/LevelPrototyping/Interactable/Target/BP_WobbleTarget", ITEM_HEIGHT),
-    ("Rotating Floor", "/Game/ThirdPerson/Blueprints/BP_RotatingFloor", ROTATING_FLOOR_HEIGHT),
+    ("Rotating Floor", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_RotatingFloor", ROTATING_FLOOR_HEIGHT),
     # Off the edge of the ground (optional 4th value: Y) so there is open space to see it fall into.
-    ("Falling Floor", "/Game/ThirdPerson/Blueprints/BP_FallingFloor", FALLING_FLOOR_HEIGHT, FALLING_FLOOR_Y),
+    ("Falling Floor", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_FallingFloor", FALLING_FLOOR_HEIGHT, FALLING_FLOOR_Y),
     # The goal stays last: taking it ends the game, so everything else gets tested first.
     ("Goal", "/Game/ThirdPerson/Blueprints/BP_GoalItem", ITEM_HEIGHT),
 ]

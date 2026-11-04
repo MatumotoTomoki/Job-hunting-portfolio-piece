@@ -1,7 +1,7 @@
 import unreal
 
 
-BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints"
+BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints/Plaey"
 MATERIAL_NAME = "M_Halo"
 MATERIAL_PATH = "{}/{}".format(BLUEPRINT_DIR, MATERIAL_NAME)
 TORUS_BP_PATH = "{}/BP_Torus".format(BLUEPRINT_DIR)

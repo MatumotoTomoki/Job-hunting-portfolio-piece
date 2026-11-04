@@ -5,7 +5,7 @@
 import unreal
 
 SOURCE_LABEL = "SM_Door25"
-BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints"
+BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints/Gimmicks"
 BLUEPRINT_NAME = "BP_RotatingFloor"
 BLUEPRINT_PATH = "{}/{}".format(BLUEPRINT_DIR, BLUEPRINT_NAME)
 PIVOT_NAME = "Pivot"

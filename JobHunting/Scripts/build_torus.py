@@ -4,7 +4,7 @@ import os
 import unreal
 
 
-BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints"
+BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints/Plaey"
 MESH_NAME = "SM_Torus"
 MESH_PATH = "{}/{}".format(BLUEPRINT_DIR, MESH_NAME)
 TORUS_BP_NAME = "BP_Torus"

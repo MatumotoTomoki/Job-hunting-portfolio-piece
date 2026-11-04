@@ -4,8 +4,8 @@
 # The Event Graph comes from BP_FallingFloor_EventGraph.txt, which relies on the names Lift, FloorMesh and Trigger.
 import unreal
 
-SOURCE_PATH = "/Game/ThirdPerson/Blueprints/BP_Elevator"
-BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints"
+SOURCE_PATH = "/Game/ThirdPerson/Blueprints/Gimmicks/BP_Elevator"
+BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints/Gimmicks"
 BLUEPRINT_NAME = "BP_FallingFloor"
 BLUEPRINT_PATH = "{}/{}".format(BLUEPRINT_DIR, BLUEPRINT_NAME)
 # The trigger is a thin slab on the top surface, inset from the edges: it fires when the player
