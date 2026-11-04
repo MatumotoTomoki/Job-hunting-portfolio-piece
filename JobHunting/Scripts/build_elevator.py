@@ -2,7 +2,7 @@ import unreal
 
 
 LEVEL_PATH = "/Game/ThirdPerson/Lvl_ThirdPerson"
-BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints"
+BLUEPRINT_DIR = "/Game/ThirdPerson/Blueprints/Gimmicks"
 BLUEPRINT_NAME = "BP_Elevator"
 BLUEPRINT_PATH = "{}/{}".format(BLUEPRINT_DIR, BLUEPRINT_NAME)
 PLATFORM_MESH_PATH = "/Engine/BasicShapes/Cube"
