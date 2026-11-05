@@ -19,9 +19,15 @@ lines = []
 
 
 def add_variable(name, pin_type, editable=False):
-    # AddMemberVariable refuses a name that already exists, so this is safe to repeat.
+    # AddMemberVariable can't be relied on to refuse a name in use, so check first: this script may run again.
+    try:
+        unreal.get_default_object(blueprint.generated_class()).get_editor_property(name)
+        lines.append("variable {}: already there".format(name))
+        return
+    except Exception:
+        pass
     added = library.add_member_variable(blueprint, name, pin_type)
-    lines.append("variable {}: {}".format(name, "added" if added else "already there"))
+    lines.append("variable {}: {}".format(name, "added" if added else "NOT added"))
     if editable:
         library.set_blueprint_variable_instance_editable(blueprint, name, True)
 
@@ -51,6 +57,35 @@ def add_component(component_class, name):
 add_variable("Destination", library.get_object_reference_type(unreal.Actor.static_class()), editable=True)
 add_variable("IsWarping", library.get_basic_type_by_name("bool"))
 add_variable("WarpUsed", library.get_basic_type_by_name("bool"))
+add_variable("HomeLocation", library.get_struct_type(unreal.Vector.static_struct()))
+add_variable("HomeRotation", library.get_struct_type(unreal.Rotator.static_struct()))
+add_variable("CageFade", library.get_basic_type_by_name("real"))
+
+
+def add_fade_parameter(path):
+    # Dithered, not translucent: the metal keeps its look and the crossing bars keep their depth order while fading.
+    material = unreal.load_asset(path)
+    if material.get_editor_property("blend_mode") == unreal.BlendMode.BLEND_MASKED:
+        lines.append("{}: already fades".format(material.get_name()))
+        return
+    editing = unreal.MaterialEditingLibrary
+    material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_MASKED)
+    fade = editing.create_material_expression(material, unreal.MaterialExpressionScalarParameter, -800, 500)
+    fade.set_editor_property("parameter_name", "Fade")
+    fade.set_editor_property("default_value", 1.0)
+    dither = editing.create_material_expression(material, unreal.MaterialExpressionMaterialFunctionCall, -500, 500)
+    dither.set_editor_property("material_function", unreal.load_asset("/Engine/Functions/Engine_MaterialFunctions02/Utility/DitherTemporalAA"))
+    linked = editing.connect_material_expressions(fade, "", dither, "Alpha Threshold")
+    connected = editing.connect_material_property(dither, "", unreal.MaterialProperty.MP_OPACITY_MASK)
+    if not linked or not connected:
+        raise RuntimeError("Could not wire the fade of " + path)
+    editing.recompile_material(material)
+    unreal.EditorAssetLibrary.save_asset(path, False)
+    lines.append("{}: fade added".format(material.get_name()))
+
+
+add_fade_parameter("/Game/Prototype/Birdcage/M_Birdcage_Brass")
+add_fade_parameter("/Game/Prototype/Birdcage/M_Birdcage_Wood")
 
 # In front of the door, which faces the actor's +Y.
 enter_trigger = add_component(unreal.BoxComponent, "EnterTrigger")
