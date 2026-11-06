@@ -45,6 +45,9 @@ public:
 
 	virtual FPrimitiveSceneProxy* CreateSceneProxy() override;
 
+	// JobHunting fix: forgets the scene proxy when the renderer destroys it (see the .cpp).
+	virtual void DestroyRenderState_Concurrent() override;
+
 	virtual UMaterialInterface* GetMaterial(int32 ElementIndex) const override;
 
 	virtual void GetUsedMaterials(TArray<UMaterialInterface*>& OutMaterials, bool bGetDebugMaterials = false) const override;
