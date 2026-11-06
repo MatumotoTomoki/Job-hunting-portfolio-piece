@@ -214,8 +214,18 @@ def ledge_hang_controls(frames):
     return result
 
 
+# --- Plant flag: both arms swing up holding the flag, then the whole body drives it into the ground (plays once) ---
+def plant_flag_controls(frames):
+    rest = both(arm_down=30.0, elbow=30.0)
+    raised = both(arm_down=-70.0, arm_swing=45.0, elbow=10.0, lean=-8.0, neck=-8.0, knee=10.0, hip_z=2.0)
+    drive = both(arm_down=35.0, arm_swing=70.0, elbow=5.0, lean=16.0, neck=10.0, thigh=20.0, knee=40.0, foot=-10.0, hip_z=-4.0)
+    hold = both(arm_down=30.0, arm_swing=55.0, elbow=10.0, lean=10.0, neck=6.0, thigh=12.0, knee=24.0, hip_z=-2.0)
+    return keyed([(0, rest), (5, raised), (9, drive), (13, hold), (frames, rest)], frames)
+
+
 # name: (frames, controls builder, loops)
 ANIMATIONS = {
+    "MM_PlantFlag_Handmade": (20, plant_flag_controls, False),
     "MM_LedgeHang_Handmade": (30, ledge_hang_controls, True),
     "MM_Run_Handmade": (12, run_controls, True),
     "MM_Jump_Handmade": (12, jump_controls, False),
@@ -263,9 +273,21 @@ def build(name, frames, builder, mesh, skeleton):
     return anim
 
 
+# Montages (on DefaultSlot) that the character Blueprint plays: montage name -> animation. Made once, kept after.
+MONTAGES = {
+    "AM_DoubleJump_Handmade": "MM_DoubleJump_Handmade",
+    "AM_PlantFlag_Handmade": "MM_PlantFlag_Handmade",
+}
+
 player_mesh = unreal.load_asset(SKELETAL_MESH)
 player_skeleton = player_mesh.get_editor_property("skeleton")
 built = {name: build(name, frames, builder, player_mesh, player_skeleton) for name, (frames, builder, _) in ANIMATIONS.items()}
+for montage_name, source in MONTAGES.items():
+    if not unreal.EditorAssetLibrary.does_asset_exist(ANIM_DIR + "/" + montage_name):
+        montage_factory = unreal.AnimMontageFactory()
+        montage_factory.set_editor_property("source_animation", built[source])
+        unreal.AssetToolsHelpers.get_asset_tools().create_asset(montage_name, ANIM_DIR, unreal.AnimMontage, montage_factory)
+        unreal.EditorAssetLibrary.save_asset(ANIM_DIR + "/" + montage_name, False)
 
 lines = ["signs: forward {} left_down {}".format(FORWARD, LEFT_DOWN)]
 ext = unreal.AnimPoseExtensions
