@@ -12,6 +12,8 @@ ROTATING_FLOOR_HEIGHT = 60.0
 # Half its 20 cm thickness down and half its 300 cm width past the 1600 cm wide ground: flush with the edge.
 FALLING_FLOOR_HEIGHT = -10.0
 FALLING_FLOOR_Y = 950.0
+MOVING_PLATFORM_HEIGHT = 60.0
+MOVING_PLATFORM_Y = -300.0
 
 # (label, blueprint, height above the floor), in walking order from the PlayerStart.
 ROW = [
@@ -25,6 +27,8 @@ ROW = [
     ("Rotating Floor", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_RotatingFloor", ROTATING_FLOOR_HEIGHT),
     # Off the edge of the ground (optional 4th value: Y) so there is open space to see it fall into.
     ("Falling Floor", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_FallingFloor", FALLING_FLOOR_HEIGHT, FALLING_FLOOR_Y),
+    # Starts on one side of the row and travels its default 600 across it.
+    ("Moving Platform", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_MovingPlatform", MOVING_PLATFORM_HEIGHT, MOVING_PLATFORM_Y),
     # The goal stays last: taking it ends the game, so everything else gets tested first.
     ("Goal", "/Game/ThirdPerson/Blueprints/BP_GoalItem", ITEM_HEIGHT),
 ]
