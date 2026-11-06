@@ -214,13 +214,19 @@ def ledge_hang_controls(frames):
     return result
 
 
-# --- Plant flag: both arms swing up holding the flag, then the whole body drives it into the ground (plays once) ---
+# --- Plant flag: reach behind for the flag, bring it up in front with a crouch, hop with it raised overhead, and
+# drive it into the ground on landing (plays once). BP_CheckpointFlag moves the flag in time with these keys:
+# it appears at frame 6, rises with the hop to frame 9 and is in the ground at frame 12. The hop is in the pose only:
+# the capsule stays on the ground.
 def plant_flag_controls(frames):
     rest = both(arm_down=30.0, elbow=30.0)
-    raised = both(arm_down=-70.0, arm_swing=45.0, elbow=10.0, lean=-8.0, neck=-8.0, knee=10.0, hip_z=2.0)
-    drive = both(arm_down=35.0, arm_swing=70.0, elbow=5.0, lean=16.0, neck=10.0, thigh=20.0, knee=40.0, foot=-10.0, hip_z=-4.0)
-    hold = both(arm_down=30.0, arm_swing=55.0, elbow=10.0, lean=10.0, neck=6.0, thigh=12.0, knee=24.0, hip_z=-2.0)
-    return keyed([(0, rest), (5, raised), (9, drive), (13, hold), (frames, rest)], frames)
+    reach_back = both(arm_down=40.0, arm_swing=-55.0, elbow=35.0, lean=-6.0, neck=-4.0, twist=0.0)
+    reach_back["twist"] = 8.0
+    ready = both(arm_down=-15.0, arm_swing=60.0, elbow=40.0, lean=8.0, neck=4.0, thigh=28.0, knee=48.0, foot=-12.0, hip_z=-4.5)
+    hop = both(arm_down=-72.0, arm_swing=40.0, elbow=10.0, lean=-6.0, neck=-8.0, thigh=40.0, knee=62.0, foot=15.0, hip_z=14.0)
+    drive = both(arm_down=35.0, arm_swing=72.0, elbow=5.0, lean=17.0, neck=10.0, thigh=24.0, knee=46.0, foot=-12.0, hip_z=-5.0)
+    hold = both(arm_down=30.0, arm_swing=58.0, elbow=10.0, lean=11.0, neck=6.0, thigh=14.0, knee=26.0, hip_z=-2.5)
+    return keyed([(0, rest), (3, reach_back), (6, ready), (9, hop), (12, drive), (15, hold), (frames, rest)], frames)
 
 
 # name: (frames, controls builder, loops)
