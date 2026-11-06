@@ -30,6 +30,7 @@ ROW = [
     # Starts on one side of the row and travels its default 600 across it.
     ("Moving Platform", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_MovingPlatform", MOVING_PLATFORM_HEIGHT, MOVING_PLATFORM_Y),
     ("Timed Platform", "/Game/ThirdPerson/Blueprints/Gimmicks/BP_TimedPlatform", MOVING_PLATFORM_HEIGHT),
+    ("Checkpoint Item", "/Game/ThirdPerson/Item/Checkpoint/BP_CheckpointItem", ITEM_HEIGHT),
     # The goal stays last: taking it ends the game, so everything else gets tested first.
     ("Goal", "/Game/ThirdPerson/Blueprints/BP_GoalItem", ITEM_HEIGHT),
 ]
