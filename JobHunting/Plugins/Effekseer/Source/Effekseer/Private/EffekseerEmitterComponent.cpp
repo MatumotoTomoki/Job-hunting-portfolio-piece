@@ -166,17 +166,20 @@ public:
 	virtual void UpdatedReferencedMaterialsWithHandles(TArray<FEffekseerHandle> handles)
 	{
 		// copied from FPrimitiveSceneProxy::FPrimitiveSceneProxy()
-#if WITH_EDITOR
+		// JobHunting fix: the handles are passed in game builds too, or a rebuilt proxy would draw nothing there.
 		TArray<UMaterialInterface*> Materials;
+#if WITH_EDITOR
 		component_->GetUsedMaterials(Materials, true);
+#endif
 		ENQUEUE_RENDER_COMMAND(FMeshRenderBufferSetDestroy)
 		(
 			[this, Materials, handles](FRHICommandListImmediate& RHICmdList)
 			{
 				handles_ = handles;
+#if WITH_EDITOR
 				this->SetUsedMaterialForVerification(Materials);
-			});
 #endif
+			});
 	}
 
 	const UEffekseerEmitterComponent* GetInComponent() const
@@ -272,8 +275,10 @@ LoopExit:;
 
 	auto ret = system_->Play(Effect, loc);
 
-	sceneProxy_->UpdatedReferencedMaterials();
+	// JobHunting fix: no proxy while the component is hidden; the next proxy gets handles_ from CreateSceneProxy.
+	if (sceneProxy_ != nullptr)
 	{
+		sceneProxy_->UpdatedReferencedMaterials();
 		auto cmd = new EffekseerEmitterUpdateData_Command();
 		cmd->Type = EffekseerEmitterUpdateData_CommandType::Add;
 		cmd->Handle = ret;
@@ -313,23 +318,27 @@ UEffekseerEmitterComponent::~UEffekseerEmitterComponent()
 
 FPrimitiveSceneProxy* UEffekseerEmitterComponent::CreateSceneProxy()
 {
-	if (sceneProxy_ != nullptr)
-	{
-		sceneProxy_ = new FEffekseerEmitterSceneProxy(this);
+	// JobHunting fix: a proxy can be rebuilt after DestroyRenderState_Concurrent cleared sceneProxy_, so every new
+	// proxy is handed the effects still playing (handles_ is empty the first time).
+	sceneProxy_ = new FEffekseerEmitterSceneProxy(this);
 
-		if (system_ != nullptr && lastPlayingEffect != nullptr)
-		{
-			system_->AssignMaterials(lastPlayingEffect, &materials_);
-		}
-
-		sceneProxy_->UpdatedReferencedMaterialsWithHandles(handles_);
-	}
-	else
+	if (system_ != nullptr && lastPlayingEffect != nullptr)
 	{
-		sceneProxy_ = new FEffekseerEmitterSceneProxy(this);
+		system_->AssignMaterials(lastPlayingEffect, &materials_);
 	}
+
+	sceneProxy_->UpdatedReferencedMaterialsWithHandles(handles_);
 
 	return sceneProxy_;
+}
+
+void UEffekseerEmitterComponent::DestroyRenderState_Concurrent()
+{
+	// JobHunting fix: the renderer deletes the proxy after this, and a hidden component gets no new one until it is
+	// shown again. Commands sent to the old pointer in the meantime ran on freed memory and crashed the editor.
+	sceneProxy_ = nullptr;
+
+	Super::DestroyRenderState_Concurrent();
 }
 
 UMaterialInterface* UEffekseerEmitterComponent::GetMaterial(int32 ElementIndex) const
@@ -445,6 +454,7 @@ void UEffekseerEmitterComponent::TickComponent(float DeltaTime, ELevelTick TickT
 			}
 			else
 			{
+				if (sceneProxy_ != nullptr)
 				{
 					auto cmd = new EffekseerEmitterUpdateData_Command();
 					cmd->Type = EffekseerEmitterUpdateData_CommandType::Remove;
@@ -527,6 +537,7 @@ void UEffekseerEmitterComponent::Stop()
 		{
 			system_->Stop(handle);
 
+			if (sceneProxy_ != nullptr)
 			{
 				auto cmd = new EffekseerEmitterUpdateData_Command();
 				cmd->Type = EffekseerEmitterUpdateData_CommandType::Remove;
