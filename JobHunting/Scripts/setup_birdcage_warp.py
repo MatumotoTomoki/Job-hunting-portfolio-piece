@@ -94,6 +94,17 @@ if enter_trigger:
     enter_trigger.set_editor_property("relative_location", unreal.Vector(0.0, 52.0, 60.0))
     enter_trigger.set_collision_profile_name("OverlapOnlyPawn")
 
+# Solid around the whole cage, tray to dome, so the door can only be reached from the front. The camera ignores it,
+# so the camera arm does not jump in whenever the cage comes between it and the player.
+cage_collision = add_component(unreal.CapsuleComponent, "CageCollision")
+if cage_collision:
+    # Just outside the bars (30): the tray pokes out a little, but the player still reaches EnterTrigger at the door.
+    cage_collision.set_editor_property("capsule_radius", 31.0)
+    cage_collision.set_editor_property("capsule_half_height", 58.0)
+    cage_collision.set_editor_property("relative_location", unreal.Vector(0.0, 0.0, 58.0))
+    cage_collision.set_collision_profile_name("BlockAllDynamic")
+    cage_collision.set_collision_response_to_channel(unreal.CollisionChannel.ECC_CAMERA, unreal.CollisionResponseType.ECR_IGNORE)
+
 # Where the player reappears: past the open door, the capsule's half height (90) above the floor.
 exit_point = add_component(unreal.SceneComponent, "ExitPoint")
 if exit_point:
