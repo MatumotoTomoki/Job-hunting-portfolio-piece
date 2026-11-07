@@ -214,6 +214,16 @@ def ledge_hang_controls(frames):
     return result
 
 
+# --- Ledge climb: from the hang, pull up with the arms, tuck the knees over the edge, stand (plays once) ---------
+# The character Blueprint lifts the capsule over the first half and carries it onto the ledge over the second.
+def ledge_climb_controls(frames):
+    hang = dict(ledge_hang_controls(30)[0])
+    pull = both(arm_down=-20.0, arm_swing=55.0, elbow=70.0, lean=14.0, neck=6.0, thigh=35.0, knee=55.0, foot=-10.0)
+    over = both(arm_down=40.0, arm_swing=35.0, elbow=45.0, lean=22.0, neck=10.0, thigh=70.0, knee=90.0, foot=10.0, hip_z=3.0)
+    rest = both(arm_down=30.0, elbow=30.0)
+    return keyed([(0, hang), (5, pull), (10, over), (frames, rest)], frames)
+
+
 # --- Plant flag: reach behind for the flag, bring it up in front with a crouch, hop with it raised overhead, and
 # drive it into the ground on landing (plays once). BP_CheckpointFlag moves the flag in time with these keys:
 # it appears at frame 6, rises with the hop to frame 9 and is in the ground at frame 12. The hop is in the pose only:
@@ -231,6 +241,7 @@ def plant_flag_controls(frames):
 
 # name: (frames, controls builder, loops)
 ANIMATIONS = {
+    "MM_LedgeClimb_Handmade": (16, ledge_climb_controls, False),
     "MM_PlantFlag_Handmade": (20, plant_flag_controls, False),
     "MM_LedgeHang_Handmade": (30, ledge_hang_controls, True),
     "MM_Run_Handmade": (12, run_controls, True),
@@ -283,7 +294,11 @@ def build(name, frames, builder, mesh, skeleton):
 MONTAGES = {
     "AM_DoubleJump_Handmade": "MM_DoubleJump_Handmade",
     "AM_PlantFlag_Handmade": "MM_PlantFlag_Handmade",
+    "AM_LedgeHang_Handmade": "MM_LedgeHang_Handmade",
+    "AM_LedgeClimb_Handmade": "MM_LedgeClimb_Handmade",
 }
+# AM_LedgeHang_Handmade has to repeat while the player hangs: Python cannot set a montage's sections, so the character
+# Blueprint does it with Montage_SetNextSection("Default" -> "Default") right after playing it.
 
 player_mesh = unreal.load_asset(SKELETAL_MESH)
 player_skeleton = player_mesh.get_editor_property("skeleton")
@@ -295,8 +310,13 @@ for montage_name, source in MONTAGES.items():
         unreal.AssetToolsHelpers.get_asset_tools().create_asset(montage_name, ANIM_DIR, unreal.AnimMontage, montage_factory)
         unreal.EditorAssetLibrary.save_asset(ANIM_DIR + "/" + montage_name, False)
 
-lines = ["signs: forward {} left_down {}".format(FORWARD, LEFT_DOWN)]
 ext = unreal.AnimPoseExtensions
+hang_pose = ext.get_anim_pose_at_frame(built["MM_LedgeHang_Handmade"], 0, unreal.AnimPoseEvaluationOptions())
+hand_heights = [ext.get_bone_pose(hang_pose, h, unreal.AnimPoseSpaces.WORLD).translation for h in ("hand_L", "hand_R")]
+
+lines = ["signs: forward {} left_down {}".format(FORWARD, LEFT_DOWN),
+         "hang hands (mesh space): {}".format(["({:.1f}, {:.1f}, {:.1f})".format(h.x, h.y, h.z) for h in hand_heights]),
+         "montages: {}".format([n for n in MONTAGES if unreal.EditorAssetLibrary.does_asset_exist(ANIM_DIR + "/" + n)])]
 options = unreal.AnimPoseEvaluationOptions()
 for name, anim in built.items():
     lines.append("{}: {:.2f} s, {} frames".format(name, anim.get_play_length(), unreal.AnimationLibrary.get_num_frames(anim)))
