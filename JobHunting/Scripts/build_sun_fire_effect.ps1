@@ -185,11 +185,16 @@ $project = @"
   <IsLoop>True</IsLoop>
 </EffekseerProject>
 "@
-$xml = [xml]$project   # well-formed check
-$projectPath = Join-Path $out 'SunFire.efkproj'
-$xml.Save($projectPath)
-$efk = Join-Path $out 'SunFire.efk'
-Remove-Item $efk -ErrorAction SilentlyContinue
-$p = Start-Process $Effekseer -ArgumentList '-cui', '-in', "`"$projectPath`"", '-e', "`"$efk`"" -PassThru -Wait -WindowStyle Hidden
-if ($p.ExitCode -ne 0 -or -not (Test-Path $efk)) { throw "Effekseer export failed ($($p.ExitCode))" }
+# SunFireBlue: the same fire with red and blue swapped (orange 255,130,40 -> blue 40,130,255). BP_Sun fades from
+# SunFire to it as the sun gets angrier.
+$blue = $project -replace '<(/?)R>', '<$1TMP>' -replace '<(/?)B>', '<$1R>' -replace '<(/?)TMP>', '<$1B>'
+foreach ($variant in @(@('SunFire', $project), @('SunFireBlue', $blue))) {
+  $xml = [xml]$variant[1]   # well-formed check
+  $projectPath = Join-Path $out ($variant[0] + '.efkproj')
+  $xml.Save($projectPath)
+  $efk = Join-Path $out ($variant[0] + '.efk')
+  Remove-Item $efk -ErrorAction SilentlyContinue
+  $p = Start-Process $Effekseer -ArgumentList '-cui', '-in', "`"$projectPath`"", '-e', "`"$efk`"" -PassThru -Wait -WindowStyle Hidden
+  if ($p.ExitCode -ne 0 -or -not (Test-Path $efk)) { throw "Effekseer export failed for $($variant[0]) ($($p.ExitCode))" }
+}
 Get-ChildItem $out -Recurse -File | Select-Object @{ n = 'File'; e = { $_.FullName.Substring($out.Length + 1) } }, Length

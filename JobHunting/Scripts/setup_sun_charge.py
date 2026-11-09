@@ -2,7 +2,8 @@
 # BP_Sun_EventGraph.txt. What it sets up:
 #   BP_Sun   an Area box like the Time Rewind Area's (10 m, sitting on the actor's origin), the sun (SunMesh) raised to
 #            HOME_HEIGHT inside it, and the SunFire flames re-attached to SunMesh so they travel with it; the actor
-#            itself never moves or turns, only SunMesh does, so the Area stays put. Plus the variables of the charge.
+#            itself never moves or turns, only SunMesh does, so the Area stays put. A level Platform box on top of the
+#            ball to ride on. Plus the variables of the charge, the ride and the anger.
 #   LV_Debug the sun after the Time Rewind Area with room for both 10 m boxes, its label beside the box like the
 #            Time Rewind Area's, the goal one step past it and the floor long enough.
 # Safe to run again. With the editor closed:
@@ -19,7 +20,15 @@ HOME_HEIGHT = 700.0
 SETTINGS = {
     "AimSeconds": 1.0, "ChargeSeconds": 1.0, "StaySeconds": 1.0, "ReturnSeconds": 2.0,
     "KnockbackStrength": 1500.0, "KnockbackUp": 600.0, "HitRadius": 110.0,
+    # How far below the player's capsule centre the ball aims, so it lands on the ground (capsule half 96 - ball 50)
+    # and a player who dodged can jump on top; how fast a rider is thrown up at the top; how near the Platform counts
+    # as riding; how much faster every phase gets per step of anger.
+    "LandDrop": 45.0, "RideLaunch": 1400.0, "RideRadius": 140.0, "AngerPace": 1.25,
 }
+INT_SETTINGS = {"MaxAnger": 3}   # Missed charges in a row before it is at its fastest and the face stays (╯‵□′)╯.
+# The rideable top: a level box over the ball (it does not turn with SunMesh), solid only while it stays and rises.
+PLATFORM_EXTENT = unreal.Vector(45.0, 45.0, 8.0)
+PLATFORM_ABOVE = 42.0     # Its top on the ball's top; the Event Graph uses the same number.
 AREA_X = 10400.0          # The Time Rewind Area (setup_time_rewind.py).
 SUN_X = AREA_X + 2 * HALF_SIZE + 200.0
 GOAL_X = SUN_X + HALF_SIZE + 700.0
@@ -50,11 +59,23 @@ if "Area" not in handles:
     area.set_editor_property("line_thickness", 4.0)
     area.set_editor_property("shape_color", unreal.Color(r=255, g=140, b=40, a=255))
     lines.append("BP_Sun: Area added")
+if "Platform" not in handles:
+    params = unreal.AddNewSubobjectParams(parent_handle=root, new_class=unreal.BoxComponent, blueprint_context=blueprint)
+    handle, _ = subsystem.add_new_subobject(params)
+    subsystem.rename_subobject(handle, unreal.Text("Platform"))
+    platform = data_library.get_object(data_library.get_data(handle))
+    platform.set_editor_property("box_extent", PLATFORM_EXTENT)
+    platform.set_editor_property("relative_location", unreal.Vector(0.0, 0.0, HOME_HEIGHT + PLATFORM_ABOVE))
+    platform.set_collision_profile_name("BlockAllDynamic")   # Begin Play turns it off until the sun stays.
+    lines.append("BP_Sun: Platform added")
 handles["SunMesh"][1].set_editor_property("relative_location", unreal.Vector(0.0, 0.0, HOME_HEIGHT))
 if "SunFire" in handles and subsystem.attach_subobject(handles["SunMesh"][0], handles["SunFire"][0]):
     lines.append("BP_Sun: SunFire attached to SunMesh")
 
 variables = [(name, pins.get_basic_type_by_name("real"), True) for name in SETTINGS] + [
+    (name, pins.get_basic_type_by_name("int"), True) for name in INT_SETTINGS] + [
+    ("Anger", pins.get_basic_type_by_name("int"), False),
+    ("BodyMaterial", pins.get_object_reference_type(unreal.MaterialInstanceDynamic), False),
     ("Phase", pins.get_basic_type_by_name("int"), False),          # 0 waiting, 1 aim, 2 charge, 3 stay, 4 rise back
     ("PhaseTime", pins.get_basic_type_by_name("real"), False),
     ("Target", pins.get_struct_type(unreal.Vector.static_struct()), False),
@@ -77,7 +98,7 @@ for name, pin_type, editable in variables:
     lines.append("  variable " + name)
 pins.compile_blueprint(blueprint)
 defaults = unreal.get_default_object(blueprint.generated_class())
-for name, value in SETTINGS.items():
+for name, value in list(SETTINGS.items()) + list(INT_SETTINGS.items()):
     defaults.set_editor_property(name, value)
 library.save_asset(BLUEPRINT_PATH, False)
 
