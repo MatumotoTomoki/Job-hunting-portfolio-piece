@@ -1,8 +1,8 @@
 # Builds the hell stage in LV_Hell: rock pillars standing in a lava sea, a run of six sections, and the exit at the top.
 #   BP_HellLava   the lava sea: a glowing Surface and a KillZone above it. Touching it sends the player back to
 #                 RespawnLocation (hell's PlayerStart) behind a quick fade.
-#   BP_FlameJet   a vent that keeps erupting: the CageFire effect flares up for WarnSeconds, then a fire Column stands
-#                 for BurnSeconds (touching it while Burning sends the player back like the lava), then OffSeconds of
+#   BP_FlameJet   a vent that keeps erupting: the CageFire effect flares up for WarnSeconds, then the Jet (FlameJet
+#                 effect, import_flame_jet.py) stands for BurnSeconds (touching it while Burning sends the player back like the lava), then OffSeconds of
 #                 nothing. StartDelay staggers a row of them.
 #   M_HellGlow    an unlit-looking glow (Color x Glow into Emissive), with MI_HellLava and MI_HellFlame.
 # The sections reuse BP_FallingFloor, BP_MovingPlatform and BP_TimedPlatform. Gaps and rises come from the player's
@@ -199,11 +199,7 @@ flame_bp = actor_blueprint(FLAME)
 vent, made = add_component(flame_bp, unreal.StaticMeshComponent, "Vent")
 if made:
     shape(vent, CYLINDER, rock, unreal.Vector(0.0, 0.0, 2.0), unreal.Vector(1.4, 1.4, 0.04))
-column, made = add_component(flame_bp, unreal.StaticMeshComponent, "Column")
-if made:
-    shape(column, CYLINDER, flame_look, unreal.Vector(0.0, 0.0, 200.0), unreal.Vector(1.9, 1.9, 4.0))
-    column.set_editor_property("visible", False)
-    column.set_editor_property("cast_shadow", False)
+# The fire column itself is the Jet emitter (FlameJet effect), added by import_flame_jet.py.
 hit, made = add_component(flame_bp, unreal.BoxComponent, "HitBox")
 if made:
     # Across the whole 200 cm walkway; 2 x 90 cm along it.
