@@ -1,9 +1,9 @@
 # Builds /Game/LV_Area1_Ruins, the first area: a ruined town on a mountainside at dusk, climbed from 0 m to about 73 m.
 # The way up winds through and over buildings, so what lies above is mostly hidden until the player gets there:
 #   A Lower Town (0 m)      a walled plaza. The Hall blocks the view ahead; inside it a stair winds up the walls to
-#                           its half-fallen roof. Side ways: crates up onto the town wall lead to the speed item (a dead
+#                           its half-fallen roof. Side ways: crates up onto the town wall lead to a star coin (a dead
 #                           end), and a small house to the south is empty (a dead end).
-#   B Roofs (10-15 m)       roof to roof, two crumbling floors, a branch roof with the jump power item (a dead end),
+#   B Roofs (10-15 m)       roof to roof, two crumbling floors, a branch roof with a star coin on a column stump (a dead end),
 #                           then a lift up to the aqueduct.
 #   C Aqueduct (15 m)       a narrow deck on arches with a broken span crossed on fading stones; the checkpoint
 #                           pickup before the tower door.
@@ -11,7 +11,7 @@
 #                           slides stepping stones out of the walls, fading stones, and a breach high in the east wall.
 #                           Broken floors and a half roof hide the way above. Torches light it.
 #   E Cliff (43-60 m)       ledges up the cliff face under an overhang: a crumbling floor, ledges, a lift, more ledges;
-#                           a branch of ledges to the double jump item (a dead end).
+#                           a branch of ledges to a star coin (a dead end).
 #   F Courtyard (60 m)      the big mechanism: the lever, and twelve giant steps rising one after another up the face of
 #                           the Great Wall (73 m), watched from a side camera; the gate and the exit on the wall.
 # Falling inside the town or the tower lands on a lower floor; falling into the abyss, the character's -50 m check
@@ -253,6 +253,17 @@ def item(path, x, y, top, name, folder):
     return spawn(bp_class(path), unreal.Vector(x, y, top + 100.0), name, folder)
 
 
+COIN = "/Game/ThirdPerson/Coin/StarCoin/BP_StarCoin"   # import_star_coin.py
+coin_count = [0]
+
+
+def coin(x, y, top, folder):
+    # Star coins, three to an area, in place of the power-up items (they made the climb too easy): hidden or hard
+    # to reach, worth finding and nothing more.
+    coin_count[0] += 1
+    return spawn(bp_class(COIN), unreal.Vector(x, y, top + 100.0), "Star Coin", folder)
+
+
 def mechanism(lever, x, y, top, size, offset, delay, name, folder, seconds=0.8, return_after=None, return_seconds=0.0):
     # A BP_Mechanism stone: its actor origin is the top of its Body. With `return_after`, it slides home again
     # that many seconds after it is out, taking `return_seconds`.
@@ -358,11 +369,12 @@ last_top = STAIR_RISE * step
 jump("hall stair -> roof edge", 250.0, HALL_TOP - last_top)
 torch(-2000.0, 0.0, 40.0, F)
 
-# Dead end 1: crates up onto the north town wall, along it to the speed item in the corner.
+# Dead end 1: crates up onto the north town wall, along it to the corner.
 for i in range(6):
     x = -1700.0 - 240.0 * i
     box(x - 110.0, x + 110.0, 1580.0, 1800.0, 0.0, 90.0 * (i + 1), F, "Crate", WOOD)
-item(ITEMS + "/BP_Item", -3700.0, 1900.0, 600.0, "Speed Item", F)
+# Star coin 1: at the far end of the town wall, out of sight behind the Hall.
+coin(-3720.0, 1900.0, 600.0, F)
 
 # Dead end 2: a little house to the south, empty.
 wall("y", -1600.0, -1000.0, -3300.0, -3150.0, 0.0, 450.0, F, teeth=False)
@@ -376,11 +388,14 @@ F = "B Roofs"
 B3 = (-1020.0, -500.0, -500.0, 300.0, 1020.0)
 box(B3[0], B3[1], B3[2], B3[3], 0.0, B3[4], F, "House")
 jump("hall roof -> house", B3[0] - x1, B3[4] - HALL_TOP)
-# Dead end 3: the roof to the north, with the jump power item.
+# Dead end 3: the roof to the north.
 B5 = (-1020.0, -500.0, 680.0, 1300.0, 1080.0)
 box(B5[0], B5[1], B5[2], B5[3], 0.0, B5[4], F, "House")
 jump("house -> north roof", B5[2] - B3[3], B5[4] - B3[4])
-item(ITEMS + "/BP_Item2", -800.0, 950.0, B5[4], "Jump Power Item", F)
+# Star coin 2: on a stump of a column at the back of the north roof, a careful hop up.
+column(-640.0, 1160.0, B5[4], 100.0, F, 60.0)
+coin(-640.0, 1160.0, B5[4] + 100.0, F)
+jump("north roof -> column stump", 0.0, 100.0)
 # Two crumbling floors, then the long roof.
 B4 = (650.0, 1300.0, -400.0, 400.0, 1150.0)
 tops = [1070.0, 1110.0]
@@ -557,9 +572,10 @@ jump("cliff ledge -> lift", rect_gap(previous, lift), 0.0, HARD_LIMIT)
 previous, top = ledge_run(lift, top + 900.0, 4, 1, "upper cliff ledge")
 COURT_TOP = top + 100.0
 jump("last ledge -> courtyard", 0.0, COURT_TOP - top)
-# Dead end 4: ledges off to the north, the double jump item at the end.
+# Dead end 4: ledges off to the north.
 previous, dead_top = ledge_run(crumble, BREACH + 60.0, 2, 1, "north ledge")
-item(ITEMS + "/BP_2jump", LX, (previous[2] + previous[3]) / 2.0, dead_top, "Double Jump Item", F)
+# Star coin 3: at the end of the hard ledges off to the north.
+coin(LX, (previous[2] + previous[3]) / 2.0, dead_top, F)
 
 # ===== F. Courtyard (60 m) and the big mechanism =====
 F = "F Courtyard"
@@ -604,7 +620,7 @@ torch(9100.0, -300.0, COURT_TOP + 40.0, F)
 
 for name, gap, rise, limit in checks:
     lines.append("  {:<34} gap {:>4.0f} rise {:>4.0f} (limit {:>4.0f})".format(name, gap, rise, limit))
-lines.append("wall top {:.0f} cm; {} actors".format(WALL_TOP, counter[0]))
+lines.append("wall top {:.0f} cm; {} actors, {} coins".format(WALL_TOP, counter[0], coin_count[0]))
 lines.append("{} saved {}".format(LEVEL, level_subsystem.save_current_level()))
 
 # ===== the area 2 placeholder, at the height area 1 ends =====
