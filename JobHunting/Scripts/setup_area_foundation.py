@@ -172,6 +172,10 @@ lever_defaults = add_variables(lever_bp, [
     ("ShowCamera", pins.get_object_reference_type(unreal.Actor.static_class()), True),
     ("ShowSeconds", REAL, True),
     ("Pulled", BOOL, False),
+    # When it was last pulled (game seconds, 0 = never): the mechanisms time their moves from it.
+    ("PulledAt", REAL, False),
+    # Seconds after a pull until it springs back and can be pulled again (0 = stays pulled).
+    ("ResetAfter", REAL, True),
 ])
 if lever_defaults.get_editor_property("ShowSeconds") == 0.0:
     lever_defaults.set_editor_property("ShowSeconds", 3.0)
@@ -192,6 +196,10 @@ mechanism_defaults = add_variables(mechanism_bp, [
     ("StartLocation", VECTOR, False),
     ("EndLocation", VECTOR, False),
     ("Done", BOOL, False),
+    # Going back: when Returns, it waits ReturnAfter seconds out there, then slides home over ReturnSeconds.
+    ("Returns", BOOL, True),
+    ("ReturnAfter", REAL, True),
+    ("ReturnSeconds", REAL, True),
 ])
 if mechanism_defaults.get_editor_property("Duration") == 0.0:
     mechanism_defaults.set_editor_property("Duration", 2.0)
