@@ -1,0 +1,41 @@
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name="K2Node_CallFunction_2001"
+   FunctionReference=(MemberName="GetOverlappingActors",bSelfContext=True)
+   NodePosX=0
+   NodePosY=3100
+   NodeGuid=7A1D0C2E5B3F4E6A9C8D1E2F3A4B5C01
+   CustomProperties Pin (PinId=A1000000000000000000000000000001,PinName="execute",PinType.PinCategory="exec")
+   CustomProperties Pin (PinId=A1000000000000000000000000000002,PinName="then",Direction="EGPD_Output",PinType.PinCategory="exec",LinkedTo=(K2Node_IfThenElse_2004 A4000000000000000000000000000001,))
+   CustomProperties Pin (PinId=A1000000000000000000000000000003,PinName="self",PinFriendlyName=NSLOCTEXT("K2Node", "Target", "Target"),PinType.PinCategory="object",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.Actor'")
+   CustomProperties Pin (PinId=A1000000000000000000000000000004,PinName="OverlappingActors",Direction="EGPD_Output",PinType.PinCategory="object",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.Actor'",PinType.ContainerType=Array,LinkedTo=(K2Node_CallArrayFunction_2002 A2000000000000000000000000000002,))
+   CustomProperties Pin (PinId=A1000000000000000000000000000005,PinName="ClassFilter",PinType.PinCategory="class",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.Actor'",DefaultObject="/Game/ThirdPerson/Blueprints/Gimmicks/DangerButton/BP_DangerButton.BP_DangerButton_C")
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallArrayFunction Name="K2Node_CallArrayFunction_2002"
+   bDefaultsToPureFunc=True
+   FunctionReference=(MemberParent="/Script/CoreUObject.Class'/Script/Engine.KismetArrayLibrary'",MemberName="Array_Length")
+   NodePosX=300
+   NodePosY=3250
+   NodeGuid=7A1D0C2E5B3F4E6A9C8D1E2F3A4B5C02
+   CustomProperties Pin (PinId=A2000000000000000000000000000001,PinName="self",PinFriendlyName=NSLOCTEXT("K2Node", "Target", "Target"),PinType.PinCategory="object",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.KismetArrayLibrary'",DefaultObject="/Script/Engine.Default__KismetArrayLibrary",bHidden=True)
+   CustomProperties Pin (PinId=A2000000000000000000000000000002,PinName="TargetArray",PinType.PinCategory="object",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.Actor'",PinType.ContainerType=Array,PinType.bIsReference=True,PinType.bIsConst=True,LinkedTo=(K2Node_CallFunction_2001 A1000000000000000000000000000004,))
+   CustomProperties Pin (PinId=A2000000000000000000000000000003,PinName="ReturnValue",Direction="EGPD_Output",PinType.PinCategory="int",LinkedTo=(K2Node_CallFunction_2003 A3000000000000000000000000000002,))
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_CallFunction Name="K2Node_CallFunction_2003"
+   bDefaultsToPureFunc=True
+   FunctionReference=(MemberParent="/Script/CoreUObject.Class'/Script/Engine.KismetMathLibrary'",MemberName="EqualEqual_IntInt")
+   NodePosX=550
+   NodePosY=3250
+   NodeGuid=7A1D0C2E5B3F4E6A9C8D1E2F3A4B5C03
+   CustomProperties Pin (PinId=A3000000000000000000000000000001,PinName="self",PinFriendlyName=NSLOCTEXT("K2Node", "Target", "Target"),PinType.PinCategory="object",PinType.PinSubCategoryObject="/Script/CoreUObject.Class'/Script/Engine.KismetMathLibrary'",DefaultObject="/Script/Engine.Default__KismetMathLibrary",bHidden=True)
+   CustomProperties Pin (PinId=A3000000000000000000000000000002,PinName="A",PinType.PinCategory="int",DefaultValue="0",LinkedTo=(K2Node_CallArrayFunction_2002 A2000000000000000000000000000003,))
+   CustomProperties Pin (PinId=A3000000000000000000000000000003,PinName="B",PinType.PinCategory="int",DefaultValue="0")
+   CustomProperties Pin (PinId=A3000000000000000000000000000004,PinName="ReturnValue",Direction="EGPD_Output",PinType.PinCategory="bool",LinkedTo=(K2Node_IfThenElse_2004 A4000000000000000000000000000002,))
+End Object
+Begin Object Class=/Script/BlueprintGraph.K2Node_IfThenElse Name="K2Node_IfThenElse_2004"
+   NodePosX=800
+   NodePosY=3100
+   NodeGuid=7A1D0C2E5B3F4E6A9C8D1E2F3A4B5C04
+   CustomProperties Pin (PinId=A4000000000000000000000000000001,PinName="execute",PinType.PinCategory="exec",LinkedTo=(K2Node_CallFunction_2001 A1000000000000000000000000000002,))
+   CustomProperties Pin (PinId=A4000000000000000000000000000002,PinName="Condition",PinType.PinCategory="bool",DefaultValue="true",LinkedTo=(K2Node_CallFunction_2003 A3000000000000000000000000000004,))
+   CustomProperties Pin (PinId=A4000000000000000000000000000003,PinName="then",Direction="EGPD_Output",PinType.PinCategory="exec")
+   CustomProperties Pin (PinId=A4000000000000000000000000000004,PinName="else",Direction="EGPD_Output",PinType.PinCategory="exec")
+End Object
