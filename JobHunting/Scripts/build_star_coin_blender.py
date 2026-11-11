@@ -176,6 +176,43 @@ def render_preview(folder):
         bpy.ops.render.render(write_still=True)
 
 
+def render_icon(path):
+    # The HUD icon: the coin face on, on a transparent background.
+    scene = bpy.context.scene
+    world = bpy.data.worlds.new("IconWorld")
+    world.use_nodes = True
+    # Warm surroundings: the metal shows them, so a grey world makes the gold look pale.
+    world.node_tree.nodes["Background"].inputs[0].default_value = (0.5, 0.3, 0.08, 1.0)
+    world.node_tree.nodes["Background"].inputs[1].default_value = 0.9
+    scene.world = world
+    light = bpy.data.objects.new("IconKey", bpy.data.lights.new("IconKey", "SUN"))
+    light.data.energy = 6.0
+    light.rotation_euler = (math.radians(60.0), math.radians(-25.0), math.radians(110.0))
+    scene.collection.objects.link(light)
+    camera = bpy.data.objects.new("IconCamera", bpy.data.cameras.new("IconCamera"))
+    camera.data.type = "ORTHO"
+    camera.data.ortho_scale = 2.0 * RADIUS * CM * 1.04
+    camera.location = Vector((1.0, 0.0, 0.0))
+    camera.rotation_euler = (-camera.location).to_track_quat("-Z", "Y").to_euler()
+    scene.collection.objects.link(camera)
+    scene.camera = camera
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "CPU"
+    scene.cycles.samples = 48
+    scene.render.film_transparent = True
+    # Standard, not AgX: AgX washes the gold out toward beige.
+    scene.view_settings.view_transform = "Standard"
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.image_settings.color_mode = "RGBA"
+    scene.render.resolution_x = 256
+    scene.render.resolution_y = 256
+    scene.render.filepath = path
+    bpy.ops.render.render(write_still=True)
+    scene.render.film_transparent = False
+    bpy.data.objects.remove(light)
+    bpy.data.objects.remove(camera)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT_DIR, exist_ok=True)
     for existing in list(bpy.data.objects):
@@ -188,6 +225,7 @@ if __name__ == "__main__":
                              mesh_smooth_type="FACE", use_mesh_modifiers=True)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT_DIR, "StarCoin.blend"))
+    render_icon(os.path.join(OUT_DIR, "T_StarCoinIcon.png"))
     preview = sys.argv[sys.argv.index("--") + 1] if "--" in sys.argv else OUT_DIR
     render_preview(preview)
     print("STAR COIN done")
