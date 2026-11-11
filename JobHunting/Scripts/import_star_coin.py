@@ -148,6 +148,59 @@ if defaults.get_editor_property("SpinSpeed") == 0.0:
 pins.compile_blueprint(coin)
 library.save_asset(COIN, False)
 
+# ----- the HUD counter -----
+# T_StarCoinIcon (rendered by build_star_coin_blender.py) and WBP_StarCoins, which the player's HUD (WBP_Height) holds:
+# the icon and "taken / AreaCoinTotal" for the area being played, shown only in area levels. The designer part (an
+# Image and a TextBlock named CoinText) is made by hand; its graph is WBP_StarCoins_EventGraph.txt.
+# Remembering which coins are gone, so a coin taken before a trip to hell is not there again on the way back:
+#   GI TakenCoinIds   "|<level>.<coin>|" for every coin taken this run, one after another
+#   GI TakenLevel, TakenInArea   how many of them in the level last taken from
+#   GI AreaLevel, AreaCoinTotal  set by BP_AreaStart for the area being played (AreaCoins on it, 3 by default)
+#   BP_StarCoin CoinId           its own "|<level>.<coin>|"
+ICON = DIR + "/T_StarCoinIcon"
+WIDGET = "/Game/UI/WBP_StarCoins"
+AREA_START = "/Game/ThirdPerson/Blueprints/Gimmicks/Area/BP_AreaStart"
+icon_task = unreal.AssetImportTask()
+icon_task.filename = os.path.join(os.path.dirname(SOURCE), "T_StarCoinIcon.png")
+icon_task.destination_path = DIR
+icon_task.automated = True
+icon_task.save = True
+icon_task.replace_existing = True
+tools.import_asset_tasks([icon_task])
+icon = unreal.load_asset(ICON)
+icon.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_EDITOR_ICON)
+icon.set_editor_property("lod_group", unreal.TextureGroup.TEXTUREGROUP_UI)
+icon.set_editor_property("mip_gen_settings", unreal.TextureMipGenSettings.TMGS_NO_MIPMAPS)
+library.save_asset(ICON, False)
+lines.append("imported " + ICON)
+
+STRING = pins.get_basic_type_by_name("string")
+NAME = pins.get_basic_type_by_name("name")
+INT = pins.get_basic_type_by_name("int")
+REAL = pins.get_basic_type_by_name("real")
+add_variables(game_instance, [
+    ("TakenCoinIds", STRING, False), ("TakenLevel", NAME, False), ("TakenInArea", INT, False),
+    ("AreaLevel", NAME, False), ("AreaCoinTotal", INT, False),
+])
+library.save_asset(GAME_INSTANCE, False)
+add_variables(coin, [("CoinId", STRING, False)])
+library.save_asset(COIN, False)
+area_start = unreal.load_asset(AREA_START)
+area_defaults = add_variables(area_start, [("AreaCoins", INT, True)])
+if area_defaults.get_editor_property("AreaCoins") == 0:
+    area_defaults.set_editor_property("AreaCoins", 3)
+library.save_asset(AREA_START, False)
+
+if library.does_asset_exist(WIDGET):
+    widget = unreal.load_asset(WIDGET)
+else:
+    factory = unreal.WidgetBlueprintFactory()
+    factory.set_editor_property("parent_class", unreal.UserWidget)
+    widget = tools.create_asset("WBP_StarCoins", "/Game/UI", unreal.WidgetBlueprint, factory)
+    lines.append("created " + WIDGET)
+add_variables(widget, [("Pop", REAL, False), ("LastShown", INT, False)])
+library.save_asset(WIDGET, False)
+
 with open(os.path.join(unreal.Paths.project_saved_dir(), "star_coin_import.txt"), "w", encoding="utf-8") as out:
     out.write("\n".join(str(l) for l in lines))
 unreal.log("\n".join(str(l) for l in lines))
