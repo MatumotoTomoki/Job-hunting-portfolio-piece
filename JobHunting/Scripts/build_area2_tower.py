@@ -673,35 +673,34 @@ for name, g, rise, limit in checks:
 lines.append("clock room top landing {:.0f}, roof {:.0f}, spire top {:.0f} cm; {} actors".format(TTOP, CLOCK_TOP, SPIRE_TOP, counter[0]))
 lines.append("{} saved {}".format(LEVEL, level_subsystem.save_current_level()))
 
-# ===== the area 3 placeholder =====
-if library.does_asset_exist(NEXT_LEVEL):
-    library.delete_asset(NEXT_LEVEL)
-if not level_subsystem.new_level(NEXT_LEVEL, False):
-    raise RuntimeError("Could not create " + NEXT_LEVEL)
-base = SPIRE_TOP
-floor = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector(0.0, 0.0, base - 50.0))
-floor.set_actor_label("A3 Floor")
-floor_mesh = floor.get_editor_property("static_mesh_component")
-floor_mesh.set_static_mesh(unreal.load_asset(CUBE))
-floor_mesh.set_material(0, FLOOR)
-floor.set_actor_scale3d(unreal.Vector(30.0, 30.0, 1.0))
-actors.spawn_actor_from_class(unreal.PlayerStart, unreal.Vector(0.0, 0.0, base + 100.0)).set_actor_label("PlayerStart")
-actors.spawn_actor_from_class(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(0.0, 300.0, base + 200.0)).set_actor_label("A3 Area Start")
-actors.spawn_actor_from_class(bp_class("/Effekseer/BluePrints/BP_EffekseerSystem"), unreal.Vector(0.0, 0.0, 0.0)).set_actor_label("Effekseer System")
-light = actors.spawn_actor_from_class(unreal.DirectionalLight, unreal.Vector(0.0, 0.0, base + 1000.0), unreal.Rotator(roll=0.0, pitch=-45.0, yaw=30.0))
-light.set_actor_label("Sun")
-sky3 = actors.spawn_actor_from_class(unreal.SkyLight, unreal.Vector(0.0, 0.0, base + 1000.0))
-sky3.set_actor_label("Sky Light")
-sky3.get_editor_property("light_component").set_editor_property("real_time_capture", True)
-sky3.get_editor_property("light_component").set_editor_property("mobility", unreal.ComponentMobility.MOVABLE)
-actors.spawn_actor_from_class(unreal.SkyAtmosphere, unreal.Vector(0.0, 0.0, 0.0)).set_actor_label("Sky Atmosphere")
-label3 = actors.spawn_actor_from_class(unreal.TextRenderActor, unreal.Vector(800.0, 0.0, base + 300.0), unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
-label3.set_actor_label("A3 Label")
-render = label3.get_editor_property("text_render")
-render.set_text(unreal.Text("AREA 3 (coming soon)"))
-render.set_editor_property("world_size", 80.0)
-render.set_editor_property("horizontal_alignment", unreal.HorizTextAligment.EHTA_CENTER)
-lines.append("{} placeholder saved {} (floor at {:.0f} cm)".format(NEXT_LEVEL, level_subsystem.save_current_level(), base))
+# ===== the area 3 placeholder: only while there is no area 3 yet (build_area3_sky.py builds the real one) =====
+if not library.does_asset_exist(NEXT_LEVEL):
+    if not level_subsystem.new_level(NEXT_LEVEL, False):
+        raise RuntimeError("Could not create " + NEXT_LEVEL)
+    base = SPIRE_TOP
+    floor = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector(0.0, 0.0, base - 50.0))
+    floor.set_actor_label("A3 Floor")
+    floor_mesh = floor.get_editor_property("static_mesh_component")
+    floor_mesh.set_static_mesh(unreal.load_asset(CUBE))
+    floor_mesh.set_material(0, FLOOR)
+    floor.set_actor_scale3d(unreal.Vector(30.0, 30.0, 1.0))
+    actors.spawn_actor_from_class(unreal.PlayerStart, unreal.Vector(0.0, 0.0, base + 100.0)).set_actor_label("PlayerStart")
+    actors.spawn_actor_from_class(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(0.0, 300.0, base + 200.0)).set_actor_label("A3 Area Start")
+    actors.spawn_actor_from_class(bp_class("/Effekseer/BluePrints/BP_EffekseerSystem"), unreal.Vector(0.0, 0.0, 0.0)).set_actor_label("Effekseer System")
+    light = actors.spawn_actor_from_class(unreal.DirectionalLight, unreal.Vector(0.0, 0.0, base + 1000.0), unreal.Rotator(roll=0.0, pitch=-45.0, yaw=30.0))
+    light.set_actor_label("Sun")
+    sky3 = actors.spawn_actor_from_class(unreal.SkyLight, unreal.Vector(0.0, 0.0, base + 1000.0))
+    sky3.set_actor_label("Sky Light")
+    sky3.get_editor_property("light_component").set_editor_property("real_time_capture", True)
+    sky3.get_editor_property("light_component").set_editor_property("mobility", unreal.ComponentMobility.MOVABLE)
+    actors.spawn_actor_from_class(unreal.SkyAtmosphere, unreal.Vector(0.0, 0.0, 0.0)).set_actor_label("Sky Atmosphere")
+    label3 = actors.spawn_actor_from_class(unreal.TextRenderActor, unreal.Vector(800.0, 0.0, base + 300.0), unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
+    label3.set_actor_label("A3 Label")
+    render = label3.get_editor_property("text_render")
+    render.set_text(unreal.Text("AREA 3 (coming soon)"))
+    render.set_editor_property("world_size", 80.0)
+    render.set_editor_property("horizontal_alignment", unreal.HorizTextAligment.EHTA_CENTER)
+    lines.append("{} placeholder saved {} (floor at {:.0f} cm)".format(NEXT_LEVEL, level_subsystem.save_current_level(), base))
 
 with open(os.path.join(unreal.Paths.project_saved_dir(), "area2_build.txt"), "w", encoding="utf-8") as out:
     out.write("\n".join(str(l) for l in lines))
