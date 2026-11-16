@@ -1,0 +1,7262 @@
+[
+ {
+  "label": "A1 001 Sun",
+  "folder": "Area1/Sky",
+  "class": "DirectionalLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   9000.0
+  ],
+  "rotation": [
+   4.025250869554476e-16,
+   -8.999999999999993,
+   -159.99999999999997
+  ],
+  "scale": [
+   2.5,
+   2.5,
+   2.5
+  ],
+  "min": [
+   -654.6781583282301,
+   -401.3248564748727,
+   8708.601652856834
+  ],
+  "max": [
+   97.80409115211296,
+   198.63927178800827,
+   9197.537668119026
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 002 Sky Light",
+  "folder": "Area1/Sky",
+  "class": "SkyLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   9000.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -1.0,
+   -1.0,
+   -1.0
+  ],
+  "max": [
+   1.0,
+   1.0,
+   9000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 003 Sky Atmosphere",
+  "folder": "Area1/Sky",
+  "class": "SkyAtmosphere",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   0.0,
+   -80.0,
+   -80.0
+  ],
+  "max": [
+   240.0,
+   80.0,
+   80.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 004 Clouds",
+  "folder": "Area1/Sky",
+  "class": "VolumetricCloud",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "max": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 005 Abyss Mist",
+  "folder": "Area1/Sky",
+  "class": "ExponentialHeightFog",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   -1200.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "max": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 006 Effekseer System",
+  "folder": "Area1/A Lower Town",
+  "class": "BP_EffekseerSystem_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -1048576.0,
+   -1048576.0,
+   -1048576.0
+  ],
+  "max": [
+   1048576.0,
+   1048576.0,
+   1048576.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 007 PlayerStart",
+  "folder": "Area1/A Lower Town",
+  "class": "PlayerStart",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -3600.0,
+   0.0,
+   100.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -3640.0,
+   -80.0,
+   -80.0
+  ],
+  "max": [
+   240.0,
+   80.0,
+   192.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 008 Area Start",
+  "folder": "Area1/A Lower Town",
+  "class": "BP_AreaStart_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -3600.0,
+   300.0,
+   200.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -3600.0,
+   300.0,
+   200.0
+  ],
+  "max": [
+   -3600.0,
+   300.0,
+   200.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 009 Town Ground",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   -1250.0,
+   0.0,
+   -2000.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   55.0,
+   40.0,
+   40.0
+  ],
+  "min": [
+   -4000.0,
+   -2000.0,
+   -4000.0
+  ],
+  "max": [
+   1500.0,
+   2000.0,
+   0.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 010 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   0.0,
+   350.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   40.0,
+   7.0
+  ],
+  "min": [
+   -4000.0,
+   -2000.0,
+   0.0
+  ],
+  "max": [
+   -3800.0,
+   2000.0,
+   700.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 011 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   -1826.3435432520055,
+   731.1932441840327
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.4731291349598905,
+   0.6238648836806533
+  ],
+  "min": [
+   -4000.0,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   -1652.687086504011,
+   762.3864883680653
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 012 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   -1301.6584285073623,
+   828.8482652557286
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.2409748315403704,
+   2.5769653051145722
+  ],
+  "min": [
+   -4000.0,
+   -1463.7071700843808,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   -1139.6096869303437,
+   957.6965305114572
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 013 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   -586.9116079177775,
+   768.4042962214153
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.4389097983325883,
+   1.3680859244283057
+  ],
+  "min": [
+   -4000.0,
+   -758.8570978344069,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   -414.96611800114806,
+   836.8085924428306
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 014 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   73.12194646106036,
+   764.2579888775072
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   1.66875559365144,
+   1.285159777550143
+  ],
+  "min": [
+   -4000.0,
+   -10.315833221511639,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   156.55972614363236,
+   828.5159777550143
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 015 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   319.8236641253152,
+   791.952704053474
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.0382862020633183,
+   1.8390540810694802
+  ],
+  "min": [
+   -4000.0,
+   167.90935402214927,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   471.7379742284811,
+   883.905408106948
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 016 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   893.3108564606209,
+   805.2935569690089
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   1.9416230400674976,
+   2.1058711393801786
+  ],
+  "min": [
+   -4000.0,
+   796.229704457246,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   990.3920084639958,
+   910.5871139380179
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 017 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   1369.2597063805715,
+   741.3429322841694
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.291163603986206,
+   0.8268586456833873
+  ],
+  "min": [
+   -4000.0,
+   1204.7015261812612,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   1533.8178865798818,
+   782.6858645683387
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 018 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   1694.998449491568,
+   754.0563536268019
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   1.8568077048767009,
+   1.0811270725360373
+  ],
+  "min": [
+   -4000.0,
+   1602.158064247733,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   1787.838834735403,
+   808.1127072536037
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 019 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3900.0,
+   1916.0610466424032,
+   770.3594224876724
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   1.678779067151936,
+   1.4071884497534484
+  ],
+  "min": [
+   -4000.0,
+   1832.1220932848064,
+   700.0
+  ],
+  "max": [
+   -3800.0,
+   2000.0,
+   840.7188449753448
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 020 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1150.0,
+   1900.0,
+   300.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   53.0,
+   2.0,
+   6.0
+  ],
+  "min": [
+   -3800.0,
+   1800.0,
+   0.0
+  ],
+  "max": [
+   1500.0,
+   2000.0,
+   600.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 021 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1150.0,
+   -1900.0,
+   350.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   53.0,
+   2.0,
+   7.0
+  ],
+  "min": [
+   -3800.0,
+   -2000.0,
+   0.0
+  ],
+  "max": [
+   1500.0,
+   -1800.0,
+   700.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 022 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3649.683042252582,
+   -1900.0,
+   832.448101097907
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.006339154948364,
+   2.0,
+   2.648962021958141
+  ],
+  "min": [
+   -3800.0,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -3499.3660845051636,
+   -1800.0,
+   964.8962021958141
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 023 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3313.54425458936,
+   -1900.0,
+   768.1217048193503
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.4689471021702047,
+   2.0,
+   1.3624340963870054
+  ],
+  "min": [
+   -3486.9916096978704,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -3140.09689948085,
+   -1800.0,
+   836.2434096387005
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 024 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2953.966172226501,
+   -1900.0,
+   770.3553320851494
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.4555667084496235,
+   2.0,
+   1.4071066417029874
+  ],
+  "min": [
+   -3126.744507648982,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -2781.1878368040198,
+   -1800.0,
+   840.7106641702987
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 025 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2577.5942315663997,
+   -1900.0,
+   794.3943764798314
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.255281434619974,
+   2.0,
+   1.8878875295966282
+  ],
+  "min": [
+   -2740.3583032973984,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -2414.830159835401,
+   -1800.0,
+   888.7887529596628
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 026 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2237.5934772593246,
+   -1900.0,
+   824.3513421079842
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.876421345714334,
+   2.0,
+   2.487026842159685
+  ],
+  "min": [
+   -2381.4145445450413,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -2093.772409973608,
+   -1800.0,
+   948.7026842159685
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 027 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2007.7686884425202,
+   -1900.0,
+   764.160106661584
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.5313198466683389,
+   2.0,
+   1.2832021332316799
+  ],
+  "min": [
+   -2084.334680775937,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -1931.2026961091033,
+   -1800.0,
+   828.320213323168
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 028 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1810.040567413962,
+   -1900.0,
+   799.9081112207205
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.162178073238465,
+   2.0,
+   1.998162224414409
+  ],
+  "min": [
+   -1918.1494710758852,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -1701.9316637520387,
+   -1800.0,
+   899.8162224414409
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 029 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1491.2168655384448,
+   -1900.0,
+   763.4059395262739
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.7637857638910646,
+   2.0,
+   1.2681187905254774
+  ],
+  "min": [
+   -1629.406153732998,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -1353.0275773438916,
+   -1800.0,
+   826.8118790525477
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 030 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1147.2168037234223,
+   -1900.0,
+   814.3739665875182
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.6780324896535603,
+   2.0,
+   2.2874793317503643
+  ],
+  "min": [
+   -1281.1184282061004,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -1013.3151792407443,
+   -1800.0,
+   928.7479331750365
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 031 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -858.3710589594557,
+   -1900.0,
+   760.799597973255
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.7493469602341065,
+   2.0,
+   1.2159919594651
+  ],
+  "min": [
+   -945.838406971161,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -770.9037109477504,
+   -1800.0,
+   821.59919594651
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 032 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -563.7509010746726,
+   -1900.0,
+   760.2505192764875
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.5833870621136157,
+   2.0,
+   1.2050103855297494
+  ],
+  "min": [
+   -692.9202541803534,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -434.5815479689918,
+   -1800.0,
+   820.5010385529749
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 033 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -267.26338356515043,
+   -1900.0,
+   774.295699807044
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.3691616629148484,
+   2.0,
+   1.48591399614088
+  ],
+  "min": [
+   -385.72146671089286,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   -148.805300419408,
+   -1800.0,
+   848.591399614088
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 034 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   56.47979772200415,
+   -1900.0,
+   762.8434919725987
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.1112641521485784,
+   2.0,
+   1.2568698394519742
+  ],
+  "min": [
+   -99.08340988542477,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   212.04300532943307,
+   -1800.0,
+   825.6869839451974
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 035 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   439.7913391120528,
+   -1900.0,
+   739.5734949313919
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.1221437667954888,
+   2.0,
+   0.7914698986278381
+  ],
+  "min": [
+   283.6841507722784,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   595.8985274518272,
+   -1800.0,
+   779.1469898627838
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 036 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   1326.9558696980312,
+   -1900.0,
+   736.6830225657031
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.7510581944079604,
+   2.0,
+   0.7336604513140628
+  ],
+  "min": [
+   1239.4029599776331,
+   -2000.0,
+   700.0
+  ],
+  "max": [
+   1414.5087794184292,
+   -1800.0,
+   773.3660451314063
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 037 Column",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   -3300.0,
+   900.0,
+   130.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   2.6
+  ],
+  "min": [
+   -3345.0,
+   855.0,
+   0.0
+  ],
+  "max": [
+   -3255.0,
+   945.0,
+   260.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 038 Column",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   -3300.0,
+   -900.0,
+   190.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   3.8
+  ],
+  "min": [
+   -3345.0,
+   -945.0,
+   0.0
+  ],
+  "max": [
+   -3255.0,
+   -855.0,
+   380.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 039 Column",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1000.0,
+   1300.0,
+   90.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   1.8
+  ],
+  "min": [
+   -1045.0,
+   1255.0,
+   0.0
+  ],
+  "max": [
+   -955.0,
+   1345.0,
+   180.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 040 Column",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   -200.0,
+   -1300.0,
+   210.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   4.2
+  ],
+  "min": [
+   -245.0,
+   -1345.0,
+   0.0
+  ],
+  "max": [
+   -155.0,
+   -1255.0,
+   420.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 041 Column",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   600.0,
+   1300.0,
+   150.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   3.0
+  ],
+  "min": [
+   555.0,
+   1255.0,
+   0.0
+  ],
+  "max": [
+   645.0,
+   1345.0,
+   300.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 042 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2500.0,
+   -450.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   5.0,
+   9.6
+  ],
+  "min": [
+   -2600.0,
+   -700.0,
+   0.0
+  ],
+  "max": [
+   -2400.0,
+   -200.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 043 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2500.0,
+   0.0,
+   670.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   4.0,
+   5.8
+  ],
+  "min": [
+   -2600.0,
+   -200.0,
+   380.0
+  ],
+  "max": [
+   -2400.0,
+   200.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 044 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2500.0,
+   450.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   5.0,
+   9.6
+  ],
+  "min": [
+   -2600.0,
+   200.0,
+   0.0
+  ],
+  "max": [
+   -2400.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 045 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1500.0,
+   -400.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   6.0,
+   9.6
+  ],
+  "min": [
+   -1600.0,
+   -700.0,
+   0.0
+  ],
+  "max": [
+   -1400.0,
+   -100.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 046 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1500.0,
+   50.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.0,
+   4.5
+  ],
+  "min": [
+   -1600.0,
+   -100.0,
+   0.0
+  ],
+  "max": [
+   -1400.0,
+   200.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 047 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1500.0,
+   50.0,
+   830.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.0,
+   2.6
+  ],
+  "min": [
+   -1600.0,
+   -100.0,
+   700.0
+  ],
+  "max": [
+   -1400.0,
+   200.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 048 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1500.0,
+   450.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   5.0,
+   9.6
+  ],
+  "min": [
+   -1600.0,
+   200.0,
+   0.0
+  ],
+  "max": [
+   -1400.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 049 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2300.0,
+   600.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.0,
+   9.6
+  ],
+  "min": [
+   -2400.0,
+   500.0,
+   0.0
+  ],
+  "max": [
+   -2200.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 050 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2050.0,
+   600.0,
+   250.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.0,
+   5.0
+  ],
+  "min": [
+   -2200.0,
+   500.0,
+   0.0
+  ],
+  "max": [
+   -1900.0,
+   700.0,
+   500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 051 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2050.0,
+   600.0,
+   855.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.0,
+   2.1
+  ],
+  "min": [
+   -2200.0,
+   500.0,
+   750.0
+  ],
+  "max": [
+   -1900.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 052 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -1750.0,
+   600.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.0,
+   9.6
+  ],
+  "min": [
+   -1900.0,
+   500.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 053 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2000.0,
+   -600.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   8.0,
+   2.0,
+   9.6
+  ],
+  "min": [
+   -2400.0,
+   -700.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   -500.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 054 Hall Roof",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   -2000.0,
+   350.0,
+   930.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   12.0,
+   7.0,
+   0.6
+  ],
+  "min": [
+   -2600.0,
+   0.0,
+   900.0
+  ],
+  "max": [
+   -1400.0,
+   700.0,
+   960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 055 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -2185.0,
+   375.0,
+   45.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   0.9
+  ],
+  "min": [
+   -2275.0,
+   250.0,
+   0.0
+  ],
+  "max": [
+   -2095.0,
+   500.0,
+   90.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 056 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -2005.0,
+   375.0,
+   90.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   1.8
+  ],
+  "min": [
+   -2095.0,
+   250.0,
+   0.0
+  ],
+  "max": [
+   -1915.0,
+   500.0,
+   180.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 057 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1825.0,
+   375.0,
+   135.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   2.7
+  ],
+  "min": [
+   -1915.0,
+   250.0,
+   0.0
+  ],
+  "max": [
+   -1735.0,
+   500.0,
+   270.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 058 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1725.0,
+   295.0,
+   180.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.5,
+   1.8,
+   3.6
+  ],
+  "min": [
+   -1850.0,
+   205.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   385.0,
+   360.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 059 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1725.0,
+   115.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.5,
+   1.8,
+   4.5
+  ],
+  "min": [
+   -1850.0,
+   25.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   205.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 060 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1725.0,
+   -65.0,
+   270.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.5,
+   1.8,
+   5.4
+  ],
+  "min": [
+   -1850.0,
+   -155.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   25.0,
+   540.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 061 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1725.0,
+   -245.0,
+   315.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.5,
+   1.8,
+   6.3
+  ],
+  "min": [
+   -1850.0,
+   -335.0,
+   0.0
+  ],
+  "max": [
+   -1600.0,
+   -155.0,
+   630.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 062 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1775.0,
+   -375.0,
+   360.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   7.2
+  ],
+  "min": [
+   -1865.0,
+   -500.0,
+   0.0
+  ],
+  "max": [
+   -1685.0,
+   -250.0,
+   720.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 063 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -1955.0,
+   -375.0,
+   405.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   8.1
+  ],
+  "min": [
+   -2045.0,
+   -500.0,
+   0.0
+  ],
+  "max": [
+   -1865.0,
+   -250.0,
+   810.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 064 Hall Stair",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   -2135.0,
+   -375.0,
+   450.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   2.5,
+   9.0
+  ],
+  "min": [
+   -2225.0,
+   -500.0,
+   0.0
+  ],
+  "max": [
+   -2045.0,
+   -250.0,
+   900.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 065 Brazier",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   -2000.0,
+   0.0,
+   20.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   -2025.0,
+   -25.0,
+   0.0
+  ],
+  "max": [
+   -1975.0,
+   25.0,
+   40.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 066 Torch Light",
+  "folder": "Area1/A Lower Town",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -2000.0,
+   0.0,
+   80.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -2000.0,
+   0.0,
+   80.0
+  ],
+  "max": [
+   -2000.0,
+   0.0,
+   80.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 067 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -1700.0,
+   1690.0,
+   45.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   0.9
+  ],
+  "min": [
+   -1810.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -1590.0,
+   1800.0,
+   90.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 068 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -1940.0,
+   1690.0,
+   90.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   1.8
+  ],
+  "min": [
+   -2050.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -1830.0,
+   1800.0,
+   180.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 069 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -2180.0,
+   1690.0,
+   135.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   2.7
+  ],
+  "min": [
+   -2290.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -2070.0,
+   1800.0,
+   270.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 070 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -2420.0,
+   1690.0,
+   180.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   3.6
+  ],
+  "min": [
+   -2530.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -2310.0,
+   1800.0,
+   360.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 071 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -2660.0,
+   1690.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   4.5
+  ],
+  "min": [
+   -2770.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -2550.0,
+   1800.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 072 Crate",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsWood",
+  "location": [
+   -2900.0,
+   1690.0,
+   270.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   2.2,
+   5.4
+  ],
+  "min": [
+   -3010.0,
+   1580.0,
+   0.0
+  ],
+  "max": [
+   -2790.0,
+   1800.0,
+   540.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 073 Star Coin",
+  "folder": "Area1/A Lower Town",
+  "class": "BP_StarCoin_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -3720.0,
+   1900.0,
+   700.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -3800.0,
+   1820.0,
+   620.0
+  ],
+  "max": [
+   -3640.0,
+   1980.0,
+   780.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 074 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3225.0,
+   -1300.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.5,
+   6.0,
+   4.5
+  ],
+  "min": [
+   -3300.0,
+   -1600.0,
+   0.0
+  ],
+  "max": [
+   -3150.0,
+   -1000.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 075 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2775.0,
+   -1300.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.5,
+   6.0,
+   4.5
+  ],
+  "min": [
+   -2850.0,
+   -1600.0,
+   0.0
+  ],
+  "max": [
+   -2700.0,
+   -1000.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 076 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3000.0,
+   -1525.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   1.5,
+   4.5
+  ],
+  "min": [
+   -3150.0,
+   -1600.0,
+   0.0
+  ],
+  "max": [
+   -2850.0,
+   -1450.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 077 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3115.0,
+   -1075.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.7,
+   1.5,
+   4.5
+  ],
+  "min": [
+   -3150.0,
+   -1150.0,
+   0.0
+  ],
+  "max": [
+   -3080.0,
+   -1000.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 078 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -3000.0,
+   -1075.0,
+   365.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.5,
+   1.7
+  ],
+  "min": [
+   -3080.0,
+   -1150.0,
+   280.0
+  ],
+  "max": [
+   -2920.0,
+   -1000.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 079 Wall",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -2885.0,
+   -1075.0,
+   225.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.7,
+   1.5,
+   4.5
+  ],
+  "min": [
+   -2920.0,
+   -1150.0,
+   0.0
+  ],
+  "max": [
+   -2850.0,
+   -1000.0,
+   450.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 080 House Roof",
+  "folder": "Area1/A Lower Town",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   -3000.0,
+   -1300.0,
+   480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.0,
+   6.0,
+   0.6
+  ],
+  "min": [
+   -3300.0,
+   -1600.0,
+   450.0
+  ],
+  "max": [
+   -2700.0,
+   -1000.0,
+   510.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 081 House",
+  "folder": "Area1/B Roofs",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -760.0,
+   -100.0,
+   510.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   5.2,
+   8.0,
+   10.2
+  ],
+  "min": [
+   -1020.0,
+   -500.0,
+   5.684341886080802e-14
+  ],
+  "max": [
+   -500.0,
+   300.0,
+   1020.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 082 House",
+  "folder": "Area1/B Roofs",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   -760.0,
+   990.0,
+   540.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   5.2,
+   6.2,
+   10.8
+  ],
+  "min": [
+   -1020.0,
+   680.0,
+   0.0
+  ],
+  "max": [
+   -500.0,
+   1300.0,
+   1080.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 083 Column",
+  "folder": "Area1/B Roofs",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   -640.0,
+   1160.0,
+   1130.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.2,
+   1.2,
+   1.0
+  ],
+  "min": [
+   -700.0,
+   1100.0,
+   1080.0
+  ],
+  "max": [
+   -580.0,
+   1220.0,
+   1180.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 084 Star Coin",
+  "folder": "Area1/B Roofs",
+  "class": "BP_StarCoin_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -640.0,
+   1160.0,
+   1280.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -720.0,
+   1080.0,
+   1200.0
+  ],
+  "max": [
+   -560.0,
+   1240.0,
+   1360.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 085 Crumbling Floor",
+  "folder": "Area1/B Roofs",
+  "class": "BP_FallingFloor_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   -200.0,
+   0.0,
+   1060.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   -350.0,
+   -150.0,
+   1050.0
+  ],
+  "max": [
+   -50.0,
+   150.0,
+   1100.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 086 Crumbling Floor",
+  "folder": "Area1/B Roofs",
+  "class": "BP_FallingFloor_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   300.0,
+   0.0,
+   1100.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   150.0,
+   -150.0,
+   1090.0
+  ],
+  "max": [
+   450.0,
+   150.0,
+   1140.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 087 Long House",
+  "folder": "Area1/B Roofs",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   975.0,
+   0.0,
+   575.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.5,
+   8.0,
+   11.5
+  ],
+  "min": [
+   650.0,
+   -400.0,
+   0.0
+  ],
+  "max": [
+   1300.0,
+   400.0,
+   1150.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 088 Chimney",
+  "folder": "Area1/B Roofs",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   790.0,
+   260.0,
+   1260.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.2,
+   1.2,
+   2.2
+  ],
+  "min": [
+   730.0,
+   200.0,
+   1150.0
+  ],
+  "max": [
+   850.0,
+   320.0,
+   1370.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 089 Lift",
+  "folder": "Area1/B Roofs",
+  "class": "BP_MovingPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   1550.0,
+   0.0,
+   1140.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   1400.0,
+   -150.0,
+   1130.0
+  ],
+  "max": [
+   1700.0,
+   150.0,
+   1150.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 090 Deck",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   2250.0,
+   0.0,
+   1425.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   11.0,
+   3.0,
+   1.5
+  ],
+  "min": [
+   1700.0,
+   -150.0,
+   1350.0
+  ],
+  "max": [
+   2800.0,
+   150.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 091 Deck",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   4350.0,
+   0.0,
+   1425.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   9.0,
+   3.0,
+   1.5
+  ],
+  "min": [
+   3900.0,
+   -150.0,
+   1350.0
+  ],
+  "max": [
+   4800.0,
+   150.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 092 Pier",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   2000.0,
+   0.0,
+   -1325.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.4,
+   53.5
+  ],
+  "min": [
+   1900.0,
+   -120.0,
+   -4000.0
+  ],
+  "max": [
+   2100.0,
+   120.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 093 Arch",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   2000.0,
+   0.0,
+   1275.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.0,
+   2.6,
+   1.5
+  ],
+  "min": [
+   1700.0,
+   -130.0,
+   1200.0
+  ],
+  "max": [
+   2300.0,
+   130.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 094 Pier",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   2600.0,
+   0.0,
+   -1325.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.4,
+   53.5
+  ],
+  "min": [
+   2500.0,
+   -120.0,
+   -4000.0
+  ],
+  "max": [
+   2700.0,
+   120.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 095 Arch",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   2600.0,
+   0.0,
+   1275.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.0,
+   2.6,
+   1.5
+  ],
+  "min": [
+   2300.0,
+   -130.0,
+   1200.0
+  ],
+  "max": [
+   2900.0,
+   130.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 096 Pier",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4100.0,
+   0.0,
+   -1325.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.4,
+   53.5
+  ],
+  "min": [
+   4000.0,
+   -120.0,
+   -4000.0
+  ],
+  "max": [
+   4200.0,
+   120.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 097 Arch",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4100.0,
+   0.0,
+   1275.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.0,
+   2.6,
+   1.5
+  ],
+  "min": [
+   3800.0,
+   -130.0,
+   1200.0
+  ],
+  "max": [
+   4400.0,
+   130.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 098 Pier",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4600.0,
+   0.0,
+   -1325.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.4,
+   53.5
+  ],
+  "min": [
+   4500.0,
+   -120.0,
+   -4000.0
+  ],
+  "max": [
+   4700.0,
+   120.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 099 Arch",
+  "folder": "Area1/C Aqueduct",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4600.0,
+   0.0,
+   1275.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   6.0,
+   2.6,
+   1.5
+  ],
+  "min": [
+   4300.0,
+   -130.0,
+   1200.0
+  ],
+  "max": [
+   4900.0,
+   130.0,
+   1350.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 100 Fading Stone",
+  "folder": "Area1/C Aqueduct",
+  "class": "BP_TimedPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   3100.0,
+   0.0,
+   1490.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   2950.0,
+   -150.0,
+   1480.0
+  ],
+  "max": [
+   3250.0,
+   150.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 101 Fading Stone",
+  "folder": "Area1/C Aqueduct",
+  "class": "BP_TimedPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   3600.0,
+   0.0,
+   1490.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   3450.0,
+   -150.0,
+   1480.0
+  ],
+  "max": [
+   3750.0,
+   150.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 102 Checkpoint Item",
+  "folder": "Area1/C Aqueduct",
+  "class": "BP_CheckpointItem_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   4500.0,
+   0.0,
+   1600.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   4440.0,
+   -60.0,
+   1540.0
+  ],
+  "max": [
+   4560.0,
+   60.0,
+   1660.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 103 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -950.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   5.0,
+   90.0
+  ],
+  "min": [
+   4800.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   5100.0,
+   -700.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 104 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -550.0,
+   -500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   70.0
+  ],
+  "min": [
+   4800.0,
+   -700.0,
+   -4000.0
+  ],
+  "max": [
+   5100.0,
+   -400.0,
+   3000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 105 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -550.0,
+   4200.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   16.0
+  ],
+  "min": [
+   4800.0,
+   -700.0,
+   3400.0
+  ],
+  "max": [
+   5100.0,
+   -400.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 106 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -300.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.0,
+   90.0
+  ],
+  "min": [
+   4800.0,
+   -400.0,
+   -4000.0
+  ],
+  "max": [
+   5100.0,
+   -200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 107 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   0.0,
+   -1250.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   4.0,
+   55.0
+  ],
+  "min": [
+   4800.0,
+   -200.0,
+   -4000.0
+  ],
+  "max": [
+   5100.0,
+   200.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 108 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   0.0,
+   3425.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   4.0,
+   31.5
+  ],
+  "min": [
+   4800.0,
+   -200.0,
+   1850.0
+  ],
+  "max": [
+   5100.0,
+   200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 109 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   700.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   10.0,
+   90.0
+  ],
+  "min": [
+   4800.0,
+   200.0,
+   -4000.0
+  ],
+  "max": [
+   5100.0,
+   1200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 110 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -1072.0307385916385,
+   5056.660704110691
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.55938522816723,
+   1.1332140822138173
+  ],
+  "min": [
+   4800.0,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   -944.061477183277,
+   5113.321408221382
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 111 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -768.5019415099669,
+   5075.53591767195
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   1.9350517127968487,
+   1.510718353439006
+  ],
+  "min": [
+   4800.0,
+   -865.2545271498093,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   -671.7493558701244,
+   5151.071835343901
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 112 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -321.7977747281111,
+   5089.569497273769
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.036547125186189,
+   1.7913899454753845
+  ],
+  "min": [
+   4800.0,
+   -423.62513098742056,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   -219.97041846880165,
+   5179.1389945475385
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 113 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   -18.681001915610977,
+   5059.588691566023
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.027785996251623,
+   1.1917738313204609
+  ],
+  "min": [
+   4800.0,
+   -170.07030172819213,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   132.70829789697018,
+   5119.177383132046
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 114 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   308.54283537839365,
+   5138.870748719346
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.125034769240301,
+   2.7774149743869203
+  ],
+  "min": [
+   4800.0,
+   202.2910969163786,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   414.7945738404087,
+   5277.741497438692
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 115 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   613.1016693820857,
+   5069.63672785354
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.325970727717504,
+   1.3927345570707985
+  ],
+  "min": [
+   4800.0,
+   446.8031329962105,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   779.4002057679609,
+   5139.27345570708
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 116 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   4950.0,
+   986.7675652207254,
+   5035.47834056204
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.553622953375452,
+   0.709566811240802
+  ],
+  "min": [
+   4800.0,
+   859.0864175519528,
+   5000.0
+  ],
+  "max": [
+   5100.0,
+   1114.448712889498,
+   5070.95668112408
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 117 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -900.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   6.0,
+   90.0
+  ],
+  "min": [
+   6900.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   7200.0,
+   -600.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 118 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -450.0,
+   -900.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   62.0
+  ],
+  "min": [
+   6900.0,
+   -600.0,
+   -4000.0
+  ],
+  "max": [
+   7200.0,
+   -300.0,
+   2200.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 119 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -450.0,
+   3800.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   24.0
+  ],
+  "min": [
+   6900.0,
+   -600.0,
+   2600.0
+  ],
+  "max": [
+   7200.0,
+   -300.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 120 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -50.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   5.0,
+   90.0
+  ],
+  "min": [
+   6900.0,
+   -300.0,
+   -4000.0
+  ],
+  "max": [
+   7200.0,
+   200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 121 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   450.0,
+   100.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   5.0,
+   82.0
+  ],
+  "min": [
+   6900.0,
+   200.0,
+   -4000.0
+  ],
+  "max": [
+   7200.0,
+   700.0,
+   4200.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 122 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   450.0,
+   4790.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   5.0,
+   4.2
+  ],
+  "min": [
+   6900.0,
+   200.0,
+   4580.0
+  ],
+  "max": [
+   7200.0,
+   700.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 123 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   950.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   5.0,
+   90.0
+  ],
+  "min": [
+   6900.0,
+   700.0,
+   -4000.0
+  ],
+  "max": [
+   7200.0,
+   1200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 124 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -1041.2235282601614,
+   5055.249353233157
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.175529434796772,
+   1.1049870646631461
+  ],
+  "min": [
+   6900.0,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   -882.4470565203228,
+   5110.498706466315
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 125 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -727.4901078259154,
+   5076.363312029716
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.4928243401072905,
+   1.5272662405943265
+  ],
+  "min": [
+   6900.0,
+   -852.1313248312799,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   -602.8488908205509,
+   5152.726624059433
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 126 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -388.89191528682204,
+   5095.9774282126455
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   2.721143742375716,
+   1.9195485642529093
+  ],
+  "min": [
+   6900.0,
+   -524.9491024056078,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   -252.83472816803624,
+   5191.954856425291
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 127 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   -70.26732013970104,
+   5088.2274272046925
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.3708713979212916,
+   1.76454854409385
+  ],
+  "min": [
+   6900.0,
+   -238.81089003576562,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   98.27624975636354,
+   5176.454854409385
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 128 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   260.0040972633542,
+   5031.166322292775
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   1.95862695685355,
+   0.6233264458554914
+  ],
+  "min": [
+   6900.0,
+   162.0727494206767,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   357.9354451060317,
+   5062.332644585549
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 129 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   451.0676793075072,
+   5059.097007826713
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   1.575539097568253,
+   1.181940156534256
+  ],
+  "min": [
+   6900.0,
+   372.29072442909455,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   529.8446341859199,
+   5118.194015653426
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 130 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7050.0,
+   947.4536083175735,
+   5081.174092959336
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.1686754030451993,
+   1.6234818591867224
+  ],
+  "min": [
+   6900.0,
+   789.0198381653136,
+   5000.0
+  ],
+  "max": [
+   7200.0,
+   1105.8873784698335,
+   5162.348185918672
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 131 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5200.0,
+   1050.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   3.0,
+   90.0
+  ],
+  "min": [
+   5100.0,
+   900.0,
+   -4000.0
+  ],
+  "max": [
+   5300.0,
+   1200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 132 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5450.0,
+   1050.0,
+   -1000.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   60.0
+  ],
+  "min": [
+   5300.0,
+   900.0,
+   -4000.0
+  ],
+  "max": [
+   5600.0,
+   1200.0,
+   2000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 133 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5450.0,
+   1050.0,
+   3700.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   26.0
+  ],
+  "min": [
+   5300.0,
+   900.0,
+   2400.0
+  ],
+  "max": [
+   5600.0,
+   1200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 134 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6250.0,
+   1050.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   13.0,
+   3.0,
+   90.0
+  ],
+  "min": [
+   5600.0,
+   900.0,
+   -4000.0
+  ],
+  "max": [
+   6900.0,
+   1200.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 135 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5196.484978110675,
+   1050.0,
+   5123.122930970276
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.9296995622135,
+   3.0,
+   2.4624586194055156
+  ],
+  "min": [
+   5100.0,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   5292.96995622135,
+   1200.0,
+   5246.245861940552
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 136 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5449.1018490742135,
+   1050.0,
+   5032.4816452096275
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.6730619860609295,
+   3.0,
+   0.6496329041925492
+  ],
+  "min": [
+   5315.448749771167,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   5582.75494837726,
+   1200.0,
+   5064.963290419255
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 137 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5714.649248294081,
+   1050.0,
+   5082.0173889247235
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0105444120199536,
+   3.0,
+   1.6403477784944698
+  ],
+  "min": [
+   5614.1220276930835,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   5815.176468895079,
+   1200.0,
+   5164.034777849447
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 138 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5936.3316899116035,
+   1050.0,
+   5102.924435050081
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.7129484656179557,
+   3.0,
+   2.0584887010016244
+  ],
+  "min": [
+   5850.684266630706,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   6021.979113192501,
+   1200.0,
+   5205.8488701001625
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 139 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6251.297457069304,
+   1050.0,
+   5061.686768196887
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.234626012359513,
+   3.0,
+   1.2337353639377397
+  ],
+  "min": [
+   6089.566156451328,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   6413.02875768728,
+   1200.0,
+   5123.373536393774
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 140 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6614.810458034772,
+   1050.0,
+   5074.192363686179
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.518042204756057,
+   3.0,
+   1.4838472737235862
+  ],
+  "min": [
+   6488.908347796969,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   6740.712568272575,
+   1200.0,
+   5148.384727372359
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 141 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6821.701094535674,
+   1050.0,
+   5120.561053551719
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.565978109286516,
+   3.0,
+   2.4112210710343787
+  ],
+  "min": [
+   6743.402189071348,
+   900.0,
+   5000.0
+  ],
+  "max": [
+   6900.0,
+   1200.0,
+   5241.122107103438
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 142 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5350.0,
+   -1050.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   5.0,
+   3.0,
+   90.0
+  ],
+  "min": [
+   5100.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   5600.0,
+   -900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 143 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5750.0,
+   -1050.0,
+   -1000.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   60.0
+  ],
+  "min": [
+   5600.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   5900.0,
+   -900.0,
+   2000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 144 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5750.0,
+   -1050.0,
+   3700.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   26.0
+  ],
+  "min": [
+   5600.0,
+   -1200.0,
+   2400.0
+  ],
+  "max": [
+   5900.0,
+   -900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 145 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6050.0,
+   -1050.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   90.0
+  ],
+  "min": [
+   5900.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   6200.0,
+   -900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 146 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6350.0,
+   -1050.0,
+   150.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   83.0
+  ],
+  "min": [
+   6200.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   6500.0,
+   -900.0,
+   4300.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 147 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6350.0,
+   -1050.0,
+   4825.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   3.5
+  ],
+  "min": [
+   6200.0,
+   -1200.0,
+   4650.0
+  ],
+  "max": [
+   6500.0,
+   -900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 148 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6700.0,
+   -1050.0,
+   500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   4.0,
+   3.0,
+   90.0
+  ],
+  "min": [
+   6500.0,
+   -1200.0,
+   -4000.0
+  ],
+  "max": [
+   6900.0,
+   -900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 149 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5569.703830686296,
+   -1050.0,
+   5087.956688738632
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.110628756871165,
+   3.0,
+   1.7591337747726357
+  ],
+  "min": [
+   5414.172392842738,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   5725.235268529854,
+   -900.0,
+   5175.913377477264
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 150 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   5952.5401869547795,
+   -1050.0,
+   5045.842605656799
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.023619126644917,
+   3.0,
+   0.9168521131359739
+  ],
+  "min": [
+   5801.359230622534,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   6103.721143287025,
+   -900.0,
+   5091.685211313597
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 151 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6222.282220496477,
+   -1050.0,
+   5095.528480116045
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2999180549086304,
+   3.0,
+   1.910569602320902
+  ],
+  "min": [
+   6107.286317751045,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   6337.278123241908,
+   -900.0,
+   5191.05696023209
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 152 Wall",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   6540.072644433299,
+   -1050.0,
+   5100.15910407099
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.824940711725503,
+   3.0,
+   2.0031820814198
+  ],
+  "min": [
+   6398.825608847023,
+   -1200.0,
+   5000.0
+  ],
+  "max": [
+   6681.319680019574,
+   -900.0,
+   5200.31820814198
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 153 Story 1 Floor",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   6000.0,
+   0.0,
+   1450.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   18.0,
+   18.0,
+   1.0
+  ],
+  "min": [
+   5100.0,
+   -900.0,
+   1400.0
+  ],
+  "max": [
+   6900.0,
+   900.0,
+   1500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 154 Broken Roof",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   5700.0,
+   0.0,
+   4950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   12.0,
+   18.0,
+   1.0
+  ],
+  "min": [
+   5100.0,
+   -900.0,
+   4900.0
+  ],
+  "max": [
+   6300.0,
+   900.0,
+   5000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 155 Brazier",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   5300.0,
+   0.0,
+   1520.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   5275.0,
+   -25.0,
+   1500.0
+  ],
+  "max": [
+   5325.0,
+   25.0,
+   1540.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 156 Torch Light",
+  "folder": "Area1/D Great Tower",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   5300.0,
+   0.0,
+   1580.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   5300.0,
+   0.0,
+   1580.0
+  ],
+  "max": [
+   5300.0,
+   0.0,
+   1580.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 157 Tower Lift",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_MovingPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6600.0,
+   600.0,
+   1500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6450.0,
+   450.0,
+   1490.0
+  ],
+  "max": [
+   6750.0,
+   750.0,
+   1510.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 158 Story 2 Balcony",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   5725.0,
+   700.0,
+   2660.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   12.5,
+   4.0,
+   0.8
+  ],
+  "min": [
+   5100.0,
+   500.0,
+   2620.0
+  ],
+  "max": [
+   6350.0,
+   900.0,
+   2700.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 159 Brazier",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   5300.0,
+   750.0,
+   2720.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   5275.0,
+   725.0,
+   2700.0
+  ],
+  "max": [
+   5325.0,
+   775.0,
+   2740.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 160 Torch Light",
+  "folder": "Area1/D Great Tower",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   5300.0,
+   750.0,
+   2780.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   5300.0,
+   750.0,
+   2780.0
+  ],
+  "max": [
+   5300.0,
+   750.0,
+   2780.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 161 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   5180.0,
+   90.0,
+   2760.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   5100.0,
+   10.0,
+   2720.0
+  ],
+  "max": [
+   5260.0,
+   170.0,
+   2800.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 162 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   5180.0,
+   -410.0,
+   2860.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   5100.0,
+   -490.0,
+   2820.0
+  ],
+  "max": [
+   5260.0,
+   -330.0,
+   2900.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 163 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   5600.0,
+   -820.0,
+   2960.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   5520.0,
+   -900.0,
+   2920.0
+  ],
+  "max": [
+   5680.0,
+   -740.0,
+   3000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 164 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   6110.0,
+   -820.0,
+   3060.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   6030.0,
+   -900.0,
+   3020.0
+  ],
+  "max": [
+   6190.0,
+   -740.0,
+   3100.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 165 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   6620.0,
+   -820.0,
+   3160.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   6540.0,
+   -900.0,
+   3120.0
+  ],
+  "max": [
+   6700.0,
+   -740.0,
+   3200.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 166 Wall Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   6820.0,
+   -320.0,
+   3260.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.6,
+   1.6,
+   0.8
+  ],
+  "min": [
+   6740.0,
+   -400.0,
+   3220.0
+  ],
+  "max": [
+   6900.0,
+   -240.0,
+   3300.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 167 Story 3 Balcony",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   6700.0,
+   500.0,
+   3360.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   4.0,
+   8.0,
+   0.8
+  ],
+  "min": [
+   6500.0,
+   100.0,
+   3320.0
+  ],
+  "max": [
+   6900.0,
+   900.0,
+   3400.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 168 Brazier",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   6800.0,
+   800.0,
+   3420.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   6775.0,
+   775.0,
+   3400.0
+  ],
+  "max": [
+   6825.0,
+   825.0,
+   3440.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 169 Torch Light",
+  "folder": "Area1/D Great Tower",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6800.0,
+   800.0,
+   3480.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6800.0,
+   800.0,
+   3480.0
+  ],
+  "max": [
+   6800.0,
+   800.0,
+   3480.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 170 Pressure Plate",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_Lever_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6700.0,
+   300.0,
+   3400.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6610.0,
+   210.0,
+   3400.0
+  ],
+  "max": [
+   6790.0,
+   390.0,
+   3540.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 171 Sliding Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6050.0,
+   1000.0,
+   3500.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.0,
+   0.6
+  ],
+  "min": [
+   5950.0,
+   900.0,
+   3440.0
+  ],
+  "max": [
+   6150.0,
+   1100.0,
+   3500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 172 Sliding Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   5500.0,
+   1000.0,
+   3600.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.0,
+   0.6
+  ],
+  "min": [
+   5400.0,
+   900.0,
+   3540.0
+  ],
+  "max": [
+   5600.0,
+   1100.0,
+   3600.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 173 Sliding Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   5000.0,
+   270.0,
+   3700.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.0,
+   2.0,
+   0.6
+  ],
+  "min": [
+   4900.0,
+   170.0,
+   3640.0
+  ],
+  "max": [
+   5100.0,
+   370.0,
+   3700.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 174 Story 4 Balcony",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   5300.0,
+   -540.0,
+   3760.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   4.0,
+   7.2,
+   0.8
+  ],
+  "min": [
+   5100.0,
+   -900.0,
+   3720.0
+  ],
+  "max": [
+   5500.0,
+   -180.0,
+   3800.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 175 Story 4 Balcony",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   5650.0,
+   -700.0,
+   3760.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   11.0,
+   4.0,
+   0.8
+  ],
+  "min": [
+   5100.0,
+   -900.0,
+   3720.0
+  ],
+  "max": [
+   6200.0,
+   -500.0,
+   3800.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 176 Brazier",
+  "folder": "Area1/D Great Tower",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   5300.0,
+   -800.0,
+   3820.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   5275.0,
+   -825.0,
+   3800.0
+  ],
+  "max": [
+   5325.0,
+   -775.0,
+   3840.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 177 Torch Light",
+  "folder": "Area1/D Great Tower",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   5300.0,
+   -800.0,
+   3880.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   5300.0,
+   -800.0,
+   3880.0
+  ],
+  "max": [
+   5300.0,
+   -800.0,
+   3880.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 178 Fading Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_TimedPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6700.0,
+   -600.0,
+   3890.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6550.0,
+   -750.0,
+   3880.0
+  ],
+  "max": [
+   6850.0,
+   -450.0,
+   3900.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 179 Fading Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_TimedPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6700.0,
+   50.0,
+   3990.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6550.0,
+   -100.0,
+   3980.0
+  ],
+  "max": [
+   6850.0,
+   200.0,
+   4000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 180 Fading Stone",
+  "folder": "Area1/D Great Tower",
+  "class": "BP_TimedPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   6700.0,
+   680.0,
+   4090.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   6550.0,
+   530.0,
+   4080.0
+  ],
+  "max": [
+   6850.0,
+   830.0,
+   4100.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 181 Broken Bridge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   7500.0,
+   450.0,
+   100.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   4.0,
+   5.0,
+   82.0
+  ],
+  "min": [
+   7300.0,
+   200.0,
+   -4000.0
+  ],
+  "max": [
+   7700.0,
+   700.0,
+   4200.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 182 Overhang",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   8050.0,
+   0.0,
+   6400.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   7.0,
+   40.0,
+   2.0
+  ],
+  "min": [
+   7700.0,
+   -2000.0,
+   6300.0
+  ],
+  "max": [
+   8400.0,
+   2000.0,
+   6500.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 183 Crumbling Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "BP_FallingFloor_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   8250.0,
+   450.0,
+   4250.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   8100.0,
+   300.0,
+   4240.0
+  ],
+  "max": [
+   8400.0,
+   600.0,
+   4290.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 184 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -140.0,
+   4320.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -230.0,
+   4280.0
+  ],
+  "max": [
+   8400.0,
+   -50.0,
+   4360.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 185 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -670.0,
+   4420.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -760.0,
+   4380.0
+  ],
+  "max": [
+   8400.0,
+   -580.0,
+   4460.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 186 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -1200.0,
+   4520.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -1290.0,
+   4480.0
+  ],
+  "max": [
+   8400.0,
+   -1110.0,
+   4560.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 187 Cliff Lift",
+  "folder": "Area1/E Cliff",
+  "class": "BP_MovingPlatform_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   8250.0,
+   -1790.0,
+   4550.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   8100.0,
+   -1940.0,
+   4540.0
+  ],
+  "max": [
+   8400.0,
+   -1640.0,
+   4560.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 188 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -1200.0,
+   5520.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -1290.0,
+   5480.0
+  ],
+  "max": [
+   8400.0,
+   -1110.0,
+   5560.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 189 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -670.0,
+   5620.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -760.0,
+   5580.0
+  ],
+  "max": [
+   8400.0,
+   -580.0,
+   5660.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 190 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   -140.0,
+   5720.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   -230.0,
+   5680.0
+  ],
+  "max": [
+   8400.0,
+   -50.0,
+   5760.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 191 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   390.0,
+   5820.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   300.0,
+   5780.0
+  ],
+  "max": [
+   8400.0,
+   480.0,
+   5860.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 192 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   1040.0,
+   4320.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   950.0,
+   4280.0
+  ],
+  "max": [
+   8400.0,
+   1130.0,
+   4360.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 193 Cliff Ledge",
+  "folder": "Area1/E Cliff",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsPale",
+  "location": [
+   8310.0,
+   1570.0,
+   4420.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.8,
+   1.8,
+   0.8
+  ],
+  "min": [
+   8220.0,
+   1480.0,
+   4380.0
+  ],
+  "max": [
+   8400.0,
+   1660.0,
+   4460.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 194 Star Coin",
+  "folder": "Area1/E Cliff",
+  "class": "BP_StarCoin_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   8310.0,
+   1570.0,
+   4560.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   8230.0,
+   1490.0,
+   4480.0
+  ],
+  "max": [
+   8390.0,
+   1650.0,
+   4640.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 195 Cliff and Courtyard",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   10450.0,
+   0.0,
+   980.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   41.0,
+   40.0,
+   99.6
+  ],
+  "min": [
+   8400.0,
+   -2000.0,
+   -4000.0
+  ],
+  "max": [
+   12500.0,
+   2000.0,
+   5960.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 196 Great Wall",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsDark",
+  "location": [
+   13200.0,
+   0.0,
+   1630.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   14.0,
+   26.0,
+   112.6
+  ],
+  "min": [
+   12500.0,
+   -1300.0,
+   -4000.0
+  ],
+  "max": [
+   13900.0,
+   1300.0,
+   7260.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 197 Column",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   9000.0,
+   1600.0,
+   6110.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   3.0
+  ],
+  "min": [
+   8955.0,
+   1555.0,
+   5960.0
+  ],
+  "max": [
+   9045.0,
+   1645.0,
+   6260.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 198 Column",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   9800.0,
+   -1600.0,
+   6185.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   4.5
+  ],
+  "min": [
+   9755.0,
+   -1645.0,
+   5960.0
+  ],
+  "max": [
+   9845.0,
+   -1555.0,
+   6410.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 199 Column",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   10600.0,
+   1600.0,
+   6060.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   2.0
+  ],
+  "min": [
+   10555.0,
+   1555.0,
+   5960.0
+  ],
+  "max": [
+   10645.0,
+   1645.0,
+   6160.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 200 Column",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsPale",
+  "location": [
+   11400.0,
+   -1600.0,
+   6150.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.9,
+   0.9,
+   3.8
+  ],
+  "min": [
+   11355.0,
+   -1645.0,
+   5960.0
+  ],
+  "max": [
+   11445.0,
+   -1555.0,
+   6340.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 201 Lever",
+  "folder": "Area1/F Courtyard",
+  "class": "BP_Lever_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   9100.0,
+   -600.0,
+   5960.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   89.99999999999999
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   8980.0,
+   -720.0,
+   5960.0
+  ],
+  "max": [
+   9220.0,
+   -480.0,
+   6160.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 202 Giant Step 01",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   9970.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   1.3
+  ],
+  "min": [
+   9860.0,
+   -350.0,
+   5820.0
+  ],
+  "max": [
+   10080.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 203 Giant Step 02",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   10190.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   2.3
+  ],
+  "min": [
+   10080.0,
+   -350.0,
+   5720.0
+  ],
+  "max": [
+   10300.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 204 Giant Step 03",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   10410.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   3.3
+  ],
+  "min": [
+   10300.0,
+   -350.0,
+   5620.0
+  ],
+  "max": [
+   10520.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 205 Giant Step 04",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   10630.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   4.3
+  ],
+  "min": [
+   10520.0,
+   -350.0,
+   5520.0
+  ],
+  "max": [
+   10740.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 206 Giant Step 05",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   10850.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   5.3
+  ],
+  "min": [
+   10740.0,
+   -350.0,
+   5420.0
+  ],
+  "max": [
+   10960.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 207 Giant Step 06",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11070.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   6.3
+  ],
+  "min": [
+   10960.0,
+   -350.0,
+   5320.0
+  ],
+  "max": [
+   11180.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 208 Giant Step 07",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11290.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   7.3
+  ],
+  "min": [
+   11180.0,
+   -350.0,
+   5220.0
+  ],
+  "max": [
+   11400.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 209 Giant Step 08",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11510.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   8.3
+  ],
+  "min": [
+   11400.0,
+   -350.0,
+   5120.0
+  ],
+  "max": [
+   11620.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 210 Giant Step 09",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11730.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   9.3
+  ],
+  "min": [
+   11620.0,
+   -350.0,
+   5020.0
+  ],
+  "max": [
+   11840.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 211 Giant Step 10",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11950.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   10.3
+  ],
+  "min": [
+   11840.0,
+   -350.0,
+   4920.0
+  ],
+  "max": [
+   12060.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 212 Giant Step 11",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   12170.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   11.3
+  ],
+  "min": [
+   12060.0,
+   -350.0,
+   4820.0
+  ],
+  "max": [
+   12280.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 213 Giant Step 12",
+  "folder": "Area1/F Courtyard/Steps",
+  "class": "BP_Mechanism_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   12390.0,
+   0.0,
+   5950.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   2.2,
+   7.0,
+   12.3
+  ],
+  "min": [
+   12280.0,
+   -350.0,
+   4720.0
+  ],
+  "max": [
+   12500.0,
+   350.0,
+   5950.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 214 Gate Tower",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   13000.0,
+   -450.0,
+   7660.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   8.0
+  ],
+  "min": [
+   12850.0,
+   -600.0,
+   7260.0
+  ],
+  "max": [
+   13150.0,
+   -300.0,
+   8060.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 215 Gate Tower",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   13000.0,
+   450.0,
+   7660.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   3.0,
+   8.0
+  ],
+  "min": [
+   12850.0,
+   300.0,
+   7260.0
+  ],
+  "max": [
+   13150.0,
+   600.0,
+   8060.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 216 Gate Lintel",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cube.Cube",
+  "material": "MI_RuinsStone",
+  "location": [
+   13000.0,
+   0.0,
+   8110.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   3.0,
+   12.0,
+   1.0
+  ],
+  "min": [
+   12850.0,
+   -600.0,
+   8060.0
+  ],
+  "max": [
+   13150.0,
+   600.0,
+   8160.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 217 Exit",
+  "folder": "Area1/F Courtyard",
+  "class": "BP_AreaExit_C",
+  "mesh": null,
+  "material": null,
+  "location": [
+   13000.0,
+   0.0,
+   7260.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   180.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   12890.0,
+   -131.53846740722656,
+   7260.0
+  ],
+  "max": [
+   13110.0,
+   131.53846740722656,
+   7580.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 218 Show Camera",
+  "folder": "Area1/F Courtyard",
+  "class": "CameraActor",
+  "mesh": null,
+  "material": null,
+  "location": [
+   11048.0,
+   -2800.0,
+   6860.0
+  ],
+  "rotation": [
+   8.614435800231229e-08,
+   -7.318367084732928,
+   87.30091159663279
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "max": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 219 Brazier",
+  "folder": "Area1/F Courtyard",
+  "class": "StaticMeshActor",
+  "mesh": "/Engine/BasicShapes/Cylinder.Cylinder",
+  "material": "MI_RuinsEmber",
+  "location": [
+   9100.0,
+   -300.0,
+   5980.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   0.5,
+   0.5,
+   0.4
+  ],
+  "min": [
+   9075.0,
+   -325.0,
+   5960.0
+  ],
+  "max": [
+   9125.0,
+   -275.0,
+   6000.0
+  ],
+  "hidden": false
+ },
+ {
+  "label": "A1 220 Torch Light",
+  "folder": "Area1/F Courtyard",
+  "class": "PointLight",
+  "mesh": null,
+  "material": null,
+  "location": [
+   9100.0,
+   -300.0,
+   6040.0
+  ],
+  "rotation": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "scale": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "min": [
+   9100.0,
+   -300.0,
+   6040.0
+  ],
+  "max": [
+   9100.0,
+   -300.0,
+   6040.0
+  ],
+  "hidden": false
+ }
+]
