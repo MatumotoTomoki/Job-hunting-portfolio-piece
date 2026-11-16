@@ -1,13 +1,11 @@
-# Builds /Game/LV_Area4_Heaven, the last area: heaven above the sky, from where area 3 ends (226.1 m). The longest area
-# (about 25 minutes) and the one with every kind of gimmick: a hub (Heaven's Plaza) and three wings played in any order,
-# each with more than one way through and a lever at its end that sinks one of the three doors of the great gate. The
-# route itself is area4_layout.py (checked jump by jump there; see its header for what is where); this places it, with
-# the gimmicks of areas 1-3: vanishing clouds, wind and updrafts, moving islands, the sun, spinning gears, red and
-# blue switch blocks, flipping floors, gondolas, cage traps, the speed item, the time rewind area, pressure plate
-# stones, flame jets, the heaven-or-hell birdcages, ledge-grab climbs, fading steps, crumbling floors, pistons.
-# Three checkpoint flags, five star coins. Behind the last door: the goal spot (a placeholder for the ending).
+# Builds /Game/LV_Area4_Heaven, the last area: "heaven that lost its light", from where area 3 ends (226.1 m). The
+# route is area4_layout.py (checked jump by jump there; its header says what is where): spider threads up to a dim
+# plaza, three wings in any order (jewel forest, upside down, memories) each ending in a light shard, then the Iwato
+# opens, the level lights up, and the wings carry the player up to Heaven's Gate (the goal, a placeholder).
+# Area 4's own gimmicks (Gimmicks/Heaven): BP_LightBeam / BP_LightPlatform, BP_ChimeJewel, BP_SpiderThread,
+# BP_GravityZone, BP_LightShard, BP_Iwato, BP_Wings; older ones as supporting cast. Four flags, five star coins.
 # Everything placed here is labelled "A4 ..." and rebuilt on every run; the placeholder's actors go too. Run
-# setup_area4_assets.py first. With the editor closed:
+# setup_area4_assets.py and the setup_heaven_*.py scripts first. With the editor closed:
 #   UnrealEditor-Cmd.exe <full path>\JobHunting.uproject -run=pythonscript -script=<full path>\build_area4_heaven.py -unattended -nop4 -nosplash -stdout
 import math
 import os
@@ -105,7 +103,7 @@ lines.append("flipping floor {:.0f} across, top {:.0f} above its origin".format(
 move = player_defaults().get_editor_property("character_movement")
 PLAT = elevator_half()
 route = area4_layout.build(B, move.get_editor_property("jump_z_velocity"), 980.0 * move.get_editor_property("gravity_scale"),
-                           move.get_editor_property("max_walk_speed"), 2.0 * PLAT.x, ROT_SIZE)
+                           move.get_editor_property("max_walk_speed"), 2.0 * PLAT.x)
 lines.append("jump {:.0f}, walk {:.0f}, platform {:.0f}".format(move.get_editor_property("jump_z_velocity"), move.get_editor_property("max_walk_speed"), 2.0 * PLAT.x))
 
 CLOUD_MESH = load(SKY + "/SM_SkyCloud")
@@ -242,6 +240,29 @@ for piece in route.pieces:
             lever.set_editor_property("ShowCamera", None)
             lever.set_editor_property("ResetAfter", reset)
         levers[name] = lever
+    elif piece[0] == "hidden_lever":
+        # Pulled by a script (the Iwato), never by the player: out of reach and unseen.
+        _, name, x, y, z = piece
+        folder[0] = section
+        lever = spawn(bp_class(AREA + "/BP_Lever"), unreal.Vector(x, y, z), "Hidden Lever " + name)
+        lever.set_actor_hidden_in_game(True)
+        levers[name] = lever
+# The light beams, which light platforms point at.
+beams = {}
+section = "Spots"
+for piece in route.pieces:
+    if piece[0] == "section":
+        section = piece[1]
+    elif piece[0] == "beam":
+        _, name, x, y, z0, z1, width, on, off, delay, offset, seconds = piece
+        folder[0] = section
+        beam = spawn(bp_class(HEAVEN + "/BP_LightBeam"), unreal.Vector(x, y, (z0 + z1) / 2.0), "Light Beam " + name)
+        beam.set_actor_scale3d(unreal.Vector(width / 100.0, width / 100.0, (z1 - z0) / 100.0))
+        configure(beam, (("OnSeconds", on), ("OffSeconds", off), ("StartDelay", delay),
+                         ("MoveOffset", unreal.Vector(*offset)), ("MoveSeconds", seconds)))
+        beams[name] = beam
+shards = {}
+iwato_pieces = []
 
 # ----- everything else -----
 coins = 0
@@ -249,12 +270,72 @@ for piece in route.pieces:
     kind = piece[0]
     if kind == "section":
         folder[0] = piece[1]
-    elif kind in ("spot", "lever"):
+    elif kind in ("spot", "lever", "hidden_lever", "beam"):
         pass
+    elif kind == "iwato":
+        iwato_pieces.append((piece, folder[0]))
+    elif kind == "under":
+        _, x0, x1, y0, y1, under, thick, look, name = piece
+        box(x0, x1, y0, y1, under, under + thick, name, LOOKS[look])
+    elif kind == "lplat":
+        _, beam_name, x, y, top, size = piece
+        actor = spawn(bp_class(HEAVEN + "/BP_LightPlatform"), unreal.Vector(x, y, top - 20.0), "Light Platform")
+        actor.set_actor_scale3d(unreal.Vector(size / 100.0, size / 100.0, 0.4))
+        actor.set_editor_property("Beam", beams[beam_name])
+    elif kind == "jewel":
+        _, x, y, top, radius, start_beat, ring, loop, beat, pitch = piece
+        actor = spawn(bp_class(HEAVEN + "/BP_ChimeJewel"), unreal.Vector(x, y, top - 20.0), "Chime Jewel")
+        actor.set_actor_scale3d(unreal.Vector(2.0 * radius / 100.0, 2.0 * radius / 100.0, 0.4))
+        configure(actor, (("BeatSeconds", beat), ("LoopBeats", int(loop)), ("StartBeat", int(start_beat)),
+                          ("RingBeats", int(ring)), ("Pitch", pitch)))
+    elif kind == "thread":
+        _, x, y, anchor, length, swing, seconds, offset, hold, facing = piece
+        actor = spawn(bp_class(HEAVEN + "/BP_SpiderThread"), unreal.Vector(x, y, anchor), "Spider Thread", yaw(facing))
+        configure(actor, (("Length", length), ("SwingDegrees", swing), ("SwingSeconds", seconds), ("SwingOffset", offset),
+                          ("HoldSeconds", hold)))
+        mesh_actor(unreal.load_asset(SPHERE), unreal.Vector(x, y, anchor + 30.0), unreal.Vector(0.6, 0.6, 0.6), "Thread Knot", LOOKS["glow"], collide=False)
+    elif kind == "gzone":
+        _, x0, x1, y0, y1, z0, z1, direction = piece
+        actor = spawn(bp_class(HEAVEN + "/BP_GravityZone"), unreal.Vector((x0 + x1) / 2.0, (y0 + y1) / 2.0, (z0 + z1) / 2.0), "Gravity Zone")
+        actor.set_actor_scale3d(unreal.Vector((x1 - x0) / 100.0, (y1 - y0) / 100.0, (z1 - z0) / 100.0))
+        actor.set_editor_property("Direction", unreal.Vector(*direction))
+    elif kind == "gear_flip":
+        _, x, y, under, r, spin = piece
+        actor = spawn(bp_class(MACHINE + "/BP_SpinGear"), unreal.Vector(x, y, under + 15.0), "Upside-down Gear",
+                      unreal.Rotator(roll=180.0, pitch=0.0, yaw=0.0))
+        actor.set_actor_scale3d(unreal.Vector(r / 100.0, r / 100.0, 1.0))
+        actor.set_editor_property("SpinSpeed", spin)
+        box(x - 18.0, x + 18.0, y - 18.0, y + 18.0, under + 40.0, under + 1500.0, "Axle", IRON, CYLINDER)
+    elif kind == "sblock_flip":
+        _, x, y, under, size, red = piece
+        thick = 60.0
+        actor = spawn(bp_class(MACHINE + "/BP_SwitchBlock"), unreal.Vector(x, y, under + thick / 2.0), "Red Block" if red else "Blue Block")
+        actor.set_actor_scale3d(unreal.Vector(size / 100.0, size / 100.0, thick / 100.0))
+        actor.set_editor_property("IsRed", red)
+        for component in actor.get_components_by_class(unreal.StaticMeshComponent):
+            solid = component.get_name().startswith("Solid")
+            component.set_material(0, (RED_SOLID if red else BLUE_SOLID) if solid else (RED_GHOST if red else BLUE_GHOST))
+    elif kind == "switch_flip":
+        _, x, y, under = piece
+        spawn(bp_class(MACHINE + "/BP_ToggleSwitch"), unreal.Vector(x, y, under), "Ceiling Switch", unreal.Rotator(roll=180.0, pitch=0.0, yaw=0.0))
+    elif kind == "timed_flip":
+        _, x, y, under, delay = piece
+        actor = spawn(bp_class(GIMMICKS + "/BP_TimedPlatform"), unreal.Vector(x, y, under + PLAT.z), "Fading Ceiling Step")
+        configure(actor, (("VisibleSeconds", 1.8), ("HiddenSeconds", 1.2), ("FadeSeconds", 0.4), ("StartDelay", delay)))
+    elif kind == "shard":
+        _, name, x, y, top = piece
+        shards[name] = spawn(bp_class(HEAVEN + "/BP_LightShard"), unreal.Vector(x, y, top + 120.0), "Light Shard " + name)
+    elif kind == "wings":
+        _, x, y, top = piece
+        spawn(bp_class(HEAVEN + "/BP_Wings"), unreal.Vector(x, y, top + 60.0), "Wings")
     elif kind == "start":
         _, x, y, top, facing = piece
         spawn(unreal.PlayerStart, unreal.Vector(x, y, top + 100.0), "PlayerStart", yaw(facing))
-        spawn(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(x + 300.0, y, top + 200.0), "Area Start")
+        area_start = spawn(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(x + 300.0, y, top + 200.0), "Area Start")
+        try:
+            area_start.set_editor_property("AreaCoins", sum(1 for p in route.pieces if p[0] == "coin"))
+        except Exception as error:
+            lines.append("AreaCoins not set: {}".format(error))
         spawn(bp_class("/Effekseer/BluePrints/BP_EffekseerSystem"), unreal.Vector(0.0, 0.0, 0.0), "Effekseer System")
     elif kind == "block":
         _, x0, x1, y0, y1, z0, z1, look, name = piece
@@ -286,9 +367,13 @@ for piece in route.pieces:
         actor = spawn(bp_class(SKY + "/BP_MovingIsland"), unreal.Vector(x, y, top), "Moving Island")
         configure(actor, (("MoveOffset", unreal.Vector(*offset)), ("MoveSeconds", seconds), ("WaitSeconds", wait)))
     elif kind == "moving":
-        _, x, y, top, offset, seconds, wait = piece
-        platform(GIMMICKS + "/BP_MovingPlatform", x, y, top, "Piston" if offset[2] else "Moving Platform",
-                 (("MoveOffset", unreal.Vector(*offset)), ("MoveSeconds", seconds), ("WaitSeconds", wait)))
+        _, x, y, top, offset, seconds, wait = piece[:7]
+        actor = platform(GIMMICKS + "/BP_MovingPlatform", x, y, top, "Piston" if offset[2] else "Moving Platform",
+                         (("MoveOffset", unreal.Vector(*offset)), ("MoveSeconds", seconds), ("WaitSeconds", wait)))
+        if len(piece) > 7:
+            # Wider: scaled across only, so the straight-up move keeps its height.
+            across = piece[7] / (2.0 * PLAT.x)
+            actor.set_actor_scale3d(unreal.Vector(across, across, 1.0))
     elif kind == "timed":
         _, x, y, top, delay = piece
         platform(GIMMICKS + "/BP_TimedPlatform", x, y, top, "Fading Step",
@@ -344,9 +429,17 @@ for piece in route.pieces:
         actor = spawn(bp_class(HELL + "/BP_FlameJet"), unreal.Vector(x, y, top), "Flame Jet", yaw(facing))
         configure(actor, (("StartDelay", delay), ("WarnSeconds", warn), ("BurnSeconds", burn), ("OffSeconds", off), ("RespawnLocation", spots[respawn])))
     elif kind == "sun":
-        _, x, y, top, respawn = piece
-        actor = spawn(bp_class(GIMMICKS + "/Sun/BP_Sun"), unreal.Vector(x, y, top), "Sun")
+        _, x, y, top, respawn = piece[:5]
+        # A sun with a bigger range (the layout gives its size) is BP_TowerSun, made by setup_tower_sun.py: sizes set
+        # on a placed BP_Sun's components did not stick.
+        path = HEAVEN + "/BP_TowerSun" if len(piece) > 5 else GIMMICKS + "/Sun/BP_Sun"
+        actor = spawn(bp_class(path), unreal.Vector(x, y, top), "Sun")
         actor.set_editor_property("RespawnPoint", spot_points[respawn])
+        if len(piece) > 5:
+            actor.set_editor_property("GrabChance", 0.3)   # (the user's choice for the tower, 2026-11-16)
+            # Where it is about to land, shown on the ground while it aims and charges (setup_sun_marker.py).
+            marker = spawn(bp_class(HEAVEN + "/BP_SunMarker"), unreal.Vector(x, y, top), "Sun Marker")
+            marker.set_editor_property("Sun", actor)
     elif kind == "rewind":
         _, x, y, top = piece
         actor = spawn(bp_class(GIMMICKS + "/BP_TimeRewindArea"), unreal.Vector(x, y, top), "Time Rewind Area")
@@ -421,7 +514,21 @@ for piece in route.pieces:
     else:
         raise RuntimeError("Unknown piece " + kind)
 
-# ===== sky: bright heaven above a sea of mist =====
+# ----- the Iwato, once its shards are placed: dim until all three are taken, then the sun as set below -----
+for piece, where in iwato_pieces:
+    _, x, y, z, facing, lever_name, eye, look_at = piece
+    folder[0] = where
+    eye_v, look_v = unreal.Vector(*eye), unreal.Vector(*look_at)
+    camera = spawn(unreal.CameraActor, eye_v, "Iwato Camera", unreal.MathLibrary.find_look_at_rotation(eye_v, look_v))
+    camera.get_editor_property("camera_component").set_editor_property("constrain_aspect_ratio", False)
+    keeper = spawn(bp_class(HEAVEN + "/BP_Iwato"), unreal.Vector(x, y, z), "Iwato", yaw(facing))
+    configure(keeper, (("Shard1", shards["shard1"]), ("Shard2", shards["shard2"]), ("Shard3", shards["shard3"]),
+                       ("Lever", levers[lever_name]), ("ShowCamera", camera), ("ShowSeconds", 7.0), ("BlendSeconds", 5.0),
+                       ("DarkRotation", unreal.Rotator(roll=0.0, pitch=-3.0, yaw=115.0)),
+                       ("BrightRotation", unreal.Rotator(roll=0.0, pitch=-62.0, yaw=115.0)),
+                       ("DarkSun", 0.5), ("BrightSun", 10.0), ("DarkSky", 0.2), ("BrightSky", 1.5)))
+
+# ===== sky: bright heaven above a sea of mist (dimmed by the Iwato until it opens) =====
 folder[0] = "Sky"
 sun = spawn(unreal.DirectionalLight, unreal.Vector(0.0, 0.0, B + 9000.0), "Sun", unreal.Rotator(roll=0.0, pitch=-62.0, yaw=115.0))
 sun_light = sun.get_editor_property("directional_light_component")

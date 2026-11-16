@@ -1,86 +1,107 @@
 # The heaven area's (area 4, the last one) route as plain data, checked jump by jump; build_area4_heaven.py places it.
 # No Unreal here, so it can be checked on its own:
 #   python area4_layout.py          (prints every jump; fails on one out of reach)
-# A hub and three wings, played in any order; each wing ends in a lever that sinks one of the three doors of the great
-# gate (the area's big mechanism). Behind the last door: the sanctum, where the goal will be (a placeholder for now).
-#   Hub  Heaven's Plaza   the start; exits west (Sky Spire), east (Golden Clockwork), south (Underworks); the gate on the
-#                         north: a sealed building with the three doors one behind the other. Star coin 4 on a pinnacle
-#                         beside the gate roof (where the Sky Spire's gondola comes back).
-#   West Sky Spire (up)   vanishing clouds, an island ferry, flag 1 on the fork island; up to the sun terrace either by a
-#                         gusty updraft (quick) or a spiral of clouds and fading steps (safe); across it either riding the
-#                         sun's launch (quick) or a ledge-grab tower (safe); crosswind beams (a trap island, star coin 1
-#                         downwind), headwind storm steps, the summit with lever 1; a gondola back to the gate roof.
-#   East Golden Clockwork spinning gears down to the switch hall (flag 2); two ways north: red blocks and flipping
-#        (down, then up) floors, or a switch flip, blue blocks and a long narrow beam; the clock landing (time rewind);
-#                         a gondola north and up to the balcony (a cage trap doorway, the speed item on a dead end,
-#                         star coin 2 over a gap only a speed run clears); west by a piston and gears to the clock top with
-#                         lever 2, which also raises a brass stair back down to the plaza.
-#   South Underworks      a dark hall hanging under the plaza, lit by shafts of light through glazed holes in its roof.
-#        (down, then up)  Down either by drop ledges (a hidden ledge with star coin 5) or a slow lift; flag 3; over the
-#                         pit either along a flame bridge or on stones a pressure plate raises for a while; up either
-#                         through the heaven-or-hell birdcages or a ledge-grab chimney; star coin 3 past flame jets on
-#                         the gallery; fading steps and a piston up to lever 3, which raises a stone bridge back to the
-#                         entrance.
-# Pieces (heights are the top a player stands on unless said otherwise; x, y the middle):
-#   area 3's: island, cloud, vanish, mover, timed, falling, wind, coin, flag, trap, lure, sign, marble
-#   ("block", x0, x1, y0, y1, z0, z1, look, name)    a solid box; looks: marble, gold, stone, darkstone, sky, ember, glow
-#   ("glass", x0, x1, y0, y1, z0, z1)                 an unseen solid box
-#   ("disk", x, y, top, r, thick, look, name)         a solid cylinder
-#   ("gear", x, y, top, r, spin), ("sblock", x, y, top, size, red), ("switch", x, y, top)
-#   ("moving", x, y, top, (dx, dy, dz), seconds, wait)   BP_MovingPlatform; ("rotating", x, y, top) BP_RotatingFloor
-#   ("gondola", x, y, top, (dx, dy, dz), seconds)
-#   ("flame", x, y, top, yaw, delay, warn, burn, off, respawn)    respawn: a spot's name
-#   ("sun", x, y, top, respawn), ("rewind", x, y, top), ("cages", x, y, top, (x, y, z) destination, pair id)
-#   ("speed", x, y, top), ("spot", name, x, y, top)   a named respawn point
-#   ("lever", name, x, y, top, yaw, reset)            reset > 0: a pressure plate that springs back after that long
-#   ("mech", lever, x, y, top, (sx, sy, sz), (dx, dy, dz), delay, seconds, back, look, name)
-#                                                     BP_Mechanism, origin on its top; back: None or (after, seconds)
-#   ("door", lever, x, y, (sx, sy, sz), look)         a gate door that sinks into the floor when the lever is pulled
-#   ("camera", lever, (x, y, z) eye, (x, y, z) look, seconds)
-#   ("shaft", x, y, z_top, z_bottom, r)               a shaft of light (glow cylinder + spot light)
-#   ("lamp", x, y, z, (r, g, b)), ("start", x, y, top, yaw), ("goal", x, y, top), ("catcher", x0, x1, y0, y1, z)
-#   ("island_deco", x, y, top, size), ("section", name)
+# "Heaven that lost its light", climbed layer on layer (agreed 2026-11-15: a climbing game ends climbing). The light has
+# hidden in the Iwato on top of the dark tower; heaven is dim until it opens.
+#   1 Spider Threads  from area 3's cloud sea up three threads (two swinging, two that snap) to the forest's floor; a
+#                     star coin on a perch only a leap off the second thread reaches.
+#   2 Jewel Forest    south, climbing: a melody stair, vanishing clouds in a crosswind, flag 1; two ways up: a rising
+#                     melody net (timing) or marble posts (precision); a fast rising melody to shard 1 (a star coin on a
+#                     jewel that rings rarely); a thread up to the next layer.
+#   3 Upside Down     east, climbing by falling up: walk off a ledge into a gravity zone, fall up to the ceiling, cross it
+#                     upside down, walk out of the zone and drop onto a ledge higher than the last. Flag 2 on the first
+#                     landing; two lanes for the middle two zones (gears, gaps and fading steps / red and blue blocks
+#                     with a ceiling switch); shard 2 on the last landing; a star coin on a side ceiling.
+#   4 Dark Tower      inside, two ways to the middle floor (flag 3): light platforms blinking one after another, or dark
+#                     ledges and ledge grabs; then platforms lit by two beams in turn, a sweeping beam and a last climb
+#                     to the top floor (shard 3) and up through a hole onto the roof. A star coin on a rarely lit
+#                     platform.
+#   5 Iwato           on the roof: the rock blocks the way to the sky; all three shards open it, the level lights up,
+#                     the wings lie behind it (flag 4).
+#   6 Heaven's Gate   glide out to updrafts and ride them up island by island to the gate (the goal, a placeholder);
+#                     a star coin on a side island.
+# Pieces (heights are the top a player stands on unless said otherwise; x, y the middle). As in area 3 / the first
+# area 4 (see git) plus:
+#   ("beam", name, x, y, z0, z1, width, on, off, delay, (dx, dy, dz), move_seconds)     BP_LightBeam
+#   ("lplat", beam, x, y, top, size)                     BP_LightPlatform (40 thick), solid while its beam is lit
+#   ("jewel", x, y, top, r, start, ring, loop, beat, pitch)   BP_ChimeJewel (40 thick)
+#   ("thread", x, y, anchor, length, swing_deg, swing_sec, offset, hold, yaw)   BP_SpiderThread (yaw turns the swing)
+#   ("gzone", x0, x1, y0, y1, z0, z1, (dx, dy, dz))      BP_GravityZone
+#   ("under", x0, x1, y0, y1, under, thick, look, name)  a slab walked on upside down: `under` is its underside
+#   ("gear_flip", x, y, under, r, spin), ("sblock_flip", x, y, under, size, red), ("switch_flip", x, y, under),
+#   ("timed_flip", x, y, under, delay), ("switch", x, y, top)
+#   ("shard", name, x, y, top), ("wings", x, y, top), ("hidden_lever", name, x, y, z)
+#   ("iwato", x, y, z, yaw, lever, (eye), (look))        BP_Iwato counting shards 1..3
 import math
 
 from area3_layout import Route as SkyRoute, rect, circle, middle, gap, beyond
 
 HARD, MID, EASY = 0.9, 0.75, 0.6
 GRAB_MIN, GRAB_MAX = 160.0, 230.0
-SPEED_ITEM_SPEED = 1500.0
 E, N, W, S = (1, 0), (0, 1), (-1, 0), (0, -1)
+PENTA = (1.0, 9.0 / 8.0, 5.0 / 4.0, 3.0 / 2.0, 5.0 / 3.0, 2.0)
+THREAD_HANG = 210.0          # a player at the top of a thread stands this far below its anchor
+LEAP_SIDE, LEAP_UP = 450.0, 520.0
+GLIDE_FALL = 160.0
 
 
 class Route(SkyRoute):
-    def __init__(self, base, jump_z, gravity, walk, plat, rot):
+    def __init__(self, base, jump_z, gravity, walk, plat):
         SkyRoute.__init__(self, base, jump_z, gravity, walk, plat)
-        self.rot = rot
 
     # ----- checks -----
     def jump(self, name, a, b, rise, ratio=HARD):
-        # As area 3's, with a centimetre to spare for pieces placed at exactly the checked ratio.
         g = gap(a, b)
         limit = ratio * self.reach(rise) + 1.0
         self.checks.append((name, g, rise, limit))
         if rise > 0.8 * self.apex or g > limit:
             raise RuntimeError("Out of reach: {} gap {:.0f} rise {:.0f} (limit {:.0f})".format(name, g, rise, limit))
 
+    def flipped(self, name, a, a_under, b, b_under, ratio=HARD):
+        # A jump walking upside down: "up" is down in the world.
+        self.jump(name + " (upside down)", a, b, a_under - b_under, ratio)
+
     def at(self, previous, direction, ratio, rise, size_half, side=0.0):
-        # Where the next piece goes: `ratio` of the jump's reach clear of `previous`.
         return beyond(previous, direction, ratio * self.reach(rise), size_half, side)
 
     def grab(self, name, a, b, rise):
-        # Hanging from the ledge (Q) and climbing up: the wall right in front, a little too high to jump.
         g = gap(a, b)
         self.checks.append((name + " (grab)", g, rise, 60.0))
         if not GRAB_MIN <= rise <= GRAB_MAX or g > 60.0:
             raise RuntimeError("Can't grab: {} gap {:.0f} rise {:.0f}".format(name, g, rise))
 
     def walk_on(self, name, a, b, rise=0.0):
-        # Joined pieces: walked across, at most a small step up.
         g = gap(a, b)
         self.checks.append((name + " (walk)", g, rise, 40.0))
         if g > 40.0 or rise > 60.0:
             raise RuntimeError("Not joined: {} gap {:.0f} rise {:.0f}".format(name, g, rise))
+
+    def catch(self, name, a, a_top, x, y, bottom, ratio=HARD):
+        # Jumping off a ledge at a thread: its bottom must hang no higher than a jump, it must be in reach.
+        g = gap(a, circle(x, y, 40.0))
+        limit = ratio * self.reach(0.0) + 1.0
+        self.checks.append((name + " (catch)", g, bottom - a_top, limit))
+        if bottom > a_top + 150.0 or g > limit:
+            raise RuntimeError("Can't catch: {} gap {:.0f}, thread bottom {:.0f} over the ledge".format(name, g, bottom - a_top))
+
+    def leap(self, name, x, y, anchor, b, b_top, ratio=HARD):
+        # Letting go at the top of a thread: launched LEAP_SIDE along, LEAP_UP up (the swing not counted).
+        rise = b_top - (anchor - THREAD_HANG)
+        up = LEAP_UP * LEAP_UP / (2.0 * self.gravity)
+        g = gap(circle(x, y, 40.0), b)
+        limit = 0.0 if rise > 0.8 * up else ratio * LEAP_SIDE * (LEAP_UP / self.gravity + math.sqrt(2.0 * (up - rise) / self.gravity)) + 1.0
+        self.checks.append((name + " (leap)", g, rise, limit))
+        if g > limit:
+            raise RuntimeError("Can't leap: {} gap {:.0f} rise {:.0f} (limit {:.0f})".format(name, g, rise, limit))
+
+    def glide(self, name, a, a_top, b, b_top, ratio=0.8):
+        # With the wings: a jump, then held to GLIDE_FALL on the way down.
+        drop = a_top - b_top
+        limit = 0.0 if drop < -0.6 * self.apex else ratio * self.walk * (self.jump_z / self.gravity + (self.apex + drop) / GLIDE_FALL) + 1.0
+        g = gap(a, b)
+        self.checks.append((name + " (glide)", g, -drop, limit))
+        if g > limit:
+            raise RuntimeError("Can't glide: {} gap {:.0f} drop {:.0f} (limit {:.0f})".format(name, g, drop, limit))
 
     # ----- pieces -----
     def block(self, x0, x1, y0, y1, z0, z1, look="marble", name="Block"):
@@ -91,21 +112,37 @@ class Route(SkyRoute):
         self.add("disk", x, y, top, r, thick, look, name)
         return circle(x, y, r)
 
-    def gear(self, x, y, top, r, spin):
-        self.add("gear", x, y, top, r, spin)
-        return circle(x, y, 0.92 * r)
+    def under(self, x0, x1, y0, y1, under, thick=100.0, look="stone", name="Ceiling"):
+        self.add("under", x0, x1, y0, y1, under, thick, look, name)
+        return ("rect", x0, x1, y0, y1)
 
-    def sblock(self, x, y, top, size, red):
-        self.add("sblock", x, y, top, size, red)
+    def jewel(self, x, y, top, r, start, ring=2, loop=8, beat=0.7, pitch=1.0):
+        self.add("jewel", x, y, top, r, start, ring, loop, beat, pitch)
+        return circle(x, y, r)
+
+    def lplat(self, beam, x, y, top, size):
+        self.add("lplat", beam, x, y, top, size)
         return rect(x, y, size)
 
-    def moving(self, x, y, top, offset, seconds, wait):
-        self.add("moving", x, y, top, offset, seconds, wait)
-        return rect(x, y, self.plat), rect(x + offset[0], y + offset[1], self.plat)
+    def beam(self, name, x, y, z0, z1, width, on=0.0, off=0.0, delay=0.0, move=(0.0, 0.0, 0.0), move_seconds=0.0):
+        self.add("beam", name, x, y, z0, z1, width, on, off, delay, move, move_seconds)
 
-    def rotating(self, x, y, top):
-        self.add("rotating", x, y, top)
-        return rect(x, y, self.rot)
+    def thread(self, x, y, anchor, length, swing=0.0, seconds=3.5, offset=0.0, hold=0.0, yaw=0.0):
+        self.add("thread", x, y, anchor, length, swing, seconds, offset, hold, yaw)
+
+    def gzone(self, x0, x1, y0, y1, z0, z1, direction=(0.0, 0.0, 1.0)):
+        self.add("gzone", x0, x1, y0, y1, z0, z1, direction)
+
+    def moving(self, x, y, top, offset, seconds, wait, size=None):
+        # size: a bigger floor (the actor scaled across; only straight-up moves then, as the offset scales too).
+        if size:
+            if offset[0] or offset[1]:
+                raise RuntimeError("A resized moving platform can only move up and down")
+            self.add("moving", x, y, top, offset, seconds, wait, size)
+        else:
+            self.add("moving", x, y, top, offset, seconds, wait)
+        s = size or self.plat
+        return rect(x, y, s), rect(x + offset[0], y + offset[1], s)
 
     def gondola(self, x, y, top, offset, seconds):
         self.add("gondola", x, y, top, offset, seconds)
@@ -117,501 +154,459 @@ class Route(SkyRoute):
     def shaft(self, x, y, z_top, z_bottom, r=160.0):
         self.add("shaft", x, y, z_top, z_bottom, r)
 
-    def stair(self, lever, name, a_shape, a_top, b_shape, b_top, a, b, count, size, thick, rise, delay, look):
-        # `count` mechanism steps evenly from point a to point b (between two pieces), each rising `rise` into place.
-        previous, prev_top = a_shape, a_top
-        for i in range(count):
-            t = (i + 1.0) / (count + 1.0)
-            x, y = a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
-            step_top = round((a_top + (b_top - a_top) * t) / 10.0) * 10.0
-            here = rect(x, y, size)
-            self.add("mech", lever, x, y, step_top - rise, (size, size, thick), (0.0, 0.0, rise), 1.0 + delay * i, 1.4, None, look, name)
-            self.jump("{} {}".format(name.lower(), i + 1), previous, here, step_top - prev_top)
-            previous, prev_top = here, step_top
-        self.jump("{} -> end".format(name.lower()), previous, b_shape, b_top - prev_top)
-        return 1.0 + delay * (count - 1) + 1.4
 
 
-def subtract(box, hole):
-    # The parts of rect `box` (x0, x1, y0, y1) outside rect `hole`.
-    x0, x1, y0, y1 = box
-    h0, h1, k0, k1 = max(hole[0], x0), min(hole[1], x1), max(hole[2], y0), min(hole[3], y1)
-    if h0 >= h1 or k0 >= k1:
-        return [box]
-    parts = [(x0, x1, y0, k0), (x0, x1, k1, y1), (x0, h0, k0, k1), (h1, x1, k0, k1)]
-    return [p for p in parts if p[1] - p[0] > 1.0 and p[3] - p[2] > 1.0]
 
-
-def with_holes(box, holes):
-    parts = [box]
-    for hole in holes:
-        parts = [piece for part in parts for piece in subtract(part, hole)]
-    return parts
-
-
-def build(base, jump_z, gravity, walk, plat, rot=300.0):
-    r = Route(base, jump_z, gravity, walk, plat, rot)
-    T0 = base
-    P = plat
-
-    # =====================================================================================================
-    # Hub: Heaven's Plaza and the great gate
-    # =====================================================================================================
-    r.add("section", "0 Plaza")
-    PR = 1600.0
-    plaza = r.disk(0.0, 0.0, T0, PR, 300.0, "marble", "Plaza")
-    r.add("island_deco", 0.0, 0.0, T0 - 300.0, 3600.0)
-    r.add("start", 0.0, -1100.0, T0, 90.0)
-    r.add("spot", "start", 0.0, -1100.0, T0)
-    for i in range(8):
-        a = math.radians(22.5 + 45.0 * i)
-        x, y = 1450.0 * math.cos(a), 1450.0 * math.sin(a)
-        r.block(x - 60.0, x + 60.0, y - 60.0, y + 60.0, T0, T0 + 900.0, "marble", "Plaza Pillar")
-        r.block(x - 80.0, x + 80.0, y - 80.0, y + 80.0, T0 + 900.0, T0 + 960.0, "gold", "Pillar Cap")
-    r.disk(0.0, 0.0, T0 + 20.0, 300.0, 20.0, "gold", "Plaza Seal")
-    r.shaft(0.0, 0.0, T0 + 4000.0, T0 + 20.0, 280.0)
-    for text, x, y, yaw in (("Sky Spire", -1250.0, 0.0, 0.0), ("Golden Clockwork", 1250.0, 0.0, 180.0),
-                            ("Underworks", 0.0, -1350.0, 90.0), ("Heaven's Gate", 0.0, 1250.0, -90.0)):
-        r.add("sign", x, y, T0 + 380.0, yaw, text)
-
-    # The gate: one sealed building, open only at the front; three doors one behind the other, then the sanctum.
-    GX0, GX1, GY0, GY1 = -500.0, 500.0, 1500.0, 3300.0
-    GATE_TOP = T0 + 1250.0
-    r.block(GX0, GX1, GY0, GY1, T0 - 300.0, T0, "marble", "Gate Floor")
-    r.block(GX0, -350.0, GY0, GY1, T0, T0 + 1100.0, "marble", "Gate Wall")
-    r.block(350.0, GX1, GY0, GY1, T0, T0 + 1100.0, "marble", "Gate Wall")
-    r.block(-350.0, 350.0, GY1 - 150.0, GY1, T0, T0 + 1100.0, "marble", "Gate Wall")
-    gate_roof = r.block(GX0, GX1, GY0, GY1, T0 + 1100.0, GATE_TOP, "gold", "Gate Roof")
-    for lever, y, look in (("sky", 1700.0, "sky"), ("clock", 1900.0, "gold"), ("under", 2100.0, "ember")):
-        r.add("door", lever, 0.0, y, (700.0, 80.0, 1100.0), look)
-        eye, look_at = (1100.0, 300.0, T0 + 700.0), (0.0, 1700.0, T0 + 450.0)
-        r.add("camera", lever, eye, look_at, 5.0)
-    r.disk(0.0, 2800.0, T0 + 20.0, 260.0, 20.0, "glow", "Goal Glow")
-    r.add("goal", 0.0, 2800.0, T0)
-    r.lamp(0.0, 2800.0, T0 + 900.0, (255, 236, 190))
-    r.jump("gate roof -> plaza (drop)", gate_roof, plaza, -1250.0)
-    # Star coin 4: a gold pinnacle off the roof's east side.
-    pin = r.block(800.0, 950.0, 1830.0, 1980.0, T0 - 300.0, GATE_TOP + 100.0, "gold", "Pinnacle")
-    r.jump("gate roof -> pinnacle", gate_roof, pin, 100.0)
-    r.add("coin", 875.0, 1905.0, GATE_TOP + 100.0)
-
-    # =====================================================================================================
-    # West: Sky Spire
-    # =====================================================================================================
-    r.add("section", "1 Sky Spire")
-    previous, top = plaza, T0
-    for i in range(3):
-        top += 100.0
-        x, y = r.at(previous, W, 0.8, 100.0, 0.4 * 260.0, side=(120.0 if i % 2 else -120.0))
-        here = r.vanish(x, y, top, 260.0, 0.6, 2.5)
-        r.jump("sky cloud {}".format(i + 1), previous, here, 100.0)
-        previous = here
-    top += 100.0
-    x, y = r.at(previous, W, 0.75, 100.0, 240.0)
-    landing = r.island(x, y, top, 500.0)
-    r.jump("cloud -> landing", previous, landing, 100.0)
-    x, y = beyond(landing, W, 160.0, 168.0)
-    ride, arrive = r.mover(x, y, top, (-1600.0, 0.0, 0.0), 3.5, 1.2)
-    r.jump("landing -> ferry", landing, ride, 0.0)
-    x, y = beyond(arrive, W, 300.0, 432.0)
-    fork = r.island(x, y, top, 900.0)
-    r.jump("ferry -> fork island", arrive, fork, 0.0)
-    fx, fy = middle(fork)
-    FORK_TOP = top
-    r.add("flag", fx + 150.0, fy + 150.0, top)
-    r.add("spot", "sky", fx, fy, top)
-    r.add("sign", fx - 250.0, fy + 250.0, top + 350.0, 0.0, "Updraft  /  Cloud Spiral")
-
-    # The sun terrace, reached two ways.
-    STEPS = 16
-    TS = FORK_TOP + 100.0 * (STEPS + 1)
-    col = ("rect", fx - 432.0 - 60.0 - 300.0, fx - 432.0 - 60.0, fy - 150.0, fy + 150.0)
-    col_top = TS + 150.0
-    r.wind((col[1] + col[2]) / 2.0, fy, (FORK_TOP - 300.0 + col_top) / 2.0, col_top - FORK_TOP + 300.0, 300.0, 300.0,
-           0.0, 90.0, 2200.0, 900.0, 3.0, 1.5, 0.0)
-    r.jump("fork -> updraft", fork, col, 0.0)
-    TX1 = col[1] - 150.0
-    TX0 = TX1 - 2400.0
-    TY0, TY1 = fy - 2600.0, fy + 300.0
-    terrace = r.block(TX0, TX1, TY0, TY1, TS - 150.0, TS, "marble", "Sun Terrace")
-    r.lift("updraft -> sun terrace", col, col_top, terrace, TS)
-    # The safe way: a spiral of clouds round a pillar south of the fork, two of them fading steps.
-    cx, cy = fx + 120.0, fy - 432.0 - 270.0 - 112.0 - 900.0
-    r.disk(cx, cy, TS + 300.0, 450.0, TS + 300.0 - (T0 - 1800.0), "marble", "Spiral Pillar")
-    previous, step_top = fork, FORK_TOP
-    for i in range(STEPS):
-        step_top += 100.0
-        a = math.radians(90.0 + 32.0 * i)
-        x, y = cx + 900.0 * math.cos(a), cy + 900.0 * math.sin(a)
-        if i in (5, 11):
-            here = r.timed(x, y, step_top, 0.0)
+def ceiling_run(r, y, x, under, items, label):
+    # Upside-down pieces eastward from x (the west end of an 800 cm first slab, `under` its underside). Items:
+    #   ("gap", du, length, ratio)   a slab `length` long        ("gear", du, radius, spin, ratio)
+    #   ("fade", du, delay, ratio)   a fading step               ("red" / "blue", du, ratio)  a switch block
+    #   ("switch", du, ratio)        a slab with a ceiling switch
+    # du: the piece's underside above `under` (higher underside = a drop when upside down). Returns the last piece,
+    # its underside and the run's east end.
+    first = r.under(x, x + 800.0, y - 250.0, y + 250.0, under, look="stone", name="Ceiling")
+    previous, prev_under, end = first, under, x + 800.0
+    for n, item in enumerate(items):
+        kind, du, ratio = item[0], item[1], item[-1]
+        u = under + du
+        g = ratio * r.reach(prev_under - u)
+        if kind == "gap":
+            here = r.under(end + g, end + g + item[2], y - 250.0, y + 250.0, u, look="stone", name="Ceiling")
+            end += g + item[2]
+        elif kind == "gear":
+            radius = item[2]
+            cx = end + g + 0.92 * radius
+            r.add("gear_flip", cx, y, u, radius, item[3])
+            here = circle(cx, y, 0.92 * radius)
+            end = cx + 0.92 * radius
+        elif kind == "fade":
+            cx = end + g + r.plat / 2.0
+            r.add("timed_flip", cx, y, u, item[2])
+            here = rect(cx, y, r.plat)
+            end = cx + r.plat / 2.0
+        elif kind in ("red", "blue"):
+            cx = end + g + 110.0
+            r.add("sblock_flip", cx, y, u, 220.0, kind == "red")
+            here = rect(cx, y, 220.0)
+            end = cx + 110.0
+        elif kind == "switch":
+            here = r.under(end + g, end + g + 600.0, y - 250.0, y + 250.0, u, look="stone", name="Switch Ceiling")
+            r.add("switch_flip", end + g + 300.0, y, u)
+            end += g + 600.0
         else:
-            here = r.cloud(x, y, step_top, 280.0)
-        r.jump("spiral {}".format(i + 1), previous, here, 100.0, MID)
-        previous = here
-    r.jump("spiral -> sun terrace", previous, terrace, TS - step_top, MID)
+            raise RuntimeError("Unknown ceiling item " + kind)
+        r.flipped("{} {}".format(label, n + 1), previous, prev_under, here, u, ratio)
+        previous, prev_under = here, u
+    return previous, prev_under, end
 
-    # The terrace: the sun in the middle. Up 11 m either on its back (its launch) or by the ledge-grab tower.
-    stx, sty = (TX0 + TX1) / 2.0, (TY0 + TY1) / 2.0
-    r.add("sun", stx, sty, TS, "sky")
-    TU = TS + 1100.0
-    upper = r.block(stx - 300.0, stx + 300.0, sty + 250.0, sty + 1350.0, TU - 100.0, TU, "marble", "Upper Terrace")
-    r.add("sign", stx + 700.0, sty - 300.0, TS + 350.0, 0.0, "Ride the sun  /  Climb the tower (Q)")
-    previous, top = terrace, TS
-    for i in range(5):
-        top += 220.0
-        y0 = sty - 150.0 + 300.0 * i
-        here = r.block(TX0 + 100.0, TX0 + 400.0, y0, y0 + 300.0, TS, top, "marble", "Grab Tower")
-        r.grab("grab tower {}".format(i + 1), previous, here, 220.0)
-        previous = here
-    walk = r.block(TX0 + 400.0, stx - 300.0, sty + 1150.0, sty + 1250.0, TU - 60.0, TU, "marble", "Tower Walk")
-    r.walk_on("grab tower -> walk", previous, walk)
-    r.walk_on("walk -> upper terrace", walk, upper)
 
-    # Crosswind beams going north (gusts blow +X); a gilded trap island off beam 3, star coin 1 downwind of beam 4.
-    previous, top = upper, TU
-    beams = []
-    y_cursor = sty + 1350.0
-    for i in range(5):
-        top += 100.0
-        y0 = y_cursor + 250.0
-        here = r.marble(stx - 60.0, stx + 60.0, y0, y0 + 650.0, top)
-        r.jump("gale beam {}".format(i + 1), previous, here, 100.0)
-        beams.append((here, top))
-        previous, y_cursor = here, y0 + 650.0
-    span0, span1 = sty + 1350.0, y_cursor
-    r.wind(stx, (span0 + span1) / 2.0, top - 150.0, 900.0, span1 - span0 + 200.0, 900.0, 0.0, 0.0, 700.0, 450.0, 1.8, 2.2, 0.0)
-    b3, b3_top = beams[2]
-    _, by = middle(b3)
-    lure = r.island(stx - 60.0 - 260.0 - 300.0, by, b3_top, 600.0)
-    r.jump("beam 3 -> lure island", b3, lure, 0.0)
-    r.add("trap", stx - 60.0 - 260.0 - 520.0, stx - 60.0 - 260.0 - 80.0, by - 220.0, by + 220.0, b3_top)
-    r.add("lure", stx - 60.0 - 260.0 - 300.0, by, b3_top)
-    b4, b4_top = beams[3]
-    _, cy4 = middle(b4)
-    coin_cloud = r.cloud(stx + 60.0 + 560.0 + 80.0, cy4, b4_top - 100.0, 200.0)
-    r.jump("beam 4 -> coin cloud (downwind)", b4, coin_cloud, -100.0)
-    r.add("coin", stx + 60.0 + 560.0 + 80.0, cy4, b4_top - 100.0)
+def build(base, jump_z, gravity, walk, plat):
+    r = Route(base, jump_z, gravity, walk, plat)
+    B = base
+    heights = {"start": B}
+
+    # =====================================================================================================
+    # 1 Spider Threads
+    # =====================================================================================================
+    r.add("section", "1 Spider Threads")
+    start = r.island(-3000.0, 0.0, B, 1000.0)
+    r.add("start", -3000.0, 0.0, B, 0.0)
+    r.add("spot", "start", -3000.0, 0.0, B)
+    r.add("sign", -2800.0, 300.0, B + 380.0, 180.0, "Climb the thread  (W / S,  Jump to let go)")
+    JF = B + 4200.0
+    threads = [(-2220.0, B + 100.0, B + 1600.0, 0.0, 3.5, 0.0, 0.0),
+               (-1170.0, B + 1300.0, B + 3110.0, 22.0, 3.6, 0.0, 6.0),
+               (-70.0, B + 2800.0, JF + 210.0, 26.0, 3.2, 1.0, 5.0)]
+    ledges = [(-1870.0, -1570.0, B + 1400.0), (-790.0, -490.0, B + 2900.0), (310.0, 1500.0, JF)]
+    previous, previous_top = start, B
+    for i, (tx, bottom, anchor, swing, seconds, offset, hold) in enumerate(threads):
+        r.thread(tx, 0.0, anchor, anchor - bottom, swing, seconds, offset, hold, 0.0)
+        r.catch("thread {}".format(i + 1), previous, previous_top, tx, 0.0, bottom)
+        x0, x1, top = ledges[i]
+        ledge = r.block(x0, x1, -300.0 if i == 2 else -150.0, 300.0 if i == 2 else 150.0, top - 100.0, top,
+                        "marble" if i < 2 else "gold", "Thread Ledge" if i < 2 else "Forest Floor")
+        r.leap("thread {} -> ledge".format(i + 1), tx, 0.0, anchor, ledge, top)
+        previous, previous_top = ledge, top
+    forest_floor = previous
+    perch = r.block(-1245.0, -1095.0, -650.0, -500.0, B + 2500.0, B + 2600.0, "gold", "Coin Perch")
+    r.leap("thread 2 -> coin perch", threads[1][0], 0.0, threads[1][2], perch, B + 2600.0)
+    r.catch("coin perch -> thread 2", perch, B + 2600.0, threads[1][0], 0.0, threads[1][1])
+    r.add("coin", -1170.0, -575.0, B + 2600.0)
+    heights["forest floor"] = JF
+
+    # =====================================================================================================
+    # 2 Jewel Forest (south, climbing)
+    # =====================================================================================================
+    r.add("section", "2 Jewel Forest")
+    JR = 110.0
+    previous, top = forest_floor, JF
+    for i in range(6):
+        top += 80.0
+        x, y = r.at(previous, S, 0.45, 80.0, JR, side=(90.0 if i % 2 else -90.0))
+        here = r.jewel(x, y, top, JR, i, beat=1.0, pitch=PENTA[i])   # (beats tuned by the user, 2026-11-16)
+        r.jump("melody stair {}".format(i + 1), previous, here, 80.0, 0.5)
+        previous = here
+    top += 80.0
+    x, y = r.at(previous, S, 0.7, 80.0, 0.48 * 700.0)
+    rest = r.island(x, y, top, 700.0)
+    r.jump("melody stair -> rest", previous, rest, 80.0, MID)
+    previous = rest
+    # Two moving islands carrying the player south and up (the vanishing clouds in a crosswind here were too much:
+    # the user found them impossible, 2026-11-16).
+    # Both move in step (same timing, from the level's start), so the second one runs the other way: it starts at its
+    # far end and comes back to meet the first exactly when the first arrives (in step they never met, 2026-11-16).
+    x, y = r.at(previous, S, 0.6, 0.0, 0.48 * 350.0)
+    ride, arrive = r.mover(x, y, top, (0.0, -1100.0, 250.0), 4.0, 1.5)
+    r.jump("rising island 1", previous, ride, 0.0, MID)
+    top += 250.0
+    x, y = r.at(arrive, S, 0.6, 0.0, 0.48 * 350.0)
+    far, near = r.mover(x, y - 1100.0, top + 250.0, (0.0, 1100.0, -250.0), 4.0, 1.5)
+    r.jump("rising island 1 -> 2 (they meet)", arrive, near, 0.0, MID)
+    top += 250.0
+    previous = far
     top += 100.0
-    x, y = beyond(previous, N, 330.0, 336.0)
-    gale_end = r.island(x, y, top, 700.0)
-    r.jump("beam 5 -> gale end", previous, gale_end, 100.0)
-    r.bridge("coin cloud -> gale end", coin_cloud, b4_top - 100.0, gale_end, top, 3, 240.0)
-    gx, gy = middle(gale_end)
+    x, y = r.at(previous, S, 0.6, 100.0, 0.48 * 900.0)
+    fork = r.island(x, y, top, 900.0)
+    r.jump("rising island -> fork", previous, fork, 100.0, MID)
+    FORK = top
+    fx, fy = middle(fork)
+    r.add("flag", fx + 150.0, fy, FORK)
+    r.add("spot", "jewel", fx, fy, FORK)
+    r.add("sign", fx - 250.0, fy, FORK + 380.0, 90.0, "Melody Net  /  High Posts")
+    # Way A: a rising melody net, each jewel ringing one beat after the last (loop 6, two beats each).
+    previous, top = fork, FORK
+    for i in range(7):
+        top += 70.0
+        x, y = r.at(previous, S, 0.45, 70.0, JR, side=(-250.0 if i == 0 else (120.0 if i % 2 else -120.0)))
+        here = r.jewel(x, y, top, JR, i % 6, 2, 6, 0.9, PENTA[i % 6])
+        r.jump("melody net {}".format(i + 1), previous, here, 70.0, 0.55)
+        previous = here
+    MEET = top + 70.0
+    x, y = r.at(previous, S, 0.6, 70.0, 0.48 * 1400.0, side=250.0)
+    meet = r.island(x, y, MEET, 1400.0)
+    r.jump("melody net -> meeting island", previous, meet, 70.0, MID)
+    # Way B: marble posts east of the net, up 100 a post, then level ones until the meeting island is in reach.
+    previous, top = fork, FORK
+    y = fy - 150.0
+    i = 0
+    while True:
+        step = min(100.0, MEET - top) if top < MEET else 0.0
+        top += step
+        here = r.block(fx + 650.0 - 70.0, fx + 650.0 + 70.0, y - 70.0, y + 70.0, top - 2500.0, top, "marble", "High Post")
+        r.jump("high post {}".format(i + 1), previous, here, step, HARD)
+        previous = here
+        i += 1
+        if gap(here, meet) <= 0.85 * r.reach(MEET - top) and top >= MEET:
+            break
+        y -= 140.0 + 0.85 * r.reach(min(100.0, MEET - top) if top < MEET else 0.0)
+    r.jump("high post -> meeting island", previous, meet, MEET - top, HARD)
+    # Up a fast melody to shard 1; a jewel ringing rarely beside it holds a star coin.
+    previous, top = meet, MEET
+    for i in range(6):
+        top += 80.0
+        x, y = r.at(previous, S, 0.45 if i == 0 else 0.5, 80.0, JR, side=(-250.0 if i == 0 else 0.0))
+        here = r.jewel(x, y, top, JR, i, 2, 8, 0.85, PENTA[i])
+        r.jump("fast melody {}".format(i + 1), previous, here, 80.0, 0.55)
+        if i == 2:
+            sx, sy = x - 2.0 * JR - 0.45 * r.reach(0.0), y
+            side_jewel = r.jewel(sx, sy, top, JR, 10, 2, 16, 0.85, 2.0)
+            r.jump("fast melody 3 -> coin jewel", here, side_jewel, 0.0, 0.5)
+            r.add("coin", sx, sy, top)
+        previous = here
+    top += 80.0
+    x, y = r.at(previous, S, 0.7, 80.0, 0.48 * 800.0)
+    shard1 = r.island(x, y, top, 800.0)
+    r.jump("fast melody -> shard island", previous, shard1, 80.0, MID)
+    s1x, s1y = middle(shard1)
+    r.add("shard", "shard1", s1x, s1y, top)
+    r.lamp(s1x, s1y, top + 600.0, (190, 230, 255))
+    heights["jewel fork"], heights["shard 1"] = FORK, top
+    # A thread up off its east side to the next layer.
+    tx, ty = s1x + 0.48 * 800.0 + 380.0, s1y
+    bottom = top + 50.0
+    anchor = bottom + 1700.0
+    r.thread(tx, ty, anchor, anchor - bottom, 12.0, 4.0, 0.0, 0.0, 90.0)
+    r.catch("shard island -> thread", shard1, top, tx, ty, bottom)
+    F0 = anchor - THREAD_HANG
+    floor = r.block(tx + 380.0, tx + 1180.0, ty - 400.0, ty + 400.0, F0 - 200.0, F0, "marble", "Upside Down Floor")
+    r.leap("thread -> upside down floor", tx, ty, anchor, floor, F0)
 
-    # Storm steps north into headwind gusts, then the summit.
-    previous = gale_end
-    first_y = None
+    # =====================================================================================================
+    # 3 Upside Down (east, climbing by falling up)
+    # =====================================================================================================
+    r.add("section", "3 Upside Down")
+    LY = ty
+    RISE = 900.0
+
+    # Zone 1 (one lane).
+    zx0 = tx + 1180.0 + 60.0
+    cu = F0 + RISE
+    last, last_u, end = ceiling_run(r, LY, tx + 1180.0 - 300.0, cu, (
+        ("gap", -100.0, 400.0, 0.85), ("gear", -100.0, 240.0, 40.0, 0.75), ("fade", 0.0, 0.0, 0.8),
+        ("gap", 0.0, 500.0, 0.85)), "ceiling 1")
+    z_end = end + 200.0
+    r.under(end, z_end + 400.0, LY - 250.0, LY + 250.0, last_u, look="stone", name="Ceiling")
+    r.gzone(zx0, z_end, LY - 600.0, LY + 600.0, F0 - 400.0, cu + 800.0)
+    r.add("catcher", zx0, z_end, LY - 600.0, LY + 600.0, cu + 450.0)   # fell up through a gap: back to the flag
+    L1 = min(cu, last_u) - 350.0
+    landing1 = r.block(z_end + 60.0, z_end + 960.0, LY - 1400.0, LY + 1500.0, L1 - 200.0, L1, "marble", "Landing")
+    r.add("flag", z_end + 500.0, LY, L1)
+    r.add("spot", "flip", z_end + 500.0, LY, L1)
+    r.add("switch", z_end + 500.0, LY + 1100.0, L1)
+    r.add("sign", z_end + 500.0, LY + 600.0, L1 + 380.0, 180.0, "Gears and gaps  /  Red and blue")
+    heights["landing 1"] = L1
+    # Zones 2 and 3: two lanes, south (gears, gaps, fading steps) and north (switch blocks).
+    previous_landings = {LY - 800.0: (landing1, L1), LY + 900.0: (landing1, L1)}
+    lane_items = {
+        2: {LY - 800.0: (("gap", -100.0, 300.0, 0.88), ("fade", -100.0, 0.0, 0.85), ("gear", 0.0, 220.0, -50.0, 0.75),
+                         ("fade", 0.0, 1.0, 0.85), ("gap", 100.0, 300.0, 0.88), ("gap", 0.0, 500.0, 0.85)),
+            LY + 900.0: (("red", -100.0, 0.85), ("red", 0.0, 0.85), ("switch", 0.0, 0.7), ("blue", 100.0, 0.85),
+                         ("blue", 0.0, 0.85), ("gap", 0.0, 500.0, 0.8))},
+        3: {LY - 800.0: (("gear", -100.0, 200.0, 60.0, 0.75), ("gap", -100.0, 250.0, 0.88), ("gear", 0.0, 200.0, -60.0, 0.75),
+                         ("fade", 0.0, 0.5, 0.85), ("gap", 100.0, 500.0, 0.85)),
+            LY + 900.0: (("blue", -100.0, 0.85), ("blue", -100.0, 0.85), ("switch", 0.0, 0.7), ("red", 0.0, 0.85),
+                         ("red", 100.0, 0.85), ("red", 0.0, 0.85), ("gap", 0.0, 500.0, 0.8))},
+    }
+    x_start = z_end + 960.0
+    for zone in (2, 3):
+        runs = []
+        for lane_y, items in lane_items[zone].items():
+            landing, ltop = previous_landings[lane_y]
+            last, last_u, end = ceiling_run(r, lane_y, x_start - 300.0, ltop + RISE, items, "ceiling {}{}".format(zone, "a" if lane_y < LY else "b"))
+            runs.append((lane_y, last, last_u, end, ltop))
+        z_end = max(run[3] for run in runs) + 200.0
+        new_landings = {}
+        for lane_y, last, last_u, end, ltop in runs:
+            r.under(end, z_end + 400.0, lane_y - 250.0, lane_y + 250.0, last_u, look="stone", name="Ceiling")
+            r.gzone(x_start + 60.0, z_end, lane_y - 600.0, lane_y + 600.0, ltop - 400.0, ltop + RISE + 900.0)
+            r.add("catcher", x_start + 60.0, z_end, lane_y - 600.0, lane_y + 600.0, ltop + RISE + 450.0)
+            new_landings[lane_y] = min(last_u, ltop + RISE) - 350.0
+        if zone == 2:
+            for lane_y, ltop in new_landings.items():
+                here = r.block(z_end + 60.0, z_end + 960.0, lane_y - 500.0, lane_y + 500.0, ltop - 200.0, ltop, "marble", "Landing")
+                previous_landings[lane_y] = (here, ltop)
+            x_start = z_end + 960.0
+        else:
+            L3 = min(new_landings.values())
+            landing3 = r.block(z_end + 60.0, z_end + 960.0, LY - 1400.0, LY + 1500.0, L3 - 200.0, L3, "marble", "Landing")
+            x_start = z_end + 960.0
+    heights["landing 3"] = L3
+    # Zone 4 (one lane), a star coin on a side ceiling.
+    cu = L3 + RISE
+    last, last_u, end = ceiling_run(r, LY, x_start - 300.0, cu, (
+        ("gap", -100.0, 300.0, 0.88), ("gear", -100.0, 260.0, 70.0, 0.75), ("gap", 0.0, 300.0, 0.88),
+        ("fade", 100.0, 0.0, 0.85), ("gap", 0.0, 600.0, 0.85)), "ceiling 4")
+    coin_x = end - 300.0
+    coin_ceiling = r.under(coin_x - 100.0, coin_x + 100.0, LY + 250.0 + 0.8 * r.reach(80.0), LY + 250.0 + 0.8 * r.reach(80.0) + 200.0, last_u + 80.0, look="gold", name="Coin Ceiling")
+    r.flipped("ceiling 4 -> coin ceiling", last, last_u, coin_ceiling, last_u + 80.0, HARD)
+    r.flipped("coin ceiling -> ceiling 4", coin_ceiling, last_u + 80.0, last, last_u, HARD)
+    r.add("coin", coin_x, LY + 250.0 + 0.8 * r.reach(80.0) + 100.0, last_u + 80.0 - 330.0)
+    z_end = end + 200.0
+    r.under(end, z_end + 400.0, LY - 250.0, LY + 250.0, last_u, look="stone", name="Ceiling")
+    r.gzone(x_start + 60.0, z_end, LY - 600.0, LY + 1100.0, L3 - 400.0, cu + 900.0)
+    r.add("catcher", x_start + 60.0, z_end, LY - 600.0, LY + 1100.0, cu + 450.0)
+    L4 = min(cu, last_u) - 350.0
+    heights["landing 4"] = L4
+
+    # =====================================================================================================
+    # 4 Dark Tower
+    # =====================================================================================================
+    r.add("section", "4 Dark Tower")
+    # Area 1's Great Tower remembered in light (2026-11-16): a big tower, two broken floors, the sun loose inside it
+    # (its range the whole tower: it charges at the player all the way up; ridden, it throws them up).
+    TF = L4
+    TX0 = z_end + 960.0
+    TX1, TY0, TY1 = TX0 + 4000.0, LY - 2000.0, LY + 2000.0
+    landing4 = r.block(z_end + 60.0, TX0, LY - 400.0, LY + 400.0, TF - 200.0, TF, "marble", "Landing")
+    r.add("shard", "shard2", z_end + 500.0, LY, TF)
+    r.lamp(z_end + 500.0, LY, TF + 600.0, (210, 180, 255))
+    tower_floor = r.block(TX0, TX1, TY0, TY1, TF - 200.0, TF, "darkstone", "Tower Floor")
+    r.walk_on("landing -> tower floor", landing4, tower_floor)
+    r.add("spot", "tower door", TX0 + 300.0, LY, TF)
+    F1, F2, TOP_F = TF + 1300.0, TF + 2600.0, TF + 3600.0
+    ROOF_U = TF + 4000.0
+    WT = 100.0
+    NW = 400.0   # the north wall is thick: the stepping stones wait inside it
+    r.block(TX0 - WT, TX0, TY0 - WT, LY - 300.0, TF - 200.0, ROOF_U, "darkstone", "Tower Wall")
+    r.block(TX0 - WT, TX0, LY + 300.0, TY1 + NW, TF - 200.0, ROOF_U, "darkstone", "Tower Wall")
+    r.block(TX0 - WT, TX0, LY - 300.0, LY + 300.0, TF + 450.0, ROOF_U, "darkstone", "Tower Wall")
+    r.block(TX1, TX1 + WT, TY0 - WT, TY1 + NW, TF - 200.0, ROOF_U, "darkstone", "Tower Wall")
+    r.block(TX0, TX1, TY0 - WT, TY0, TF - 200.0, ROOF_U, "darkstone", "Tower Wall")
+    r.block(TX0, TX1, TY1, TY1 + NW, TF - 200.0, ROOF_U, "darkstone", "Tower Wall")
+    r.add("sign", TX0 + 300.0, LY + 500.0, TF + 380.0, 180.0, "Blinking Light  /  Stepping Stones (plate)")
+    # The sun, high in the middle, its range the whole tower; caught, the player is back at the tower door.
+    r.add("sun", TX0 + 2000.0, LY, TF, "tower door", (2000.0, 2000.0, 2000.0), 3000.0)
+    # Broken floor 1: the east half, short of the north wall (the stepping stones run along it).
+    floor1 = r.block(TX0 + 2000.0, TX1, TY0, TY1 - 600.0, F1 - 150.0, F1, "darkstone", "Broken Floor")
+    r.add("flag", TX0 + 3400.0, LY - 900.0, F1)
+    r.add("spot", "tower", TX0 + 3400.0, LY - 900.0, F1)
+    # Way A: a helix of big light platforms round three columns by the south wall, each column's beam blinking in turn.
+    cols = ((TX0 + 1100.0, LY - 1300.0), (TX0 + 1700.0, LY - 1300.0), (TX0 + 1400.0, LY - 1800.0))
+    for k, (cx, cy) in enumerate(cols):
+        r.beam("helix{}".format(k), cx, cy, TF, F1 + 300.0, 400.0, 2.6, 1.4, 4.0 / 3.0 * k)   # (slowed for the user, 2026-11-16)
+    previous, top = tower_floor, TF
+    for i in range(12):
+        top += 100.0
+        k = (i + 2) % 3        # (so the last one is the column by the broken floor)
+        cx, cy = cols[k]
+        here = r.lplat("helix{}".format(k), cx, cy, top, 300.0)
+        r.jump("light helix {}".format(i + 1), previous, here, 100.0, 0.8)
+        previous = here
+    r.jump("light helix -> broken floor 1", previous, floor1, F1 - top, 0.85)
+    # Way B: a pressure plate by the north wall slides twelve stones out of the wall, one after another, as a stair
+    # along it; they slide back 10 s after the last one is out.
+    r.add("lever", "stones", TX0 + 300.0, TY1 - 700.0, TF, 0.0, 16.0)
+    previous, top = rect(TX0 + 300.0, TY1 - 700.0, 180.0), TF
+    sx = TX0 + 350.0
+    for i in range(12):
+        top += 100.0
+        sx += 280.0
+        r.add("mech", "stones", sx, TY1 + 200.0, top, (180.0, 300.0, 100.0), (0.0, -450.0, 0.0), 0.3 * i, 0.5, (13.3 - 0.3 * i, 0.6), "stone", "Stepping Stone")
+        here = rect(sx, TY1 - 250.0, 180.0, 300.0)
+        r.jump("stepping stone {}".format(i + 1), previous, here, 100.0, 0.8)
+        previous = here
+    r.jump("stepping stone -> broken floor 1", previous, floor1, F1 - top, 0.85)
+    # Broken floor 2: the west part.
+    floor2 = r.block(TX0, TX0 + 1000.0, TY0, TY1 - 600.0, F2 - 150.0, F2, "darkstone", "Broken Floor")
+    # Floor 1 -> 2: a lift at floor 1's west edge, then big platforms round two beams that take turns, westward.
+    lift, lift_top = r.moving(TX0 + 1750.0, LY - 300.0, F1, (0.0, 0.0, 600.0), 3.5, 1.5, 500.0)   # (made bigger for the user, 2026-11-16)
+    r.jump("broken floor 1 -> lift", floor1, lift, 0.0, MID)
+    r.beam("turnA", TX0 + 1250.0, LY - 250.0, F1 + 400.0, F2 + 300.0, 450.0, 2.4, 2.4, 0.0)
+    r.beam("turnB", TX0 + 1250.0, LY + 250.0, F1 + 400.0, F2 + 300.0, 450.0, 2.4, 2.4, 2.4)
+    spots = ((TX0 + 1250.0, LY + 250.0), (TX0 + 1250.0, LY - 250.0))
+    previous, top = lift_top, F1 + 600.0
     for i in range(6):
         top += 100.0
-        y0 = (previous[4] if previous[0] == "rect" else previous[2] + previous[3]) + 300.0
-        here = r.marble(gx - 110.0, gx + 110.0, y0, y0 + 220.0, top, 100.0)
-        r.jump("storm step {}".format(i + 1), previous, here, 100.0)
-        first_y = first_y or y0
+        cx, cy = spots[i % 2]
+        cx = cx + (-100.0 if (i // 2) % 2 else 100.0)
+        here = r.lplat("turnB" if cy > LY else "turnA", cx, cy, top, 260.0)
+        r.jump("turning light {}".format(i + 1), previous, here, 100.0, 0.8)
         previous = here
-    last_y = previous[4]
-    r.wind(gx, (first_y + last_y) / 2.0 + 100.0, top - 250.0, last_y - first_y + 500.0, 700.0, 1100.0, -90.0, 0.0, 600.0, 400.0, 2.0, 2.0, 0.5)
-    top += 100.0
-    x, y = beyond(previous, N, 330.0, 576.0)
-    summit = r.island(x, y, top, 1200.0)
-    r.jump("storm step -> summit", previous, summit, 100.0)
-    SUMMIT_TOP = top
-    smx, smy = middle(summit)
-    r.add("lever", "sky", smx - 200.0, smy, top, 0.0, 0.0)
-    r.block(smx - 120.0, smx + 120.0, smy + 300.0, smy + 420.0, top, top + 600.0, "sky", "Summit Obelisk")
-    r.shaft(smx, smy, top + 4000.0, top, 450.0)
-    # The gondola back down, beside the gate roof.
-    station = rect(smx + 576.0 + 40.0 + P / 2.0, smy, P)
-    r.jump("summit -> gondola", summit, station, 0.0)
-    sx_, sy_ = middle(station)
-    dest = (GX0 - 40.0 - P / 2.0, 1900.0)
-    offset = (dest[0] - sx_, dest[1] - sy_, GATE_TOP - SUMMIT_TOP)
-    length = math.sqrt(sum(c * c for c in offset))
-    ride, arrive = r.gondola(sx_, sy_, SUMMIT_TOP, offset, length / 700.0)
-    r.jump("gondola -> gate roof", arrive, gate_roof, 0.0)
+    r.jump("turning light -> broken floor 2", previous, floor2, F2 - top, 0.85)
+    # Floor 2 -> the top floor: stones jutting from the south wall and crumbling floors, east, then north up the east
+    # wall to the top floor in the north-east corner.
+    previous, top = floor2, F2
+    for i, direction in enumerate((E, E, E, E, N, N, N, N, N)):
+        top += 100.0
+        x, y = r.at(previous, direction, 0.72, 100.0, 120.0,
+                    side=0.0)
+        if i == 0:
+            y = TY0 + 200.0
+        if i in (2, 6):
+            here = r.falling(x, y, top)
+        else:
+            here = r.block(x - 120.0, x + 120.0, y - 120.0, y + 120.0, top - 120.0, top, "stone", "Wall Stone")
+        r.jump("wall stone {}".format(i + 1), previous, here, 100.0, 0.8)
+        previous = here
+    top_floor = r.block(TX0 + 2800.0, TX1, middle(previous)[1] + 0.6 * r.reach(100.0) + 120.0, TY1, TOP_F - 150.0, TOP_F, "darkstone", "Top Floor")
+    r.jump("wall stone -> top floor", previous, top_floor, TOP_F - top, 0.8)
+    r.add("shard", "shard3", TX1 - 300.0, TY1 - 300.0, TOP_F)
+    r.lamp(TX1 - 300.0, TY1 - 300.0, TOP_F + 300.0, (255, 210, 150))
+    # A star coin on a rarely lit platform west of the top floor.
+    tf_y = (top_floor[3] + top_floor[4]) / 2.0
+    rx = TX0 + 2800.0 - 0.5 * r.reach(0.0) - 120.0   # (the hole is at the east end)
+    r.beam("rare", rx, tf_y, TOP_F - 300.0, ROOF_U, 300.0, 1.8, 5.0, 0.0)
+    rare = r.lplat("rare", rx, tf_y, TOP_F, 220.0)
+    r.jump("top floor -> rare light", top_floor, rare, 0.0, 0.6)
+    r.add("coin", rx, tf_y, TOP_F)
+    if TOP_F > ROOF_U - 350.0:
+        raise RuntimeError("Top floor too close under the roof: {:.0f}".format(ROOF_U - TOP_F))
+    # Up through a hole above the top floor's east end: two ledge grabs onto the roof.
+    RT = ROOF_U + 100.0
+    g1 = r.block(TX1 - 300.0, TX1, TY1 - 300.0, TY1, TOP_F - 150.0, TOP_F + 220.0, "stone", "Ruin Step")
+    r.grab("top floor -> step 1", top_floor, g1, 220.0)
+    g2_top = TOP_F + 440.0
+    g2 = r.block(TX1 - 600.0, TX1 - 300.0, TY1 - 300.0, TY1, TOP_F - 150.0, g2_top, "stone", "Ruin Step")
+    r.grab("step 1 -> step 2", g1, g2, 220.0)
+    hole = (TX1 - 700.0, TX1, TY1 - 400.0, TY1)
+    for x0, x1, y0, y1 in ((TX0 - WT, TX1 + WT, TY0 - WT, hole[2]), (TX0 - WT, hole[0], hole[2], TY1 + NW),
+                           (hole[1], TX1 + WT, hole[2], TY1 + NW), (hole[0], hole[1], TY1, TY1 + NW)):
+        if x1 - x0 > 1.0 and y1 - y0 > 1.0:
+            r.block(x0, x1, y0, y1, ROOF_U, RT, "darkstone", "Tower Roof")
+    roof = ("rect", TX0, TX1, TY0, hole[2])
+    if RT - g2_top > 102.0 or g2_top < ROOF_U + 20.0:
+        raise RuntimeError("Step 2 does not reach the roof: {:.0f}".format(RT - g2_top))
+    r.jump("step 2 -> roof", g2, roof, RT - g2_top, 0.8)
+    TY1 = TY1 + NW - WT   # (the roof's parapets go round the thick north wall)
+    heights["tower floor 1"], heights["tower floor 2"], heights["tower top"], heights["roof"] = F1, F2, TOP_F, RT
 
     # =====================================================================================================
-    # East: Golden Clockwork
+    # 5 Iwato (on the roof)
     # =====================================================================================================
-    r.add("section", "2 Golden Clockwork")
-    bridge_e = r.block(PR - 60.0, 2200.0, -200.0, 200.0, T0 - 80.0, T0, "gold", "East Bridge")
-    r.walk_on("plaza -> east bridge", plaza, bridge_e)
-    gear_gate = r.block(2200.0, 2800.0, -300.0, 300.0, T0 - 2600.0, T0, "marble", "Gear Gate")
-    r.walk_on("east bridge -> gear gate", bridge_e, gear_gate)
-    previous, top = gear_gate, T0
-    for i, (radius, spin) in enumerate(((180.0, 35.0), (160.0, -45.0), (200.0, 30.0), (160.0, -50.0), (180.0, 40.0))):
-        top -= 150.0
-        x, y = r.at(previous, E, 0.75, -150.0, 0.92 * radius, side=((150.0 if i % 2 else -150.0) if i else 0.0))
-        here = r.gear(x, y, top, radius, spin)
-        r.jump("gear down {}".format(i + 1), previous, here, -150.0, 0.85)
-        previous = here
-    HALL_TOP = top
-    x, y = r.at(previous, E, 0.8, 0.0, 700.0)
-    hall = r.block(x - 700.0, x + 700.0, -700.0, 700.0, HALL_TOP - 2400.0, HALL_TOP, "marble", "Switch Hall")
-    r.jump("gear -> switch hall", previous, hall, 0.0, 0.8)
-    hx = x
-    r.add("switch", hx - 300.0, -300.0, HALL_TOP)
-    r.add("flag", hx + 200.0, -350.0, HALL_TOP)
-    r.add("spot", "clock", hx, 0.0, HALL_TOP)
-    r.add("sign", hx, 500.0, HALL_TOP + 350.0, -90.0, "Red: flipping floors  /  Blue: the beam")
-    r.lamp(hx, 0.0, HALL_TOP + 500.0)
-    # Red (east side): two red steps up, two flipping floors, two red steps up; blue (west side): a switch flip, four
-    # small blue steps up, then a long narrow beam.
-    previous, top = hall, HALL_TOP
-    for i in range(2):
-        top += 100.0
-        x, y = r.at(previous, N, 0.8, 100.0, 150.0, side=(-450.0 if i == 0 else 0.0))
-        here = r.sblock(x, y, top, 300.0, True)
-        r.jump("red step {}".format(i + 1), previous, here, 100.0, 0.8)
-        previous = here
-    for i in range(2):
-        x, y = r.at(previous, N, 0.6, 0.0, rot / 2.0)
-        here = r.rotating(x, y, top)
-        r.jump("flipping floor {}".format(i + 1), previous, here, 0.0, 0.6)
-        previous = here
-    for i in range(2):
-        top += 100.0
-        x, y = r.at(previous, N, 0.8, 100.0, 150.0)
-        here = r.sblock(x, y, top, 300.0, True)
-        r.jump("red step {}".format(i + 3), previous, here, 100.0, 0.8)
-        previous = here
-    LANDING_TOP = top
-    x, y = r.at(previous, N, 0.8, 0.0, 400.0)
-    clock_landing = r.block(hx - 800.0, hx + 800.0, y - 400.0, y + 400.0, LANDING_TOP - 2400.0, LANDING_TOP, "marble", "Clock Landing")
-    r.jump("red step -> clock landing", previous, clock_landing, 0.0, 0.8)
-    ly = y
-    previous, top = hall, HALL_TOP
-    for i in range(4):
-        top += 100.0
-        x, y = r.at(previous, N, HARD, 100.0, 110.0, side=(450.0 if i == 0 else 0.0))
-        here = r.sblock(x, y, top, 220.0, False)
-        r.jump("blue step {}".format(i + 1), previous, here, 100.0)
-        previous = here
-    if previous[4] >= clock_landing[3]:
-        raise RuntimeError("The blue steps run past the clock landing")
-    beam = r.block(hx - 500.0, hx - 400.0, previous[4], clock_landing[3], top - 60.0, top, "gold", "Narrow Beam")
-    r.walk_on("blue step -> beam", previous, beam)
-    r.walk_on("beam -> clock landing", beam, clock_landing, LANDING_TOP - top)
-    r.add("switch", hx + 500.0, ly - 200.0, LANDING_TOP)
-    r.add("rewind", hx, ly, LANDING_TOP)
-    r.lamp(hx - 500.0, ly + 200.0, LANDING_TOP + 400.0)
-    # The gondola north and up to the balcony; from there the way runs back west.
-    station = rect(hx - 800.0 - 40.0 - P / 2.0, ly, P)
-    r.jump("clock landing -> gondola", clock_landing, station, 0.0)
-    sx_, sy_ = middle(station)
-    ride, arrive = r.gondola(sx_, sy_, LANDING_TOP, (0.0, 2400.0, 950.0), 6.0)
-    BALCONY_TOP = LANDING_TOP + 950.0
-    ax0, ay = arrive[1], middle(arrive)[1]
-    balcony = r.block(ax0 - 60.0 - 1500.0, ax0 - 60.0, ay - 600.0, ay + 600.0, BALCONY_TOP - 150.0, BALCONY_TOP, "marble", "Balcony")
-    r.jump("gondola -> balcony", arrive, balcony, 0.0)
-    bx0, bx1, by0, by1 = balcony[1:]
-    r.lamp((bx0 + bx1) / 2.0, ay, BALCONY_TOP + 450.0)
-    # Trap: a dark doorway south-east of the balcony.
-    alcove = r.block(bx1 - 500.0, bx1, by0 - 220.0 - 500.0, by0 - 220.0, BALCONY_TOP - 100.0, BALCONY_TOP, "stone", "Alcove Floor")
-    r.jump("balcony -> alcove", balcony, alcove, 0.0)
-    r.block(bx1 - 500.0, bx1, by0 - 820.0, by0 - 720.0, BALCONY_TOP, BALCONY_TOP + 500.0, "stone", "Doorway Wall")
-    r.block(bx1 - 350.0, bx1 - 150.0, by0 - 725.0, by0 - 715.0, BALCONY_TOP, BALCONY_TOP + 320.0, "darkstone", "Dark Door")
-    r.add("trap", bx1 - 480.0, bx1 - 20.0, by0 - 700.0, by0 - 240.0, BALCONY_TOP)
-    # Dead end: hard perches south-west to the speed item.
-    previous, top = balcony, BALCONY_TOP
-    for i in range(2):
-        top += 100.0
-        x, y = r.at(previous, S, HARD, 100.0, 80.0, side=((-(bx1 - bx0) / 2.0 + 150.0) if i == 0 else 0.0))
-        here = r.block(x - 80.0, x + 80.0, y - 80.0, y + 80.0, top - 60.0, top, "gold", "Perch")
-        r.jump("speed perch {}".format(i + 1), previous, here, 100.0)
-        previous = here
-    r.add("speed", x, y, top)
-    # Star coin 2: a ledge north of the balcony, too far for a plain jump: a run with the speed item clears it.
-    far = r.block(bx0 + 500.0, bx0 + 800.0, by1 + 820.0, by1 + 1120.0, BALCONY_TOP - 60.0, BALCONY_TOP, "gold", "Far Ledge")
-    if gap(balcony, far) < r.reach(0.0):
-        raise RuntimeError("The far ledge can be reached without the speed item")
-    r.jump("balcony -> far ledge (speed run)", balcony, far, 0.0, 0.6 * SPEED_ITEM_SPEED / r.walk)
-    r.add("coin", bx0 + 650.0, by1 + 970.0, BALCONY_TOP)
-    # The way on: west, up a piston, two gears, a crumbling floor, the clock top.
-    top = BALCONY_TOP
-    x, y = r.at(balcony, W, EASY, 0.0, P / 2.0)
-    piston, _ = r.moving(x, y, top, (0.0, 0.0, 500.0), 2.4, 1.0)
-    r.jump("balcony -> piston", balcony, piston, 0.0, EASY)
-    top += 500.0
-    previous = piston
-    for i, (radius, spin) in enumerate(((170.0, 35.0), (150.0, -45.0))):
-        top += 100.0
-        x, y = r.at(previous, W, 0.75, 100.0, 0.92 * radius, side=(-150.0 if i else 150.0))
-        here = r.gear(x, y, top, radius, spin)
-        r.jump("clock gear {}".format(i + 1), previous, here, 100.0, 0.85)
-        previous = here
-    x, y = r.at(previous, W, 0.8, 0.0, P / 2.0)
-    crumble = r.falling(x, y, top)
-    r.jump("gear -> crumbling floor", previous, crumble, 0.0, 0.8)
-    top += 100.0
-    x, y = r.at(crumble, W, 0.85, 100.0, 500.0)
-    clock_top = r.block(x - 500.0, x + 500.0, y - 500.0, y + 500.0, top - 2600.0, top, "gold", "Clock Top")
-    r.jump("crumbling floor -> clock top", crumble, clock_top, 100.0, 0.85)
-    CLOCK_TOP = top
-    ctx, cty = x, y
-    r.add("lever", "clock", ctx + 200.0, cty + 200.0, top, 180.0, 0.0)
-    r.lamp(ctx, cty, top + 500.0)
-    # Lever 2 also raises a brass stair from the clock top's south edge back down to the plaza's north-east rim.
-    rim = (PR * math.cos(math.radians(40.0)), PR * math.sin(math.radians(40.0)))
-    r.stair("clock", "Brass Step", clock_top, CLOCK_TOP, plaza, T0, (ctx, clock_top[3]), rim, 18, 280.0, 80.0, 1600.0, 0.15, "gold")
+    r.add("section", "5 Iwato")
+    PAR = 1400.0
+    # Parapets round the roof, open only into the corridor east.
+    r.block(TX0 - WT, TX1 + WT, TY1, TY1 + WT, RT, RT + PAR, "marble", "Parapet")
+    r.block(TX0 - WT, TX1 + WT, TY0 - WT, TY0, RT, RT + PAR, "marble", "Parapet")
+    r.block(TX0 - WT, TX0, TY0, TY1, RT, RT + PAR, "marble", "Parapet")
+    r.block(TX1, TX1 + WT, TY0, LY - 350.0, RT, RT + PAR, "marble", "Parapet")
+    r.block(TX1, TX1 + WT, LY + 350.0, TY1, RT, RT + PAR, "marble", "Parapet")
+    CX1 = TX1 + 1500.0
+    corridor = r.block(TX1, CX1, LY - 350.0, LY + 350.0, RT - 200.0, RT, "marble", "Iwato Corridor")
+    r.block(TX1, CX1, LY - 600.0, LY - 350.0, RT, RT + PAR, "marble", "Corridor Wall")
+    r.block(TX1, CX1, LY + 350.0, LY + 600.0, RT, RT + PAR, "marble", "Corridor Wall")
+    r.add("hidden_lever", "iwato", TX0 + 1500.0, LY, TF - 1500.0)
+    r.add("mech", "iwato", TX1 + 300.0, LY, RT + 1300.0, (200.0, 700.0, 1300.0), (0.0, 0.0, -1350.0), 1.5, 4.0, None, "darkstone", "Iwato Rock")
+    r.add("iwato", TX1 + 150.0, LY, RT + 1550.0, 180.0, "iwato", (TX1 - 1400.0, LY - 900.0, RT + 700.0), (TX1 + 300.0, LY, RT + 600.0))
+    r.block(TX1 + 840.0, TX1 + 960.0, LY - 60.0, LY + 60.0, RT, RT + 80.0, "gold", "Wing Pedestal")
+    r.add("wings", TX1 + 900.0, LY, RT + 80.0)
+    r.add("flag", TX1 + 1200.0, LY, RT)
+    r.add("spot", "wings", TX1 + 1200.0, LY, RT)
+    r.lamp(TX0 + 1500.0, LY, RT + 900.0, (255, 230, 190))
 
     # =====================================================================================================
-    # South: Underworks
+    # 6 Heaven's Gate (wings and updrafts)
     # =====================================================================================================
-    r.add("section", "3 Underworks")
-    UX0, UX1, UY0, UY1 = -3000.0, 3000.0, -9400.0, -2600.0
-    UF = T0 - 3000.0
-    CEIL = T0 - 300.0
-    WALL_T = 200.0
-    BOTTOM = UF - 1200.0
-    DOOR_Z = T0 - 600.0
-    holes = [(-1400.0, -1000.0, -4400.0, -4000.0), (1300.0, 1700.0, -6500.0, -6100.0), (-1700.0, -1300.0, -6500.0, -6100.0),
-             (-200.0, 200.0, -8600.0, -8200.0), (2200.0, 2600.0, -5000.0, -4600.0), (-2600.0, -2200.0, -8000.0, -7600.0)]
-    for part in with_holes((UX0 - WALL_T, UX1 + WALL_T, UY0 - WALL_T, UY1 + WALL_T), holes):
-        r.block(part[0], part[1], part[2], part[3], CEIL, CEIL + 100.0, "stone", "Underworks Roof")
-    for x0, x1, y0, y1 in holes:
-        r.add("glass", x0, x1, y0, y1, CEIL, CEIL + 100.0)
-        r.shaft((x0 + x1) / 2.0, (y0 + y1) / 2.0, CEIL + 100.0, UF, 170.0)
-    r.block(UX0 - WALL_T, UX0, UY0 - WALL_T, UY1 + WALL_T, BOTTOM, CEIL, "stone", "Underworks Wall")
-    r.block(UX1, UX1 + WALL_T, UY0 - WALL_T, UY1 + WALL_T, BOTTOM, CEIL, "stone", "Underworks Wall")
-    r.block(UX0, UX1, UY0 - WALL_T, UY0, BOTTOM, CEIL, "stone", "Underworks Wall")
-    # The north wall, with the doorway (x -300..300, from the sill up to the roof).
-    r.block(UX0, -300.0, UY1, UY1 + WALL_T, BOTTOM, CEIL, "stone", "Underworks Wall")
-    r.block(300.0, UX1, UY1, UY1 + WALL_T, BOTTOM, CEIL, "stone", "Underworks Wall")
-    sill = r.block(-300.0, 300.0, UY1, UY1 + WALL_T, BOTTOM, DOOR_Z, "stone", "Door Sill")
-    # Down from the plaza: eight steps south to the doorway.
-    previous, top = plaza, T0
-    for i in range(8):
-        top -= 75.0
-        y1 = -1600.0 - 100.0 * i + (40.0 if i == 0 else 0.0)
-        here = r.block(-300.0, 300.0, -1700.0 - 100.0 * i, y1, top - 100.0, top, "marble", "Stair Down")
-        r.jump("stair down {}".format(i + 1), previous, here, -75.0, EASY)
-        previous = here
-    r.walk_on("stair -> doorway", previous, sill, DOOR_Z - top)
-    mouth = r.block(-600.0, 600.0, -3400.0, UY1, DOOR_Z - 200.0, DOOR_Z, "darkstone", "Well Mouth")
-    r.walk_on("doorway -> well mouth", sill, mouth)
-    r.lamp(0.0, -3000.0, DOOR_Z + 220.0, (140, 170, 255))
-    r.add("sign", 0.0, -3350.0, DOOR_Z + 250.0, 90.0, "Drop ledges  /  Slow lift")
-    # Down two ways: drop ledges, west then south then east (quick), or the slow lift (safe).
-    previous, top = mouth, DOOR_Z
-    drops = []
-    for i, direction in enumerate((W, W, W, S, S, E, E)):
-        top -= 300.0
-        x, y = r.at(previous, direction, 0.5, -300.0, 150.0, side=(200.0 if i == 0 else 0.0))
-        here = r.block(x - 150.0, x + 150.0, y - 150.0, y + 150.0, top - 100.0, top, "darkstone", "Drop Ledge")
-        r.jump("drop ledge {}".format(i + 1), previous, here, -300.0, 0.5)
-        drops.append((here, top))
-        previous = here
-    north_floor = r.block(UX0, UX1, -5200.0, UY1, BOTTOM, UF, "darkstone", "North Floor")
-    r.jump("drop ledge -> floor", previous, north_floor, UF - top)
-    # Star coin 5: a hidden ledge tucked in under drop ledge 3, a jump back north from ledge 4.
-    l3, _ = drops[2]
-    l4, l4_top = drops[3]
-    hx3, hy3 = middle(l3)
-    hidden = r.block(hx3 + 180.0 - 120.0, hx3 + 180.0 + 120.0, hy3 - 120.0, hy3 + 120.0, l4_top - 400.0, l4_top - 300.0, "darkstone", "Hidden Ledge")
-    r.jump("drop ledge 4 -> hidden ledge", l4, hidden, -300.0, 0.6)
-    r.add("coin", hx3 + 180.0, hy3, l4_top - 300.0)
-    x, y = beyond(mouth, S, 60.0, P / 2.0)
-    lift, _ = r.moving(x, y, DOOR_Z, (0.0, 0.0, UF - DOOR_Z), 7.0, 2.0)
-    r.jump("well mouth -> slow lift", mouth, lift, 0.0)
-    r.add("flag", 700.0, -4300.0, UF)
-    r.add("spot", "under", 400.0, -4300.0, UF)
-    r.lamp(700.0, -4300.0, UF + 400.0, (140, 170, 255))
-    # The pit: along the flame bridge (east) or on stones a pressure plate raises for a while (west).
-    PIT0, PIT1 = -7400.0, -5200.0
-    south_floor = r.block(UX0, UX1, UY0, PIT0, BOTTOM, UF, "darkstone", "South Floor")
-    r.add("catcher", UX0, UX1, PIT0, PIT1, BOTTOM - 200.0)
-    flame_bridge = r.block(1400.0, 1600.0, PIT0, PIT1, BOTTOM, UF, "darkstone", "Flame Bridge")
-    r.walk_on("north floor -> flame bridge", north_floor, flame_bridge)
-    r.walk_on("flame bridge -> south floor", flame_bridge, south_floor)
-    for i in range(5):
-        r.add("flame", 1500.0, PIT1 - 250.0 - 425.0 * i, UF, 90.0, 0.45 * i, 0.6, 1.0, 1.6, "under")
-    r.add("sign", 1500.0, -4900.0, UF + 350.0, 90.0, "Flames")
-    r.add("lever", "plate", -1500.0, -4950.0, UF, 0.0, 9.0)
-    r.add("sign", -1500.0, -4600.0, UF + 350.0, 90.0, "Stones")
-    previous = north_floor
-    stone_y = PIT1
-    for i in range(3):
-        y = stone_y - 325.0 - 150.0
-        here = rect(-1500.0, y, 300.0)
-        r.add("mech", "plate", -1500.0, y, UF - 800.0, (300.0, 300.0, 200.0), (0.0, 0.0, 800.0), 0.3 + 0.3 * i, 0.8, (6.0, 1.5), "stone", "Pit Stone")
-        r.jump("pit stone {}".format(i + 1), previous, here, 0.0)
-        previous, stone_y = here, y - 150.0
-    r.jump("pit stone -> south floor", previous, south_floor, 0.0)
-    # Up: the heaven-or-hell birdcages (the heaven one carries the player up to the gallery) or the ledge-grab chimney.
-    GAL = UF + 1500.0
-    gallery = r.block(-700.0, UX1, UY0, UY0 + 600.0, GAL - 200.0, GAL, "darkstone", "Gallery")
-    walkway = r.block(UX0, -700.0, UY0 + 200.0, UY0 + 400.0, GAL - 100.0, GAL, "darkstone", "Gallery Walkway")
-    r.walk_on("gallery -> walkway", gallery, walkway)
-    r.add("cages", 0.0, -8000.0, UF, (300.0, UY0 + 300.0, GAL), 2)
-    r.add("sign", 0.0, -7600.0, UF + 450.0, 90.0, "Heaven or Hell  /  Climb (Q)")
-    previous, top = south_floor, UF
-    for i, rise in enumerate((220.0, 220.0, 220.0, 220.0, 220.0, 220.0, 180.0)):
-        top += rise
-        x0 = -2500.0 + 300.0 * i
-        here = r.block(x0, x0 + 300.0, UY0 + 600.0, UY0 + 900.0, UF, top, "stone", "Chimney Block")
-        r.grab("chimney {}".format(i + 1), previous, here, rise)
-        previous = here
-    r.walk_on("chimney -> gallery", previous, gallery, GAL - top)
-    r.lamp(-1500.0, UY0 + 300.0, GAL + 300.0, (140, 170, 255))
-    # Star coin 3: the walkway's west end past three flame jets.
-    for i in range(3):
-        r.add("flame", -1100.0 - 500.0 * i, UY0 + 300.0, GAL, 0.0, 0.5 * i, 0.6, 1.0, 1.4, "under")
-    r.add("coin", -2800.0, UY0 + 300.0, GAL)
-    # North along the east side: fading steps, a piston, a crumbling floor, the lever gallery.
-    previous, top = gallery, GAL
-    gcx, _ = middle(gallery)
-    for i in range(3):
-        top += 100.0
-        x, y = r.at(previous, N, 0.8, 100.0, P / 2.0, side=((gcx - 2500.0) if i == 0 else 0.0))
-        here = r.timed(x, y, top, 0.6 * i)
-        r.jump("fading step {}".format(i + 1), previous, here, 100.0, 0.8)
-        previous = here
-    x, y = r.at(previous, N, EASY, 0.0, P / 2.0)
-    piston, _ = r.moving(x, y, top, (0.0, 0.0, 400.0), 2.6, 1.0)
-    r.jump("fading step -> piston", previous, piston, 0.0, EASY)
-    top += 400.0
-    x, y = r.at(piston, N, 0.8, 100.0, P / 2.0)
-    top += 100.0
-    crumble = r.falling(x, y, top)
-    r.jump("piston -> crumbling floor", piston, crumble, 100.0, 0.8)
-    top += 100.0
-    x, y = r.at(crumble, N, 0.8, 100.0, 500.0)
-    lever_gallery = r.block(1900.0, UX1, y - 500.0, y + 500.0, top - 200.0, top, "darkstone", "Lever Gallery")
-    r.jump("crumbling floor -> lever gallery", crumble, lever_gallery, 100.0, 0.8)
-    LG_TOP = top
-    lgx, lgy = (1900.0 + UX1) / 2.0, y
-    if LG_TOP > CEIL - 250.0:
-        raise RuntimeError("The lever gallery is too close under the roof: {:.0f}".format(CEIL - LG_TOP))
-    r.add("lever", "under", lgx, lgy, LG_TOP, 90.0, 0.0)
-    r.lamp(lgx, lgy, LG_TOP + 200.0, (140, 170, 255))
-    # Lever 3 also raises a stone bridge from the lever gallery west to the well mouth.
-    r.stair("under", "Bridge Stone", lever_gallery, LG_TOP, mouth, DOOR_Z, (1900.0, lgy), (600.0, -3000.0), 5, 260.0, 100.0, 1500.0, 0.25, "stone")
+    r.add("section", "6 Heaven's Gate")
+    previous, top = corridor, RT
+    x, ly = CX1, LY
+    hops = ((1000.0, 0.0, 0.0, 0.0), (1200.0, 600.0, 0.0, 0.0), (1400.0, -600.0, 3.0, 1.5),
+            (1600.0, 0.0, 2.6, 1.6), (1700.0, 700.0, 2.4, 1.8), (1700.0, -700.0, 2.2, 1.8))
+    for i, (distance, side, on, off) in enumerate(hops):
+        ly += side
+        x += distance
+        column = rect(x + 150.0, ly, 300.0)
+        bottom, column_top = top - 500.0, top + 1100.0
+        r.wind(x + 150.0, ly, (bottom + column_top) / 2.0, column_top - bottom, 300.0, 300.0, 0.0, 90.0, 2200.0, 900.0, on, off)
+        r.glide("wing hop {}".format(i + 1), previous, top, column, bottom + 100.0)
+        island_top = column_top - 100.0
+        isle_x = x + 300.0 + 60.0 + 0.48 * 700.0
+        here = r.island(isle_x, ly, island_top, 700.0)
+        r.lift("updraft {} -> island".format(i + 1), column, column_top, here, island_top)
+        if i == 2:
+            coin_isle = r.island(isle_x, ly + 1500.0, island_top - 300.0, 300.0)
+            r.glide("island 3 -> coin isle", here, island_top, coin_isle, island_top - 300.0)
+            r.add("coin", isle_x, ly + 1500.0, island_top - 300.0)
+        previous, top = here, island_top
+        x = isle_x + 0.48 * 700.0
+    HG = top - 200.0
+    gx, gy = x + 700.0 + 0.48 * 1600.0, ly
+    gate = r.island(gx, gy, HG, 1600.0)
+    r.glide("last island -> heaven's gate", previous, top, gate, HG)
+    r.block(gx - 80.0, gx + 80.0, gy - 500.0, gy - 350.0, HG, HG + 1200.0, "gold", "Gate Pillar")
+    r.block(gx - 80.0, gx + 80.0, gy + 350.0, gy + 500.0, HG, HG + 1200.0, "gold", "Gate Pillar")
+    r.block(gx - 100.0, gx + 100.0, gy - 560.0, gy + 560.0, HG + 1200.0, HG + 1350.0, "gold", "Gate Lintel")
+    r.add("goal", gx + 200.0, gy, HG)
+    r.shaft(gx, gy, HG + 5000.0, HG, 500.0)
+    heights["heaven's gate"] = HG
 
-    # Catchers: under the sky and the clockwork, around the underworks (which has its own in the pit).
-    xs = [p[1] for p in r.pieces if p[0] in ("island", "cloud", "vanish", "mover", "gear", "sblock", "timed", "falling")]
-    ys = [p[2] for p in r.pieces if p[0] in ("island", "cloud", "vanish", "mover", "gear", "sblock", "timed", "falling")]
-    X0, X1, Y0, Y1 = min(xs) - 3000.0, max(xs) + 3000.0, min(ys + [UY0]) - 3000.0, max(ys) + 3000.0
-    M = 200.0
-    r.add("catcher", X0, UX0 - WALL_T - M, Y0, Y1, T0 - 900.0)
-    r.add("catcher", UX1 + WALL_T + M, X1, Y0, Y1, T0 - 1800.0)
-    r.add("catcher", UX0 - WALL_T - M, UX1 + WALL_T + M, UY1 + WALL_T + M, Y1, T0 - 1800.0)
-    r.add("catcher", UX0 - WALL_T - M, UX1 + WALL_T + M, Y0, UY0 - WALL_T - M, T0 - 1800.0)
+    # One catcher under everything (the tower has its own floor).
+    xs = [p[1] for p in r.pieces if p[0] in ("island", "jewel")] + [TX0, TX1]
+    ys = [p[2] for p in r.pieces if p[0] in ("island", "jewel")] + [TY0, TY1]
+    X0, X1, Y0, Y1 = min(xs + [-4000.0]) - 3000.0, max(xs + [gx]) + 3000.0, min(ys) - 3000.0, max(ys) + 3000.0
+    r.add("catcher", X0, X1, Y0, Y1, B - 1500.0)
     r.bounds = (X0, X1, Y0, Y1)
-    r.under = (UX0 - WALL_T, UX1 + WALL_T, UY0 - WALL_T, UY1 + WALL_T)
-
-    r.summit_top, r.gate_top = SUMMIT_TOP, GATE_TOP
-    r.heights = {"plaza": T0, "fork": FORK_TOP, "sun terrace": TS, "upper terrace": TU, "summit": SUMMIT_TOP,
-                 "switch hall": HALL_TOP, "clock landing": LANDING_TOP, "balcony": BALCONY_TOP, "clock top": CLOCK_TOP,
-                 "underworks floor": UF, "gallery": GAL, "lever gallery": LG_TOP}
+    r.under = (TX0 - WT, TX1 + WT, TY0 - WT, TY1 + WT)
+    r.summit_top, r.gate_top = HG, HG
+    r.heights = heights
     return r
 
 
 if __name__ == "__main__":
     route = build(22610.0, 500.9, 980.0, 600.0, 300.0)
     for name, g, rise, limit in route.checks:
-        print("  {:<40} gap {:>5.0f} rise {:>6.0f} (limit {:>5.0f}){}".format(name, g, rise, limit, "  TIGHT" if g > 0.85 * limit else ""))
+        print("  {:<42} gap {:>5.0f} rise {:>6.0f} (limit {:>5.0f}){}".format(name, g, rise, limit, "  TIGHT" if g > 0.85 * limit else ""))
     for name, z in route.heights.items():
-        print("  {:<18} {:>7.0f}  ({:+.0f} from the plaza)".format(name, z, z - route.heights["plaza"]))
+        print("  {:<18} {:>7.0f}  ({:+.0f} from the start)".format(name, z, z - route.heights["start"]))
     print("bounds {}".format(route.bounds))
     print("pieces {}, jumps {}".format(len(route.pieces), len(route.checks)))
