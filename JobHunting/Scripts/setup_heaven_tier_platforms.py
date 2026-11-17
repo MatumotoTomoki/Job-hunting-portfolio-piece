@@ -69,6 +69,31 @@ for name, tex, glow, rough, gold in (("MI_HeavenPure", "Pure", 0.9, 0.25, (1.0, 
     library.save_asset(path, False)
     looks[name] = mi
 looks["MI_HeavenClean"] = unreal.load_asset(DIR + "/MI_HeavenClean")
+# Area 2's big mechanism (the drawer steps and the Great Gear on the spire): the showpiece, so its inlay glows a little
+# more, as area 1's giant steps do (MI_HeavenDebrisBright). The gear is dressed like BP_SpinGear: marble, gold, shadow.
+bright_path = DIR + "/MI_HeavenCleanBright"
+if library.does_asset_exist(bright_path):
+    bright = unreal.load_asset(bright_path)
+else:
+    bright = tools.create_asset("MI_HeavenCleanBright", DIR, unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
+    editing.set_material_instance_parent(bright, looks["MI_HeavenClean"])
+    lines.append("created " + bright_path)
+editing.set_material_instance_scalar_parameter_value(bright, "Glow", 2.0)
+library.save_asset(bright_path, False)
+# Levers (and pressure plates, which are levers with the handle hidden): the base in the area's step, the handle gold,
+# the knob a softly glowing gold so it reads as the thing to touch.
+knob_path = DIR + "/MI_HeavenGoldGlow"
+if library.does_asset_exist(knob_path):
+    knob = unreal.load_asset(knob_path)
+else:
+    knob = tools.create_asset("MI_HeavenGoldGlow", DIR, unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
+    editing.set_material_instance_parent(knob, unreal.load_asset(DIR + "/MI_HeavenGold"))
+    lines.append("created " + knob_path)
+editing.set_material_instance_scalar_parameter_value(knob, "Glow", 1.0)
+library.save_asset(knob_path, False)
+GOLD_LOOK = unreal.load_asset(DIR + "/MI_HeavenGold")
+GEAR_LOOK = [unreal.load_asset(DIR + "/MI_HeavenMarble"), unreal.load_asset(DIR + "/MI_HeavenGold"),
+             unreal.load_asset("/Game/ThirdPerson/Blueprints/Gimmicks/Machine/MI_MachineShadow")]
 
 level = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
@@ -86,6 +111,30 @@ for level_path, look_name in LEVELS:
             for i in range(component.get_num_materials()):
                 component.set_material(i, look)
         dressed += 1
+    levers = 0
+    for actor in actors.get_all_level_actors():
+        if actor.get_class().get_name() != "BP_Lever_C":
+            continue
+        for component in actor.get_components_by_class(unreal.StaticMeshComponent):
+            part = component.get_name()
+            component.set_material(0, GOLD_LOOK if part.startswith("Handle") else knob if part.startswith("Knob") else look)
+        levers += 1
+    lines.append("   {} levers".format(levers))
+    if level_path.endswith("LV_Area2_Tower"):
+        steps = 0
+        for actor in actors.get_all_level_actors():
+            if actor.get_class().get_name() != "BP_Mechanism_C":
+                continue
+            label = actor.get_actor_label()
+            for component in actor.get_components_by_class(unreal.StaticMeshComponent):
+                if "Drawer Step" in label:
+                    component.set_material(0, bright)
+                    steps += 1
+                elif "Great Gear" in label:
+                    for slot, material in enumerate(GEAR_LOOK[:component.get_num_materials()]):
+                        component.set_material(slot, material)
+                    lines.append("   Great Gear dressed: " + label)
+        lines.append("   {} drawer steps -> MI_HeavenCleanBright".format(steps))
     lines.append("{}: {} platforms -> {} (saved {})".format(level_path, dressed, look_name, level.save_current_level()))
     # Check it stuck.
     level.load_level(level_path)
