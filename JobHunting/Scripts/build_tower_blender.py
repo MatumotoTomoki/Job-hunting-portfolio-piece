@@ -7,6 +7,7 @@
 #                                                            Shadow (named M_Tower<Slot>)
 #   SourceArt/Models/Tower/SM_TowerGear_<letter><n>.fbx      the great wall gears, one mesh each (they turn in UE),
 #   SourceArt/Models/Tower/tower_gears_<letter>.json          and where they go
+#   SourceArt/Models/Tower/SM_TowerLamps_<letter>.fbx         the hanging lamps (world positioned; no shadows in UE)
 #   SourceArt/Models/Tower/Textures/T_Tower<Slot>_C/_N/_E.png   tileable 1024 colour, normal and glow-mask maps
 #                                                                (2 m of surface per tile)
 # Gimmicks (BP actors) are not touched. Decorations never make new ledges at walkable heights: anything sideways is
@@ -249,6 +250,7 @@ class Builder:
         self.bm = bmesh.new()
         self.tone, self.z0, self.z1, self.uv = (1.0, 1.0, 1.0), 0.0, 1.0, (0.0, 0.0)
         self.gears = []     # (centre, normal, radius, tone) of the great wall gears, built as their own meshes
+        self.lamps = None   # a second Builder for the hanging lamps (set by main)
 
     def begin(self, row, z0, z1):
         rng = random.Random(zlib.crc32(row["label"].encode("utf-8")))
@@ -319,8 +321,8 @@ class Builder:
         self.bm.from_mesh(mesh)
         bpy.data.meshes.remove(mesh)
 
-    def tube(self, a, b, r, slot, segments=12, cap_slot=None):
-        # A cylinder from point a to point b (metres), any direction.
+    def tube(self, a, b, r, slot, segments=12, cap_slot=None, r_end=None):
+        # A cylinder from point a to point b (metres), any direction; with r_end, a cone or frustum (radius r at a).
         a, b = Vector(a), Vector(b)
         axis = b - a
         length = axis.length
@@ -334,9 +336,9 @@ class Builder:
         lo, hi = [], []
         for i in range(segments):
             ang = 2.0 * math.pi * (i + 0.5) / segments
-            off = u * (r * math.cos(ang)) + w * (r * math.sin(ang))
-            lo.append(new.verts.new(a + off))
-            hi.append(new.verts.new(b + off))
+            ring = u * math.cos(ang) + w * math.sin(ang)
+            lo.append(new.verts.new(a + ring * r))
+            hi.append(new.verts.new(b + ring * (r if r_end is None else r_end)))
         sides = [new.faces.new((lo[i], lo[(i + 1) % segments], hi[(i + 1) % segments], hi[i])) for i in range(segments)]
         caps = [new.faces.new(list(reversed(lo))), new.faces.new(hi)]
         bmesh.ops.recalc_face_normals(new, faces=new.faces)
@@ -642,18 +644,86 @@ def dark_door(b, x0, x1, y0, y1, z0, z1):
         b.box(x0 - out, x1 + out, y0 - f, y1 + f, z1, z1 + f, S["Bronze"], bevel=0.015)
 
 
-def lantern(b, x0, x1, y0, y1, z0, z1, hang_to=None):
-    cx, cy, r = (x0 + x1) / 2.0, (y0 + y1) / 2.0, min(x1 - x0, y1 - y0) / 2.0
-    b.cylinder(cx, cy, z0, z0 + 0.05, r * 1.1, S["Bronze"], 12)
-    b.cylinder(cx, cy, z0 + 0.05, z1 - 0.05, r * 0.7, S["Ember"], 12)
-    for k in range(4):
-        a = 2.0 * math.pi * (k + 0.5) / 4.0
-        px, py = cx + r * 0.95 * math.cos(a), cy + r * 0.95 * math.sin(a)
-        b.tube((px, py, z0 + 0.05), (px, py, z1 - 0.05), 0.015, S["Bronze"], 4)
-    b.cylinder(cx, cy, z1 - 0.05, z1, r * 1.15, S["Bronze"], 12)
-    b.cylinder(cx, cy, z1, z1 + 0.06, r * 0.5, S["Bronze"], 12)
-    if hang_to is not None:
-        b.tube((cx, cy, z1 + 0.06), (cx, cy, hang_to), 0.02, S["Iron"], 6)
+def chain(b, a, e, link=0.075, width=0.04, wire=0.008):
+    # Iron chain from a to e: flat oval links, each turned 90 degrees from the last.
+    a, e = Vector(a), Vector(e)
+    axis = e - a
+    length = axis.length
+    if length < 1e-3:
+        return
+    axis.normalize()
+    helper = Vector((0.0, 0.0, 1.0)) if abs(axis.z) < 0.9 else Vector((1.0, 0.0, 0.0))
+    side = axis.cross(helper).normalized()
+    sides = (side, axis.cross(side).normalized())
+    n = max(1, int(length / (link * 0.8)))
+    for i in range(n):
+        c = a + axis * (length * (i + 0.5) / n)
+        p = sides[i % 2] * (width / 2.0)
+        h = axis * (link / 2.0)
+        corners = (c - h - p, c + h - p, c + h + p, c - h + p)
+        for k in range(4):
+            b.tube(corners[k], corners[(k + 1) % 4], wire, S["Iron"], 4)
+
+
+def lantern(b, x0, x1, y0, y1, z0, z1, hang_to=None, arm_from=None):
+    # An ancient machine lamp in place of the bulb: a bronze fire bowl with a glyph band, a cluster of glowing
+    # crystals growing out of it and three bronze prongs round them, hung on three chains that meet in a ring above
+    # the lamp's PointLight (left where it is, ~0.4 m over the box) and go on up to the ceiling as one chain.
+    cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    zb, zr = z0 - 0.05, z0 + 0.18           # bowl foot and rim
+    r_foot, r_rim = 0.12, 0.36
+
+    def r_at(z):
+        return r_foot + (r_rim - r_foot) * (z - zb) / (zr - zb)
+
+    b.tube((cx, cy, zb - 0.06), (cx, cy, zb), 0.03, S["Bronze"], 8, r_end=0.07)                  # finial under it
+    b.tube((cx, cy, zb), (cx, cy, zr), r_foot, S["Bronze"], 20, r_end=r_rim)
+    za, zc = z0 + 0.03, z0 + 0.11
+    b.tube((cx, cy, za), (cx, cy, zc), r_at(za) + 0.012, S["Glyph"], 20, r_end=r_at(zc) + 0.012)  # glowing band
+    b.cylinder(cx, cy, zr - 0.02, zr + 0.025, r_rim + 0.025, S["Iron"], 20)                       # rim
+    b.cylinder(cx, cy, zr + 0.025, zr + 0.035, r_rim - 0.03, S["Ember"], 20)                       # embers
+    # crystals: one tall, five leaning round it
+    rng = random.Random(int(cx * 100) * 7919 + int(cy * 100))
+    base = Vector((cx, cy, zr + 0.02))
+    b.tube(base, base + Vector((0.0, 0.0, 0.3)), 0.075, S["Ember"], 6, r_end=0.005)
+    for k in range(5):
+        ang = 2.0 * math.pi * k / 5.0 + rng.uniform(-0.3, 0.3)
+        foot = base + Vector((math.cos(ang) * 0.12, math.sin(ang) * 0.12, 0.0))
+        tip = foot + Vector((math.cos(ang) * 0.1, math.sin(ang) * 0.1, rng.uniform(0.12, 0.2)))
+        b.tube(foot, tip, rng.uniform(0.035, 0.05), S["Ember"], 6, r_end=0.004)
+    # prongs curling up round the crystals
+    for k in range(3):
+        ang = 2.0 * math.pi * (k + 0.5) / 3.0
+        d = Vector((math.cos(ang), math.sin(ang), 0.0))
+        p0 = base + d * (r_rim - 0.02)
+        p1 = base + d * (r_rim + 0.04) + Vector((0.0, 0.0, 0.14))
+        p2 = base + d * (r_rim - 0.08) + Vector((0.0, 0.0, 0.26))
+        b.tube(p0, p1, 0.018, S["Bronze"], 6)
+        b.tube(p1, p2, 0.018, S["Bronze"], 6, r_end=0.006)
+    # three chains to a ring above the light, then one chain up
+    apex = Vector((cx, cy, z0 + 1.0))
+    for k in range(3):
+        ang = 2.0 * math.pi * k / 3.0
+        chain(b, (cx + math.cos(ang) * r_rim, cy + math.sin(ang) * r_rim, zr + 0.02), apex)
+    b.cylinder(cx, cy, apex.z - 0.02, apex.z + 0.03, 0.05, S["Bronze"], 12)
+    hung = hang_to is not None and hang_to > apex.z + 0.1
+    if hung:
+        chain(b, apex + Vector((0.0, 0.0, 0.03)), (cx, cy, hang_to))
+        b.cylinder(cx, cy, hang_to - 0.04, hang_to, 0.12, S["Bronze"], 12)                        # ceiling rose
+    elif arm_from is not None:
+        # no ceiling: an iron arm out of the nearest wall or column, with a brace under it and a bronze plate
+        (wx, wy, wz), out = arm_from
+        wall = Vector((wx, wy, wz))
+        hook = Vector((cx, cy, wz))
+        chain(b, apex + Vector((0.0, 0.0, 0.03)), hook)
+        b.tube(wall, hook + out * 0.08, 0.035, S["Iron"], 8)
+        b.tube(wall - Vector((0.0, 0.0, 0.5)), wall + (hook - wall) * 0.6, 0.022, S["Iron"], 6)
+        b.tube(hook + out * 0.08, hook + out * 0.08 - Vector((0.0, 0.0, 0.07)), 0.03, S["Bronze"], 8, r_end=0.005)
+        b.tube(wall - out * 0.01, wall + out * 0.03, 0.16, S["Bronze"], 6)
+        b.tube(wall - Vector((0.0, 0.0, 0.5)) - out * 0.01, wall - Vector((0.0, 0.0, 0.5)) + out * 0.03, 0.08, S["Bronze"], 6)
+    else:
+        # nothing to hang from nearby: a long chain up into the dark, as if from somewhere far above
+        chain(b, apex + Vector((0.0, 0.0, 0.03)), (cx, cy, apex.z + 8.0))
 
 
 def axle(b, x0, x1, y0, y1, z0, z1):
@@ -692,6 +762,53 @@ def ceiling_above(rows, row):
     return best / 100.0
 
 
+def support_beside(rows, row, z, reach=300.0):
+    # For a lamp with no ceiling over it: the nearest point (metres, Blender) on the side of a solid box or column
+    # that spans height z (metres) within `reach` cm of the lamp, and the outward direction there; else None.
+    (x0, y0, _), (x1, y1, _) = row["min"], row["max"]
+    cx, cy, zc = (x0 + x1) / 2.0, (y0 + y1) / 2.0, z * 100.0
+    best = None
+    for other in rows:
+        mesh = other["mesh"] or ""
+        if other is row or other["class"] != "StaticMeshActor" or role(other["label"]) == "Lamp":
+            continue
+        if not (mesh.endswith("/Cube.Cube") or mesh.endswith("/Cylinder.Cylinder")):
+            continue
+        (ox0, oy0, oz0), (ox1, oy1, oz1) = other["min"], other["max"]
+        if not oz0 + 30.0 <= zc <= oz1 - 30.0:
+            continue
+        px, py = min(max(cx, ox0), ox1), min(max(cy, oy0), oy1)
+        d = math.hypot(cx - px, cy - py)
+        if 1.0 < d <= reach and (best is None or d < best[0]):
+            best = (d, px, py)
+    if best is None:
+        return None
+    _, px, py = best
+    return to_blender(px, py, zc), Vector(((cx - px), -(cy - py), 0.0)).normalized()
+
+
+def sink_shared_tops(rows):
+    # Where two boxes' tops are at the same height and overlap (F's roof slabs over the tower walls), the two top
+    # faces would fight. The lower-priority box (a wall under a roof or floor) gets a copy with its top 2 cm lower,
+    # hidden under the other; the collision box in the level keeps the real height. Returns {label: copy}.
+    def rank(row):
+        return 1 if role(row["label"]) in ("Roof", "Room Ceiling") or row["material"] == "MI_TowerFloor" else 0
+
+    boxes = [r for r in rows if r["class"] == "StaticMeshActor" and not r["hidden"] and (r["mesh"] or "").endswith("/Cube.Cube")]
+    sunk = {}
+    for i, p in enumerate(boxes):
+        for q in boxes[i + 1:]:
+            if abs(p["max"][2] - q["max"][2]) > 2.0:
+                continue
+            if min(p["max"][0], q["max"][0]) - max(p["min"][0], q["min"][0]) <= 1.0:
+                continue
+            if min(p["max"][1], q["max"][1]) - max(p["min"][1], q["min"][1]) <= 1.0:
+                continue
+            low = p if rank(p) < rank(q) else q
+            sunk[low["label"]] = dict(low, max=[low["max"][0], low["max"][1], low["max"][2] - 2.0])
+    return sunk
+
+
 def dress(b, row, rows):
     x0, x1, y0, y1, z0, z1 = bounds(row)
     name, material, mesh = role(row["label"]), row["material"], row["mesh"] or ""
@@ -699,7 +816,11 @@ def dress(b, row, rows):
     if name == "Cable":
         cable(b, row)
     elif name == "Lamp" or material == "MI_RuinsEmber":
-        lantern(b, x0, x1, y0, y1, z0, z1, ceiling_above(rows, row))
+        # into the section's lamp mesh: its chains pass right by the PointLight, so in UE it casts no shadow
+        b.lamps.uv = b.uv
+        above = ceiling_above(rows, row)
+        lantern(b.lamps, x0, x1, y0, y1, z0, z1, above,
+                None if above is not None else support_beside(rows, row, z0 + 1.25))
     elif mesh.endswith("/Cylinder.Cylinder"):
         axle(b, x0, x1, y0, y1, z0, z1)
     elif material == "MI_TowerWall":
@@ -856,13 +977,17 @@ def main():
     rows = json.load(open(os.path.join(OUT_DIR, "area2_layout.json"), encoding="utf-8"))
     report = []
     built = []
+    sunk = sink_shared_tops(rows)
+    report.append("tops sunk 2 cm under a shared top: " + ", ".join(sorted(sunk)))
     for letter in SECTIONS:
         builder = Builder()
+        builder.lamps = Builder()
         kinds = {}
         for row in rows:
             section = row["folder"].split("/")[1] if "/" in row["folder"] else ""
             if not section.startswith(letter + " ") or row["class"] != "StaticMeshActor" or row["hidden"]:
                 continue
+            row = sunk.get(row["label"], row)
             _, _, _, _, z0, z1 = bounds(row)
             builder.begin(row, z0, z1)
             name = dress(builder, row, rows)
@@ -873,6 +998,15 @@ def main():
         export(obj, name)
         report.append("{}: {} pieces ({}), {} vertices".format(name, sum(kinds.values()), ", ".join("{} {}".format(k, v) for k, v in sorted(kinds.items())), len(obj.data.vertices)))
         report.append(build_gears(letter, builder.gears))
+        lamps_path = os.path.join(OUT_DIR, "SM_TowerLamps_" + letter + ".fbx")
+        if os.path.exists(lamps_path):
+            os.remove(lamps_path)
+        if kinds.get("Lamp"):
+            lamps = builder.lamps.finish("SM_TowerLamps_" + letter)
+            lamps.visible_shadow = False                # as in UE, for the preview
+            export(lamps, "SM_TowerLamps_" + letter)
+        else:
+            builder.lamps.bm.free()
     with open(os.path.join(OUT_DIR, "tower_build.txt"), "w", encoding="utf-8") as out:
         out.write("\n".join(report) + "\n")
     print("\n".join(report))

@@ -1,0 +1,62 @@
+[
+ {
+  "name": "SM_TowerGear_E1",
+  "location": [
+   9600.0,
+   7150.0,
+   10918.0
+  ],
+  "yaw": -180.0,
+  "radius": 162.0
+ },
+ {
+  "name": "SM_TowerGear_E2",
+  "location": [
+   9700.0,
+   7150.0,
+   10918.0
+  ],
+  "yaw": -0.0,
+  "radius": 162.0
+ },
+ {
+  "name": "SM_TowerGear_E3",
+  "location": [
+   9000.0,
+   7800.0,
+   10918.0
+  ],
+  "yaw": 90.0,
+  "radius": 162.0
+ },
+ {
+  "name": "SM_TowerGear_E4",
+  "location": [
+   9000.0,
+   7700.0,
+   10918.0
+  ],
+  "yaw": -90.0,
+  "radius": 162.0
+ },
+ {
+  "name": "SM_TowerGear_E5",
+  "location": [
+   9000.0,
+   6600.0,
+   10918.0
+  ],
+  "yaw": 90.0,
+  "radius": 162.0
+ },
+ {
+  "name": "SM_TowerGear_E6",
+  "location": [
+   9000.0,
+   6500.0,
+   10918.0
+  ],
+  "yaw": -90.0,
+  "radius": 162.0
+ }
+]
