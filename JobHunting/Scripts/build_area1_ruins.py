@@ -492,6 +492,7 @@ torch(6800.0, 800.0, S3 + 40.0, F)
 # Story 3: the pressure plate slides three stones out of the walls, up to story 4.
 plate = pressure_plate(6700.0, 300.0, S3, F)
 SLIDE = 200.0
+RECESS = 5.0   # hidden 5 cm deeper than the wall face: flush, the stone and the wall art flickered (the user's fix, 2026-11-17)
 # The stones stay out a while, then slide back into the walls one after another, first to last: hurry.
 # When all are home the plate springs back up, ready to be stepped on again.
 STONE_OUT = 0.8
@@ -502,13 +503,13 @@ north = [(6050.0, 3500.0), (5500.0, 3600.0)]
 previous = S3_AREA
 for i, (sx, st) in enumerate(north):
     # Hidden in the north wall, then out by SLIDE.
-    mechanism(plate, sx, IY1 + SLIDE / 2.0, st, (200.0, SLIDE, 60.0), unreal.Vector(0.0, -SLIDE, 0.0), 0.3 * i, "Sliding Stone", F, STONE_OUT, STONE_STAYS, STONE_BACK)
-    here = (sx - 100.0, sx + 100.0, IY1 - SLIDE, IY1)
+    mechanism(plate, sx, IY1 + SLIDE / 2.0 + RECESS, st, (200.0, SLIDE, 60.0), unreal.Vector(0.0, -SLIDE, 0.0), 0.3 * i, "Sliding Stone", F, STONE_OUT, STONE_STAYS, STONE_BACK)
+    here = (sx - 100.0, sx + 100.0, IY1 - SLIDE + RECESS, IY1)
     jump("sliding stone {}".format(i + 1), rect_gap(previous, here), 100.0, HARD_LIMIT)
     previous = here
 west_y = 270.0
-mechanism(plate, IX0 - SLIDE / 2.0, west_y, 3700.0, (SLIDE, 200.0, 60.0), unreal.Vector(SLIDE, 0.0, 0.0), 0.6, "Sliding Stone", F, STONE_OUT, STONE_STAYS, STONE_BACK)
-here = (IX0, IX0 + SLIDE, west_y - 100.0, west_y + 100.0)
+mechanism(plate, IX0 - SLIDE / 2.0 - RECESS, west_y, 3700.0, (SLIDE, 200.0, 60.0), unreal.Vector(SLIDE, 0.0, 0.0), 0.6, "Sliding Stone", F, STONE_OUT, STONE_STAYS, STONE_BACK)
+here = (IX0, IX0 + SLIDE - RECESS, west_y - 100.0, west_y + 100.0)
 jump("sliding stone 3", rect_gap(previous, here), 100.0, HARD_LIMIT)
 previous = here
 # Story 4: an L of balconies along the west and south walls.
@@ -609,7 +610,12 @@ gate_x = WALL_FACE + 500.0
 for side in (-1, 1):
     box(gate_x - 150.0, gate_x + 150.0, side * 450.0 - 150.0, side * 450.0 + 150.0, WALL_TOP, WALL_TOP + 800.0, F, "Gate Tower")
 box(gate_x - 150.0, gate_x + 150.0, -600.0, 600.0, WALL_TOP + 800.0, WALL_TOP + 900.0, F, "Gate Lintel")
-gate = spawn(exit_class, unreal.Vector(gate_x, 0.0, WALL_TOP), "Exit", F, unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
+# The way out: BP_GearExit (setup_gear_exit.py) past the gate, clear of the lintel as it rises; the plain exit until it exists.
+if library.does_asset_exist(DIR + "/BP_GearExit"):
+    gate = spawn(bp_class(DIR + "/BP_GearExit"), unreal.Vector(WALL_FACE + 950.0, 0.0, WALL_TOP), "Gear Exit", F,
+                 unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
+else:
+    gate = spawn(exit_class, unreal.Vector(gate_x, 0.0, WALL_TOP), "Exit", F, unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
 gate.set_editor_property("NextLevel", NEXT_LEVEL.rsplit("/", 1)[1])
 eye = unreal.Vector(WALL_FACE - STEP_DEPTH * STEPS * 0.55, -2800.0, COURT_TOP + 900.0)
 target = unreal.Vector(WALL_FACE - STEP_DEPTH * STEPS * 0.5, 0.0, COURT_TOP + STEP_RISE * STEPS * 0.45)

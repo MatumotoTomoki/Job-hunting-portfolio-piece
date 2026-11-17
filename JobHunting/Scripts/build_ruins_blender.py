@@ -305,10 +305,12 @@ def dress(builder, row, rng):
         builder.cylinder(cx, cy, z1 - 1.3 * base, z1 - base, r * 1.08, S["Marble"], 24)
         builder.box(cx - r * 1.25, cx + r * 1.25, cy - r * 1.25, cy + r * 1.25, z1 - base, z1, S["Marble"], bevel=0.02)
     elif ("Roof" in name and "Broken" not in name) or name in ("House", "Long House"):
-        # Houses are walked on along their tops: tiled roof terraces over plaster walls, eaves round them.
-        builder.box(x0, x1, y0, y1, z0, z1, S["Plaster"], S["Terracotta"], bevel=0.02)
+        # Houses are walked on along their tops: tiled roof terraces over plaster walls, eaves round them. The tiles
+        # sit 3 cm proud: a roof's top is level with the walls it rests on, and the two flickered (2026-11-17).
+        lift = 0.03
+        builder.box(x0, x1, y0, y1, z0, z1 + lift, S["Plaster"], S["Terracotta"], bevel=0.02)
         eave = 0.18
-        builder.box(x0 - eave, x1 + eave, y0 - eave, y1 + eave, z1 - 0.12, z1 - 0.04, S["Terracotta"], bevel=0.02)
+        builder.box(x0 - eave, x1 + eave, y0 - eave, y1 + eave, z1 - 0.12 + lift, z1 - 0.04 + lift, S["Terracotta"], bevel=0.02)
         if h > 2.0:
             builder.box(x0 - 0.05, x1 + 0.05, y0 - 0.05, y1 + 0.05, z0, z0 + 0.4, S["Ashlar"], bevel=0.02)
     elif name in ("Deck", "Broken Bridge", "Broken Roof") or name.startswith("Story"):
