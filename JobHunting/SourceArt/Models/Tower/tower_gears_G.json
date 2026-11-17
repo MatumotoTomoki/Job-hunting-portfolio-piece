@@ -1,0 +1,42 @@
+[
+ {
+  "name": "SM_TowerGear_G1",
+  "location": [
+   14150.0,
+   7300.0,
+   11046.0
+  ],
+  "yaw": 90.0,
+  "radius": 260.0
+ },
+ {
+  "name": "SM_TowerGear_G2",
+  "location": [
+   14150.0,
+   5700.0,
+   11046.0
+  ],
+  "yaw": -90.0,
+  "radius": 260.0
+ },
+ {
+  "name": "SM_TowerGear_G3",
+  "location": [
+   12700.0,
+   6500.0,
+   11046.0
+  ],
+  "yaw": -180.0,
+  "radius": 260.0
+ },
+ {
+  "name": "SM_TowerGear_G4",
+  "location": [
+   15600.0,
+   6500.0,
+   11046.0
+  ],
+  "yaw": -0.0,
+  "radius": 260.0
+ }
+]

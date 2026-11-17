@@ -5,6 +5,7 @@
 #   /Game/Art/Tower/SM_Tower_<letter>               one mesh per section, world positioned, no collision
 #   /Game/Art/Tower/Gears/SM_TowerGear_<letter><n>  the great wall gears, placed as "A2 Gear <letter><n>"; their
 #                                                   MI_TowerGear<Slot> materials turn them (Spin, SpinSpeed)
+#   /Game/Art/Tower/SM_TowerLamps_<letter>          the section's hanging lamps, "A2 Lamps <letter>", no shadows
 # In the level: for every section that has a mesh, its plain boxes (the "A2 ..." StaticMeshActors in that section's
 # folder) stay as the collision but are hidden, and the mesh is placed at the origin as "A2 Art <letter>". Gimmicks
 # (BP actors) are left exactly as they are. Run it again after build_area2_tower.py (which brings the plain boxes back
@@ -224,14 +225,29 @@ for path in sorted(glob.glob(os.path.join(SOURCE, "tower_gears_*.json"))):
         gears.append((spec, mesh))
 lines.append("{} gears imported".format(len(gears)))
 
+# the hanging lamps of each section (world positioned, cast no shadow: their chains pass by the PointLights)
+lamps = {}
+for path in sorted(glob.glob(os.path.join(SOURCE, "SM_TowerLamps_*.fbx"))):
+    asset_path, mesh = import_mesh(path, DIR, instances)
+    lamps[asset_path.rsplit("_", 1)[1]] = mesh
+lines.append("lamps for sections {}".format(", ".join(sorted(lamps))))
+
 # ----- the level -----
 level = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 if not level.load_level(LEVEL):
     raise RuntimeError("Could not open " + LEVEL)
 for actor in actors.get_all_level_actors():
-    if actor.get_actor_label().startswith(("A2 Art ", "A2 Gear ")):
+    if actor.get_actor_label().startswith(("A2 Art ", "A2 Gear ", "A2 Lamps ")):
         actors.destroy_actor(actor)
+for letter, mesh in sorted(lamps.items()):
+    lamp = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector(0.0, 0.0, 0.0), unreal.Rotator(0.0, 0.0, 0.0))
+    lamp.set_actor_label("A2 Lamps " + letter)
+    lamp.set_folder_path("Area2/Art")
+    component = lamp.get_editor_property("static_mesh_component")
+    component.set_static_mesh(mesh)
+    component.set_collision_profile_name("NoCollision")
+    component.set_editor_property("cast_shadow", False)
 for spec, mesh in gears:
     x, y, z = spec["location"]
     gear = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector(x, y, z), unreal.Rotator(0.0, 0.0, spec["yaw"]))
