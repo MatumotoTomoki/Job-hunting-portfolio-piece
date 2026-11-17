@@ -1,0 +1,2 @@
+SM_Tower_A: 17 pieces (Alcove Floor 1, Lamp 3, Ledge Pillar 1, Room Ceiling 1, Room Floor 1, Switch Ledge 1, Wall 9), 29292 vertices
+A gears: 8
