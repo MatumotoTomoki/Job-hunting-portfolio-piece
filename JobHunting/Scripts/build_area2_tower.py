@@ -399,7 +399,7 @@ for x, y in ((1900.0, -150.0), (1900.0, 350.0), (2150.0, 800.0)):
     previous = here
 jump("blue step -> door", RX1 - previous[2], DOOR_SILL - top)
 for x, y in ((300.0, -900.0), (1200.0, 1000.0), (2200.0, 0.0)):
-    lamp(x, y, B + 1000.0, F, 3000.0, 1500.0)
+    lamp(x, y, B + 1000.0, F, 1800.0, 1500.0)     # rooms are dimmer (was 3000: too bright inside)
 
 # ===== B. Gear Shaft (80-97 m) =====
 F = "B Gear Shaft"
@@ -530,7 +530,8 @@ wall("x", CX0, CX1, CY1, CY1 + T, FOOT, CLOCK_TOP, F)
 wall("x", CX0, CX1, CY0 - T, CY0, FOOT, CLOCK_TOP, F)
 L = ledge(span(CX0, 10500.0, 6250.0, 6750.0), F_TOP, F, "Arrival Landing", FLOOR, thick=150.0)
 toggle(10120.0, 6330.0, F_TOP, F)
-lamp(10100.0, 6700.0, F_TOP + 300.0, F)
+ROOM_LAMP = 2400.0     # the clock room's lamps: dimmer than outside (was 4000: too bright inside)
+lamp(10100.0, 6700.0, F_TOP + 300.0, F, ROOM_LAMP)
 # Round the walls, counter-clockwise from the landing: down the west wall, along the south, up the east, back along
 # the north, a second lap higher up. Each piece: (kind, size); a step up of 100 each.
 INSET = 170.0
@@ -578,7 +579,7 @@ for index, (kind, size) in enumerate(pieces):
         rewind = spawn(bp_class(GIMMICKS + "/BP_TimeRewindArea"), unreal.Vector(x, y, top), "Time Rewind Area", F)
         for key, value in (("CountSeconds", 3.0), ("CooldownSeconds", 10.0), ("NightSunPitch", 15.0), ("NightBlendSpeed", 1.0), ("TextHeight", 140.0)):
             rewind.set_editor_property(key, value)
-        lamp(x, y, top + 350.0, F)
+        lamp(x, y, top + 350.0, F, ROOM_LAMP)
     elif kind == "piston":
         here = platform(bp_class(GIMMICKS + "/BP_MovingPlatform"), x, y, top, "Piston", F,
                         (("MoveOffset", unreal.Vector(0.0, 0.0, 600.0)), ("MoveSeconds", 2.4), ("WaitSeconds", 1.0)))
@@ -616,7 +617,7 @@ platform(bp_class(GIMMICKS + "/BP_MovingPlatform"), TX, TY, TTOP, "Roof Lift", F
          (("MoveOffset", unreal.Vector(0.0, 0.0, lift_rise)), ("MoveSeconds", 2.5), ("WaitSeconds", 1.5)))
 for i in range(4):
     a = 2.0 * math.pi * i / 4.0
-    lamp((CX0 + CX1) / 2.0 + 900.0 * math.cos(a), (CY0 + CY1) / 2.0 + 900.0 * math.sin(a), F_TOP + 1200.0 + 300.0 * i, F)
+    lamp((CX0 + CX1) / 2.0 + 900.0 * math.cos(a), (CY0 + CY1) / 2.0 + 900.0 * math.sin(a), F_TOP + 1200.0 + 300.0 * i, F, ROOM_LAMP)
 
 # ===== G. Roof (136-149 m) and the big mechanism =====
 F = "G Roof"

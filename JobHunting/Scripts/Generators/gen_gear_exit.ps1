@@ -210,6 +210,8 @@ $leaving = SetSelf 'Leaving' 'bool' 'true' 3200 0
 $cast = GameInstance 3500 0
 $saved = SaveStats $cast 3800 0
 $moving = GiSet $cast 'ChangingArea' 'bool' '' 5000 0 'true'
+# GearArrival: the next area's BP_GearArrival (if it has one) brings the player up through its floor.
+$arrival = GiSet $cast 'GearArrival' 'bool' '' 5000 300 'true'
 $dark = Fade '0.0' '1.0' '0.6' 'true' 5250 0
 $wait = Delay '0.6' 5750 0
 $open = OpenLevel 6000 0
@@ -219,5 +221,5 @@ Connect $top 'then' $once 'execute'
 Connect $once 'else' $leaving 'execute'
 Chain @($leaving, $cast)
 Connect $cast 'then' $saved[0] 'execute'
-Chain @($saved[1], $moving, $dark, $wait, $open)
+Chain @($saved[1], $moving, $arrival, $dark, $wait, $open)
 Write-Graph 'BP_GearExit_EventGraph.txt'

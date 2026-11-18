@@ -496,11 +496,90 @@ def wall_piece(b, x0, x1, y0, y1, z0, z1):
     gears(b, x0, x1, y0, y1, z0, z1)
 
 
-def room_floor(b, x0, x1, y0, y1, z0, z1):
-    b.box(x0, x1, y0, y1, z0, z1, S["Masonry"], S["Flagstone"], bevel=0.03)
-    # An inlaid machine seal in the middle: bronze, a glyph ring, a bronze hub (each a little above the last).
+OPEN_SEALS = {"A2 010 Room Floor"}   # the seal area 1's gear rises through (BP_GearArrival, setup_gear_arrival.py)
+SEAL_LID = "SM_TowerSealLid"
+
+
+def ring_piece(b, cx, cy, z0, z1, r_in, outer, slot_side, slot_top, segments=48):
+    # A flat piece with a round hole: between the circle r_in and an outer boundary, with its top, bottom and the
+    # hole's inner wall (the outer edge is left open: neighbours close it). outer: a radius (an annulus) or ("square",
+    # half size).
+    new = bmesh.new()
+    rings = []
+    for z in (z0, z1):
+        inner, outside = [], []
+        for i in range(segments):
+            a = 2.0 * math.pi * i / segments
+            ca, sa = math.cos(a), math.sin(a)
+            inner.append(new.verts.new((cx + r_in * ca, cy + r_in * sa, z)))
+            if isinstance(outer, tuple):
+                k = outer[1] / max(abs(ca), abs(sa))
+            else:
+                k = outer
+            outside.append(new.verts.new((cx + k * ca, cy + k * sa, z)))
+        rings.append((inner, outside))
+    (bi, bo), (ti, to) = rings
+    # Winding sets each face's side (angles run anticlockwise seen from above): tops up, bottoms down, the hole's
+    # wall towards the middle, an annulus's outer wall outwards.
+    for i in range(segments):
+        j = (i + 1) % segments
+        new.faces.new((ti[j], ti[i], to[i], to[j]))          # top
+        new.faces.new((bi[i], bi[j], bo[j], bo[i]))          # bottom
+        new.faces.new((ti[i], ti[j], bi[j], bi[i]))          # the hole's wall
+        if not isinstance(outer, tuple):
+            new.faces.new((bo[i], bo[j], to[j], to[i]))      # an annulus closes its outer wall too
+    new.normal_update()   # (take() picks each face's slot by its normal)
+    b.take(new, slot_side, slot_top, slot_side)
+
+
+def seal_lid():
+    # One half of the opening seal (the other is the same mesh turned 180 degrees in UE): a half disc of glowing glyph
+    # stone in a bronze rim, half the bronze hub, six bronze spokes. Pivot at the seal's centre on the floor's top, the
+    # half on UE's +Y side (Blender -Y). It sinks and slides into the floor under BP_GearArrival's graph.
+    g = Builder()
+    g.tone, g.z0, g.z1 = (1.0, 1.0, 1.0), -0.1, 0.03
+    r = 3.0 * 0.88 - 0.015
+    new = bmesh.new()
+    segments = 24
+    for z0, z1, rad, slot in ((-0.08, 0.016, r, S["Glyph"]), (-0.08, 0.022, 0.9, S["Bronze"])):
+        bot, top = [], []
+        for i in range(segments + 1):
+            a = math.pi * i / segments
+            bot.append(new.verts.new((rad * math.cos(a), -rad * math.sin(a), z0)))
+            top.append(new.verts.new((rad * math.cos(a), -rad * math.sin(a), z1)))
+        faces = [new.faces.new(top), new.faces.new(list(reversed(bot)))]
+        for i in range(segments):
+            faces.append(new.faces.new((bot[i], bot[i + 1], top[i + 1], top[i])))
+        faces.append(new.faces.new((bot[segments], bot[0], top[0], top[segments])))   # the straight cut
+        bmesh.ops.recalc_face_normals(new, faces=faces)
+        g.take(new, S["Bronze"], slot, S["Bronze"])
+        new = bmesh.new()
+    new.free()
+    for k in range(6):
+        a = math.pi * (k + 0.5) / 6.0
+        g.tube((0.9 * math.cos(a), -0.9 * math.sin(a), 0.02), (2.55 * math.cos(a), -2.55 * math.sin(a), 0.02), 0.04,
+               S["Bronze"], 6)
+    obj = g.finish(SEAL_LID)
+    export(obj, SEAL_LID)
+    bpy.data.objects.remove(obj)
+
+
+def room_floor(b, x0, x1, y0, y1, z0, z1, open_seal=False):
     cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
     r = min(3.0, min(x1 - x0, y1 - y0) * 0.15)
+    if open_seal:
+        # The seal here opens (SM_TowerSealLid, in UE): the floor around a square, a square-with-a-round-hole piece in
+        # it, and the bronze rim of the seal left in the floor round the hole.
+        h = r + 0.1
+        b.box(x0, x1, y0, cy - h, z0, z1, S["Masonry"], S["Flagstone"])
+        b.box(x0, x1, cy + h, y1, z0, z1, S["Masonry"], S["Flagstone"])
+        b.box(x0, cx - h, cy - h, cy + h, z0, z1, S["Masonry"], S["Flagstone"])
+        b.box(cx + h, x1, cy - h, cy + h, z0, z1, S["Masonry"], S["Flagstone"])
+        ring_piece(b, cx, cy, z0, z1, r * 0.88, ("square", h), S["Iron"], S["Flagstone"])
+        ring_piece(b, cx, cy, z1 - 0.005, z1 + 0.01, r * 0.88, r, S["Bronze"], S["Bronze"])
+        return
+    b.box(x0, x1, y0, y1, z0, z1, S["Masonry"], S["Flagstone"], bevel=0.03)
+    # An inlaid machine seal in the middle: bronze, a glyph ring, a bronze hub (each a little above the last).
     b.cylinder(cx, cy, z1 - 0.02, z1 + 0.01, r, S["Bronze"], 48)
     b.cylinder(cx, cy, z1 - 0.02, z1 + 0.016, r * 0.88, S["Glyph"], 48)
     b.cylinder(cx, cy, z1 - 0.02, z1 + 0.022, r * 0.3, S["Bronze"], 32)
@@ -832,7 +911,7 @@ def dress(b, row, rows):
             wall_piece(b, x0, x1, y0, y1, z0, z1)
     elif material == "MI_TowerFloor":
         if name == "Room Floor":
-            room_floor(b, x0, x1, y0, y1, z0, z1)
+            room_floor(b, x0, x1, y0, y1, z0, z1, row["label"] in OPEN_SEALS)
         else:
             slab(b, x0, x1, y0, y1, z0, z1)
     elif material == "MI_MachineIron":
@@ -979,6 +1058,9 @@ def main():
     built = []
     sunk = sink_shared_tops(rows)
     report.append("tops sunk 2 cm under a shared top: " + ", ".join(sorted(sunk)))
+    if "A" in SECTIONS:
+        seal_lid()
+        report.append(SEAL_LID + ".fbx (the opening seal's half)")
     for letter in SECTIONS:
         builder = Builder()
         builder.lamps = Builder()
