@@ -75,6 +75,13 @@ def build():
     for i in range(SPOKE_HOLES):
         a = 2.0 * math.pi * (i + 0.5) / SPOKE_HOLES
         prism(bm, circle(HOLE_R, 20, HOLE_AT * math.cos(a), HOLE_AT * math.sin(a)), HALF - 0.01, HALF + 0.6, 0, 2)
+    # UVs seen from above: the whole wheel spans the texture once (centre at 0.5, 0.5, the tooth tips at radius 0.5),
+    # so the heaven's-debris gear texture (build_heaven_clean_textures.py, T_HeavenGear_*) can draw rings and spokes
+    # on its faces. (Before 2026-11-18 the mesh had no UVs and every texture came out as one flat colour.)
+    uv = bm.loops.layers.uv.new("UVMap")
+    for face in bm.faces:
+        for loop in face.loops:
+            loop[uv].uv = (loop.vert.co.x / (2.0 * OUTER * CM) + 0.5, loop.vert.co.y / (2.0 * OUTER * CM) + 0.5)
     mesh = bpy.data.meshes.new("SM_Gear")
     bm.to_mesh(mesh)
     bm.free()

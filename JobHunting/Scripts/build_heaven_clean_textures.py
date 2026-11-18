@@ -126,6 +126,29 @@ for name, base, vein_depth, extra, self_glow in (("Pure", [0.97, 0.96, 0.94], 0.
     save("T_Heaven" + name + "_C", colour * (1.0 - 0.5 * edge[..., None]))
     save("T_Heaven" + name + "_N", normal_from((1.0 - main) * 0.01 + pattern * 0.25 - edge * 0.3 + fine * 0.01, 4.0))
     save("T_Heaven" + name + "_E", np.dstack([np.clip(pattern * (0.88 + 0.12 * noise(TEX, 12, 99)) + self_glow, 0.0, 1.0)] * 3))
+
+# ----- the gear (SM_Gear, UVs seen from above: centre 0.5, 0.5, tooth tips at radius 0.5 = 100 cm) -----
+# Area 2's clean debris as a wheel: polished marble with a gold band and a fine line inside the teeth, a ring round
+# the hub, gold rims round the six (dark) spoke holes and thin gold spokes between them; a groove round the band.
+gr = np.sqrt((xx - 0.5) ** 2 + (yy - 0.5) ** 2)
+ga = np.arctan2(yy - 0.5, xx - 0.5)
+g_band = ((gr > 0.372) & (gr < 0.394)).astype(float)
+g_line = ((gr > 0.348) & (gr < 0.353)).astype(float)
+g_hub = ((gr > 0.148) & (gr < 0.16)).astype(float)
+g_holes = np.zeros_like(gr)
+for k in range(6):
+    a = math.radians(30.0 + 60.0 * k)
+    d = np.sqrt((xx - 0.5 - 0.26 * math.cos(a)) ** 2 + (yy - 0.5 - 0.26 * math.sin(a)) ** 2)
+    g_holes = np.maximum(g_holes, ((d > 0.065) & (d < 0.078)).astype(float))
+spoke_angle = np.abs(((ga + math.pi / 6.0) % (math.pi / 3.0)) - math.pi / 6.0)   # distance to the nearest k x 60 deg
+g_spokes = ((spoke_angle * gr < 0.0035) & (gr > 0.16) & (gr < 0.348)).astype(float)
+g_inlay = np.clip(g_band + g_line + g_hub + g_holes + g_spokes, 0.0, 1.0)
+g_groove = np.clip((((gr > 0.366) & (gr < 0.372)) | ((gr > 0.394) & (gr < 0.4))).astype(float) - g_inlay, 0.0, 1.0)
+shine = tint(np.array([0.92, 0.64, 0.24]), 0.9 + 0.15 * noise(TEX, 8, 97))
+colour = marble * (1.0 - g_inlay[..., None]) + shine * g_inlay[..., None]
+save("T_HeavenGear_C", colour * (1.0 - 0.55 * g_groove[..., None]))
+save("T_HeavenGear_N", normal_from((1.0 - veins) * 0.02 + g_inlay * 0.25 - g_groove * 0.3 + fine * 0.02, 4.0))
+save("T_HeavenGear_E", np.dstack([g_inlay * (0.85 + 0.15 * noise(TEX, 12, 99))] * 3))
 print("textures in", OUT_DIR)
 
 # ----- a check picture -----
@@ -185,7 +208,22 @@ if PREVIEW:
             obj.data.materials.append(looks[look])
         return obj
 
-    if TIERS:
+    if "--gear" in args:
+        # SM_Gear (build_gear_blender.py) dressed as the spinning gear / great gear: the gear texture on the wheel,
+        # gold on the hub and the tooth sides, dark spoke holes. One lying flat, one stood on edge.
+        looks["gear"] = material("Gear", "T_HeavenGear_C", "T_HeavenGear_N", "T_HeavenGear_E", (1.0, 0.7, 0.3), 1.0, 0.3)
+        looks["gold"] = material("Gold", "T_HeavenGold_C", "T_HeavenMarble_N", "T_HeavenWhite_E", (1.0, 0.7, 0.3), 0.15, 0.25)
+        shadow = bpy.data.materials.new("Shadow"); shadow.use_nodes = True
+        shadow.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.02, 0.02, 0.02, 1.0)
+        gear_fbx = os.path.join(os.path.dirname(HERE), "SourceArt", "Models", "Gear", "SM_Gear.fbx")
+        for loc, rot in (((-1.3, 0.0, 0.2), (0.0, 0.0, 0.0)), ((1.4, 0.6, 1.1), (math.radians(80), 0.0, math.radians(10)))):
+            bpy.ops.import_scene.fbx(filepath=gear_fbx)
+            obj = bpy.context.selected_objects[0]
+            obj.location, obj.rotation_euler = loc, rot
+            for i, mat in enumerate((looks["gear"], looks["gold"], shadow)):
+                if i < len(obj.data.materials):
+                    obj.data.materials[i] = mat
+    elif TIERS:
         for i, look in enumerate(("area1", "clean", "area3", "area4")):   # 300 x 300 x 20 platforms, areas 1..4
             cube((-5.1 + i * 3.4, 0.0, 0.1), (3.0, 3.0, 0.2), look)
     else:
