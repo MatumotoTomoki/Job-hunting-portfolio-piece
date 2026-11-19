@@ -177,7 +177,7 @@ function Write-Graph($file, [string[]]$extraNames = @(), [string]$prefix = '') {
       if ($p.Cat -eq 'exec' -and $p.Dir -eq 'in' -and $p.Links.Count -eq 0 -and $n.Class -notmatch 'K2Node_Event') { throw "$file : unreached node $($n.Name)" }
     }
   }
-  [IO.File]::WriteAllText((Join-Path $OutDir $file), $text, [Text.UTF8Encoding]::new($false))
+  [IO.File]::WriteAllText((Join-Path (Resolve-Path -LiteralPath $OutDir).Path $file), $text, [Text.UTF8Encoding]::new($false))   # (absolute: .NET resolves relative paths from its own directory, not PowerShell's)
   "$file : $($names.Count) nodes"
 }
 
