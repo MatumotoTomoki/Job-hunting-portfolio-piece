@@ -92,7 +92,7 @@ else:
 editing.set_material_instance_scalar_parameter_value(knob, "Glow", 1.0)
 library.save_asset(knob_path, False)
 GOLD_LOOK = unreal.load_asset(DIR + "/MI_HeavenGold")
-GEAR_LOOK = [unreal.load_asset(DIR + "/MI_HeavenMarble"), unreal.load_asset(DIR + "/MI_HeavenGold"),
+GEAR_LOOK = [unreal.load_asset(DIR + "/MI_HeavenGearClean") or unreal.load_asset(DIR + "/MI_HeavenMarble"),   # (setup_heaven_gear.py) unreal.load_asset(DIR + "/MI_HeavenGold"),
              unreal.load_asset("/Game/ThirdPerson/Blueprints/Gimmicks/Machine/MI_MachineShadow")]
 
 level = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)

@@ -399,7 +399,7 @@ for x, y in ((1900.0, -150.0), (1900.0, 350.0), (2150.0, 800.0)):
     previous = here
 jump("blue step -> door", RX1 - previous[2], DOOR_SILL - top)
 for x, y in ((300.0, -900.0), (1200.0, 1000.0), (2200.0, 0.0)):
-    lamp(x, y, B + 1000.0, F, 3000.0, 1500.0)
+    lamp(x, y, B + 1000.0, F, 1800.0, 1500.0)     # rooms are dimmer (was 3000: too bright inside)
 
 # ===== B. Gear Shaft (80-97 m) =====
 F = "B Gear Shaft"
@@ -502,7 +502,7 @@ wall("y", 6500.0, 7800.0, 9600.0, 9700.0, D_TOP, D_TOP + 900.0, F)
 wall("x", E_X0, 9600.0, 7700.0, 7800.0, D_TOP, D_TOP + 900.0, F)
 wall("x", E_X0, 9600.0, 6500.0, 6600.0, D_TOP, D_TOP + 900.0, F)
 F_TOP = D_TOP + 500.0
-LANDING = (10250.0, 6500.0)
+LANDING = (10450.0, 6650.0)   # the middle of the Arrival Landing (made bigger 2026-11-18: the cages are 3x now)
 target = spawn(unreal.TargetPoint, unreal.Vector(LANDING[0], LANDING[1], F_TOP), "Cage Destination", F)
 cage_class = bp_class(CAGE_DOOR)
 cage_a = spawn(cage_class, unreal.Vector(9250.0, 6850.0, D_TOP), "Choice Cage A", F, unreal.Rotator(roll=0.0, pitch=0.0, yaw=90.0))
@@ -528,9 +528,12 @@ wall("y", CY0 - T, CY1 + T, CX0 - T, CX0, FOOT, CLOCK_TOP, F)
 wall("y", CY0 - T, CY1 + T, CX1, CX1 + T, FOOT, CLOCK_TOP, F)
 wall("x", CX0, CX1, CY1, CY1 + T, FOOT, CLOCK_TOP, F)
 wall("x", CX0, CX1, CY0 - T, CY0, FOOT, CLOCK_TOP, F)
-L = ledge(span(CX0, 10500.0, 6250.0, 6750.0), F_TOP, F, "Arrival Landing", FLOOR, thick=150.0)
+# 9 x 8 m (was 5 x 5): the user made the birdcages 3x bigger; grown east and north, away from the wall path's first
+# red block just south of it.
+L = ledge(span(CX0, 10900.0, 6250.0, 7050.0), F_TOP, F, "Arrival Landing", FLOOR, thick=150.0)
 toggle(10120.0, 6330.0, F_TOP, F)
-lamp(10100.0, 6700.0, F_TOP + 300.0, F)
+ROOM_LAMP = 2400.0     # the clock room's lamps: dimmer than outside (was 4000: too bright inside)
+lamp(10100.0, 6700.0, F_TOP + 300.0, F, ROOM_LAMP)
 # Round the walls, counter-clockwise from the landing: down the west wall, along the south, up the east, back along
 # the north, a second lap higher up. Each piece: (kind, size); a step up of 100 each.
 INSET = 170.0
@@ -578,7 +581,7 @@ for index, (kind, size) in enumerate(pieces):
         rewind = spawn(bp_class(GIMMICKS + "/BP_TimeRewindArea"), unreal.Vector(x, y, top), "Time Rewind Area", F)
         for key, value in (("CountSeconds", 3.0), ("CooldownSeconds", 10.0), ("NightSunPitch", 15.0), ("NightBlendSpeed", 1.0), ("TextHeight", 140.0)):
             rewind.set_editor_property(key, value)
-        lamp(x, y, top + 350.0, F)
+        lamp(x, y, top + 350.0, F, ROOM_LAMP)
     elif kind == "piston":
         here = platform(bp_class(GIMMICKS + "/BP_MovingPlatform"), x, y, top, "Piston", F,
                         (("MoveOffset", unreal.Vector(0.0, 0.0, 600.0)), ("MoveSeconds", 2.4), ("WaitSeconds", 1.0)))
@@ -616,7 +619,7 @@ platform(bp_class(GIMMICKS + "/BP_MovingPlatform"), TX, TY, TTOP, "Roof Lift", F
          (("MoveOffset", unreal.Vector(0.0, 0.0, lift_rise)), ("MoveSeconds", 2.5), ("WaitSeconds", 1.5)))
 for i in range(4):
     a = 2.0 * math.pi * i / 4.0
-    lamp((CX0 + CX1) / 2.0 + 900.0 * math.cos(a), (CY0 + CY1) / 2.0 + 900.0 * math.sin(a), F_TOP + 1200.0 + 300.0 * i, F)
+    lamp((CX0 + CX1) / 2.0 + 900.0 * math.cos(a), (CY0 + CY1) / 2.0 + 900.0 * math.sin(a), F_TOP + 1200.0 + 300.0 * i, F, ROOM_LAMP)
 
 # ===== G. Roof (136-149 m) and the big mechanism =====
 F = "G Roof"
@@ -658,7 +661,13 @@ gate_x = SPIRE_X0 + 800.0
 for side in (-1, 1):
     box(gate_x - 150.0, gate_x + 150.0, 6500.0 + side * 450.0 - 150.0, 6500.0 + side * 450.0 + 150.0, SPIRE_TOP, SPIRE_TOP + 800.0, F, "Gate Tower", IRON)
 box(gate_x - 150.0, gate_x + 150.0, 5900.0, 7100.0, SPIRE_TOP + 800.0, SPIRE_TOP + 900.0, F, "Gate Lintel", BRASS)
-gate = spawn(bp_class(AREA + "/BP_AreaExit"), unreal.Vector(gate_x, 6500.0, SPIRE_TOP), "Exit", F, unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
+# The way out: BP_SteamCatapult (setup_steam_catapult.py) 11 m past the gate, clear of the lintel as it launches the
+# player straight up; the plain exit until it exists. (Run setup_steam_catapult.py again after a rebuild for area 3's
+# BP_SkyLanding too.)
+if library.does_asset_exist(AREA + "/BP_SteamCatapult"):
+    gate = spawn(bp_class(AREA + "/BP_SteamCatapult"), unreal.Vector(gate_x + 1100.0, 6500.0, SPIRE_TOP), "Steam Catapult", F)
+else:
+    gate = spawn(bp_class(AREA + "/BP_AreaExit"), unreal.Vector(gate_x, 6500.0, SPIRE_TOP), "Exit", F, unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
 gate.set_editor_property("NextLevel", NEXT_LEVEL.rsplit("/", 1)[1])
 eye = unreal.Vector(SPIRE_X0 - 1500.0, 3300.0, CLOCK_TOP + 1100.0)
 look = unreal.Vector(SPIRE_X0 - 900.0, 6000.0, CLOCK_TOP + 600.0)

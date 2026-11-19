@@ -1,3 +1,3 @@
 tops sunk 2 cm under a shared top: A2 114 Wall, A2 115 Wall, A2 116 Wall, A2 117 Wall
-SM_Tower_F: 24 pieces (Arrival Landing 1, Axle 1, Clock Landing 1, Lamp 6, Pedestal 2, Roof 4, Top Landing 1, Wall 4, Wall Stone 4), 106708 vertices
+SM_Tower_F: 24 pieces (Arrival Landing 1, Axle 1, Clock Landing 1, Lamp 6, Pedestal 2, Roof 4, Top Landing 1, Wall 4, Wall Stone 4), 107002 vertices
 F gears: 8
