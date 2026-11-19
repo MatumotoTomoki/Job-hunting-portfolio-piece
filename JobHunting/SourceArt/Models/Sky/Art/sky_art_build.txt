@@ -1,0 +1,1 @@
+SM_Sky_F: 2 (Column 1, Gate 1), 23667 vertices

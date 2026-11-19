@@ -109,10 +109,54 @@ Connect (Comp 'Cloud' $STATIC_MESH 2450 250) 'Cloud' $back 'self'
 $floor = Collide 'Cloud' 'QueryAndPhysics' 2950 0
 $show = Visible 'Cloud' 'true' 3250 0
 $free = SetSelf 'Busy' 'bool' 'false' 3550 0
+# The look (setup_vanish_cloud_look.py, 2026-11-19): a poof as it goes, a gathering puff as it comes back; the sounds
+# at SE Volume x Master Volume, set at Begin Play.
+$CLOUD_EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$CLOUD_AUDIO = "/Script/CoreUObject.Class'/Script/Engine.AudioComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+function Fx-Play($componentName, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMP 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMP
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $componentName $null 'object' '' $CLOUD_EMITTER ($x - 200) ($y + 200)) $componentName $n 'self'
+  return $n
+}
+function Sound-Play($componentName, [double]$x, [double]$y) {
+  $n = New-Call $CLOUD_AUDIO 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $CLOUD_AUDIO
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $componentName $null 'object' '' $CLOUD_AUDIO ($x - 200) ($y + 200)) $componentName $n 'self'
+  return $n
+}
+$poof = Fx-Play 'PoofFx' 2100 (-350)
+$poofSound = Sound-Play 'PoofSound' 2350 (-350)
+$form = Fx-Play 'FormFx' 2700 (-350)
+$formSound = Sound-Play 'FormSound' 2950 (-350)
 Connect $stepped 'then' $busy 'execute'
 Connect $busy 'then' $sink 'Move'
 Connect $sink 'then' $stay 'execute'
-Chain @($stay, $noFloor, $hide, $gone, $back, $floor, $show, $free)
+Chain @($stay, $noFloor, $hide, $poof, $poofSound, $gone, $back, $form, $formSound, $floor, $show, $free)
+# Begin Play: the two sounds' volume.
+$start = Event 'ReceiveBeginPlay' 0 (-900)
+$giCast = GameInstance 300 (-900)
+$seVol = New-Operator 'Multiply' 'Multiply_DoubleDouble' 'real' 'double' 'real' 550 (-650)
+(Get-Pin $seVol 'ReturnValue').Sub = 'double'
+Connect (GiGet $giCast 'SE Volume' 'real' 'double' 350 (-700)) 'SE Volume' $seVol 'A'
+Connect (GiGet $giCast 'Master Volume' 'real' 'double' 350 (-600)) 'Master Volume' $seVol 'B'
+$vols = @()
+$vx = 700
+foreach ($name in 'PoofSound', 'FormSound') {
+  $v = New-Call $CLOUD_AUDIO 'SetVolumeMultiplier' $false $vx (-900)
+  Add-Pin $v 'self' 'in' 'object' '' $CLOUD_AUDIO
+  Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+  Connect (New-VarGet $name $null 'object' '' $CLOUD_AUDIO ($vx - 200) (-700)) $name $v 'self'
+  Connect $seVol 'ReturnValue' $v 'NewVolumeMultiplier'
+  $vols += $v
+  $vx += 300
+}
+Connect $start 'then' $giCast 'execute'
+Connect $giCast 'then' $vols[0] 'execute'
+Chain $vols
 Write-Graph 'BP_VanishCloud_EventGraph.txt'
 
 # ===== BP_WindZone =========================================================================================
@@ -139,9 +183,21 @@ $rest = SetSelf 'Active' 'bool' 'false' 2050 0
 $side0 = Visible 'StreaksSide' 'false' 2350 0
 $top0 = Visible 'StreaksTop' 'false' 2650 0
 $resting = Wait 'GustOff' 2950 0
+# The wind's look (WindFx, setup_wind_fx.py, 2026-11-19): on while a gust blows, off while it rests.
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$ACTOR_COMPONENT = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+function WindFx($func, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMPONENT $func $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMPONENT
+  if ($func -eq 'Activate') { Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true' }
+  Connect (New-VarGet 'WindFx' $null 'object' '' $EMITTER ($x - 200) ($y + 200)) 'WindFx' $n 'self'
+  return $n
+}
+$fxOn = WindFx 'Activate' 1500 (-300)
+$fxOff = WindFx 'Deactivate' 2650 (-300)
 Connect $begin 'then' $gusty 'execute'
 Connect $gusty 'then' $first 'execute'
-Chain @($first, $blow, $side1, $top1, $blowing, $rest, $side0, $top0, $resting)
+Chain @($first, $blow, $side1, $top1, $fxOn, $blowing, $rest, $side0, $top0, $fxOff, $resting)
 # Round again.
 Connect $resting 'then' $blow 'execute'
 

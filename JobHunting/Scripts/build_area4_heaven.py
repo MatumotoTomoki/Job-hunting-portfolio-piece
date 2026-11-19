@@ -463,7 +463,8 @@ for piece in route.pieces:
         coins += 1
     elif kind == "flag":
         _, x, y, top = piece
-        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointItem"), unreal.Vector(x, y, top + 100.0), "Checkpoint Item")
+        # a flag stuck in the ground, broken until touched (since 2026-11-19; was a pickup item)
+        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointFlag"), unreal.Vector(x, y, top), "Checkpoint Flag")
     elif kind == "trap":
         _, x0, x1, y0, y1, top = piece
         actor = spawn(bp_class(MACHINE + "/BP_CageTrap"), unreal.Vector((x0 + x1) / 2.0, (y0 + y1) / 2.0, top), "Cage Trap")
