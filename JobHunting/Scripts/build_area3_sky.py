@@ -193,7 +193,8 @@ for piece in route.pieces:
         coins += 1
     elif kind == "flag":
         _, x, y, top = piece
-        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointItem"), unreal.Vector(x, y, top + 100.0), "Checkpoint Item")
+        # a flag stuck in the ground, broken until touched (since 2026-11-19; was a pickup item)
+        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointFlag"), unreal.Vector(x, y, top), "Checkpoint Flag")
     elif kind == "trap":
         _, x0, x1, y0, y1, top = piece
         actor = spawn(bp_class(MACHINE + "/BP_CageTrap"), unreal.Vector((x0 + x1) / 2.0, (y0 + y1) / 2.0, top), "Cage Trap")
@@ -219,7 +220,10 @@ for piece in route.pieces:
         for side in (-1, 1):
             box(x - 60.0, x + 60.0, y + side * 250.0 - 60.0, y + side * 250.0 + 60.0, top, top + 700.0, "Gate Pillar", MARBLE)
         box(x - 80.0, x + 80.0, y - 340.0, y + 340.0, top + 700.0, top + 800.0, "Gate Lintel", GOLD)
-        gate = spawn(bp_class(AREA + "/BP_AreaExit"), unreal.Vector(x, y, top), "Exit", unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
+        # The way out: the pillar of light (BP_LightGate, setup_light_transition.py, 2026-11-20); the plain exit until it exists.
+        exit_path = AREA + ("/BP_LightGate" if unreal.EditorAssetLibrary.does_asset_exist(AREA + "/BP_LightGate") else "/BP_AreaExit")
+        gate = spawn(bp_class(exit_path), unreal.Vector(x, y, top), "Light Gate" if exit_path.endswith("Gate") else "Exit",
+                     unreal.Rotator(roll=0.0, pitch=0.0, yaw=180.0))
         gate.set_editor_property("NextLevel", NEXT_LEVEL.rsplit("/", 1)[1])
     else:
         raise RuntimeError("Unknown piece " + kind)

@@ -464,7 +464,8 @@ D_TOP = stop_top + 400.0
 F = "D Beams"
 T2 = ledge(span(2800.0, 4400.0, 6700.0, 7600.0), D_TOP, F, "Second Tower Balcony", FLOOR, thick=150.0, support=True)
 jump("gondola -> balcony", gap(arrive2, T2), 0.0)
-item(ITEMS + "/Checkpoint/BP_CheckpointItem", 3600.0, 7150.0, D_TOP, "Checkpoint Item", F)
+# The checkpoint: a flag stuck in the ground, broken until touched (since 2026-11-19; was a pickup item).
+spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointFlag"), unreal.Vector(3600.0, 7150.0, D_TOP), "Checkpoint Flag", F)
 lamp(3000.0, 7500.0, D_TOP + 300.0, F)
 # Dead end with the speed item: hard perches off the balcony's west side.
 previous, perch_top = T2, D_TOP

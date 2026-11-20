@@ -332,6 +332,9 @@ for piece in route.pieces:
         _, x, y, top, facing = piece
         spawn(unreal.PlayerStart, unreal.Vector(x, y, top + 100.0), "PlayerStart", yaw(facing))
         area_start = spawn(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(x + 300.0, y, top + 200.0), "Area Start")
+        # Arriving from area 3's pillar of light (setup_light_transition.py, 2026-11-20): it comes down here and dies away.
+        if unreal.EditorAssetLibrary.does_asset_exist(AREA + "/BP_LightArrival"):
+            spawn(bp_class(AREA + "/BP_LightArrival"), unreal.Vector(x, y, top), "Light Arrival")
         try:
             area_start.set_editor_property("AreaCoins", sum(1 for p in route.pieces if p[0] == "coin"))
         except Exception as error:
@@ -463,7 +466,8 @@ for piece in route.pieces:
         coins += 1
     elif kind == "flag":
         _, x, y, top = piece
-        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointItem"), unreal.Vector(x, y, top + 100.0), "Checkpoint Item")
+        # a flag stuck in the ground, broken until touched (since 2026-11-19; was a pickup item)
+        spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointFlag"), unreal.Vector(x, y, top), "Checkpoint Flag")
     elif kind == "trap":
         _, x0, x1, y0, y1, top = piece
         actor = spawn(bp_class(MACHINE + "/BP_CageTrap"), unreal.Vector((x0 + x1) / 2.0, (y0 + y1) / 2.0, top), "Cage Trap")

@@ -429,7 +429,8 @@ for i, x in enumerate((3100.0, 3600.0)):
     jump("aqueduct fading stone", x - PLAT.x - edge, 0.0)
     edge = x + PLAT.x
 jump("fading stone -> deck", BREAK[1] - edge, 0.0)
-item(ITEMS + "/Checkpoint/BP_CheckpointItem", 4500.0, 0.0, AQUEDUCT_TOP, "Checkpoint Item", F)
+# The checkpoint: a flag stuck in the ground, broken until touched (since 2026-11-19; was a pickup item).
+spawn(bp_class(ITEMS + "/Checkpoint/BP_CheckpointFlag"), unreal.Vector(4500.0, 0.0, AQUEDUCT_TOP), "Checkpoint Flag", F)
 
 # ===== D. Great Tower (15-43 m) =====
 F = "D Great Tower"

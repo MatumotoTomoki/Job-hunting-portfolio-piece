@@ -4,6 +4,8 @@ param([string]$OutDir)
 #   local < RingBeats: ringing - on the first such tick it chimes (ChimeSound at Pitch, ChimeAttenuation, volume
 #   GI SE Volume x Master Volume); Solid shown and colliding, Ghost and Hint hidden.
 #   Otherwise: Solid hidden, no collision, Ghost shown, Hint shown only on the beat before it rings (local = LoopBeats - 1).
+#   As it starts ringing RingFx (the ripple) plays. Begin Play: Pitch goes to Solid, Ghost and Hint as custom
+#   primitive data 0 (their colour).
 if (-not $OutDir) { throw 'OutDir is required' }
 $lightGen = Get-Content -LiteralPath (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_heaven_light.ps1') -Encoding UTF8
 $cut = ($lightGen | Select-String -Pattern '^# ===== BP_LightBeam' | Select-Object -First 1).LineNumber - 1
@@ -13,6 +15,8 @@ $helpers = $lightGen[1..($cut - 1)] -join "`n"
 $SOUND_BASE = "/Script/CoreUObject.Class'/Script/Engine.SoundBase'"
 $ATTENUATION = "/Script/CoreUObject.Class'/Script/Engine.SoundAttenuation'"
 $CONCURRENCY = "/Script/CoreUObject.Class'/Script/Engine.SoundConcurrency'"
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
 
 function Int($name, [double]$x, [double]$y) { New-VarGet $name $null 'int' '' $null $x $y }
 function IntOp($operation, $func, $a, $aPin, $b, $bPin, [double]$x, [double]$y, $outCat = 'int') {
@@ -63,8 +67,14 @@ Connect (Bool 'Ringing' 450 -250) 'Ringing' $was 'Condition'
 Connect $ring 'then' $was 'execute'
 $start = SetSelf 'Ringing' 'bool' 'true' 900 -600
 Connect $was 'else' $start 'execute'
+# The ripple of light (setup_chime_gem_look.py, 2026-11-20).
+$ripple = New-Call $ACTOR_COMP 'Activate' $false 900 -900
+Add-Pin $ripple 'self' 'in' 'object' '' $ACTOR_COMP
+Add-Pin $ripple 'bReset' 'in' 'bool' '' $null 'true'
+Connect (New-VarGet 'RingFx' $null 'object' '' $EMITTER 700 -750) 'RingFx' $ripple 'self'
+Connect $start 'then' $ripple 'execute'
 $cast = GameInstance 1200 -600
-Connect $start 'then' $cast 'execute'
+Connect $ripple 'then' $cast 'execute'
 $play = New-Call $STATICS 'PlaySoundAtLocation' $false 1600 -600
 Add-Pin $play 'Sound' 'in' 'object' '' $SOUND_BASE
 Add-Pin $play 'Location' 'in' 'struct' '' $VECTOR
@@ -94,4 +104,19 @@ $stop = SetSelf 'Ringing' 'bool' 'false' 600 300
 Connect $ring 'else' $stop 'execute'
 $ghost = Shape $false 1700 300 @($hintNow, 'ReturnValue')
 Connect $stop 'then' $ghost[0] 'execute'
+# Begin Play: each part's colour comes from Pitch (custom primitive data 0, read by M_ChimeGem / M_ChimeGemGhost).
+$begin = Event 'ReceiveBeginPlay' 0 (-1300)
+$prev = $begin
+$px = 300
+foreach ($part in 'Solid', 'Ghost', 'Hint') {
+  $n = New-Call $PRIMITIVE 'SetCustomPrimitiveDataFloat' $false $px (-1300)
+  Add-Pin $n 'self' 'in' 'object' '' $PRIMITIVE
+  Add-Pin $n 'DataIndex' 'in' 'int' '' $null '0'
+  Add-Pin $n 'Value' 'in' 'real' 'float'
+  Connect (Comp $part $STATIC_MESH ($px - 200) (-1100)) $part $n 'self'
+  Connect (Real 'Pitch' ($px - 200) (-1000)) 'Pitch' $n 'Value'
+  Connect $prev 'then' $n 'execute'
+  $prev = $n
+  $px += 350
+}
 Write-Graph 'BP_ChimeJewel_EventGraph.txt'
