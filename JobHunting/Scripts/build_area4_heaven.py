@@ -332,6 +332,9 @@ for piece in route.pieces:
         _, x, y, top, facing = piece
         spawn(unreal.PlayerStart, unreal.Vector(x, y, top + 100.0), "PlayerStart", yaw(facing))
         area_start = spawn(bp_class(AREA + "/BP_AreaStart"), unreal.Vector(x + 300.0, y, top + 200.0), "Area Start")
+        # Arriving from area 3's pillar of light (setup_light_transition.py, 2026-11-20): it comes down here and dies away.
+        if unreal.EditorAssetLibrary.does_asset_exist(AREA + "/BP_LightArrival"):
+            spawn(bp_class(AREA + "/BP_LightArrival"), unreal.Vector(x, y, top), "Light Arrival")
         try:
             area_start.set_editor_property("AreaCoins", sum(1 for p in route.pieces if p[0] == "coin"))
         except Exception as error:

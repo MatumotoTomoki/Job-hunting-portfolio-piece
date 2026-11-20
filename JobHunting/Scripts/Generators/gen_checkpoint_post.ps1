@@ -6,6 +6,9 @@ param([string]$OutDir)
 #   Touched by the player (Touch box), the first time only: Raised, the player's ActiveFlag = this flag, the top half
 #     swings up straight in 0.35 s (eased). The character's fall check then sends the player to this flag's
 #     RespawnPoint on every fall (its "break and forget" nodes removed by hand, see setup_checkpoint_flags.py).
+#   While the player is in Touch the flag listens to E (IA_UseItem); walking away stops it.
+#   E by a raised flag not yet Broken: Broken, it tips over again for good (Raised stays, so it never stands up
+#     again); if it was the player's ActiveFlag, that is cleared (falls go back to the area's start).
 #   BreakFlag (kept: the character's old plant-a-flag graph still calls it): the top snaps over, the flag is removed.
 if (-not $OutDir) { throw 'OutDir is required' }
 $lightGen = Get-Content -LiteralPath (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_heaven_light.ps1') -Encoding UTF8
@@ -76,12 +79,87 @@ $self = New-Node '/Script/BlueprintGraph.K2Node_Self' @() 1250 750
 Add-Pin $self 'self' 'out' 'object' '' $ACTOR
 Connect $self 'self' $remember 'ActiveFlag'
 $standUp = MoveTo 'Upper' $JOINT $UPRIGHT '0.35' 1800 500
-Connect $touch 'then' $once 'execute'
-Connect $once 'else' $isPlayer 'execute'
-Connect $isPlayer 'then' $raised 'execute'
+# The player near the flag: it listens to E (IA_UseItem) while they are in Touch (2026-11-19).
+function Flag-Input($func, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR $func $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR
+  Add-Pin $n 'PlayerController' 'in' 'object' '' $CONTROLLER
+  Connect (Controller ($x - 200) ($y + 250)) 'ReturnValue' $n 'PlayerController'
+  return $n
+}
+$listen = Flag-Input 'EnableInput' 300 300
+Connect $touch 'then' $isPlayer 'execute'
+Connect $isPlayer 'then' $listen 'execute'
+Connect $listen 'then' $once 'execute'
+Connect $once 'else' $raised 'execute'
 Connect $raised 'then' $cast 'execute'
 Connect $cast 'then' $remember 'execute'
 Connect $remember 'then' $standUp 'Move'
+
+# ----- the player walks away: stop listening to E -----
+$leave = Event 'ReceiveActorEndOverlap' 0 1700
+Add-Pin $leave 'OtherActor' 'out' 'object' '' $ACTOR
+$stillIn = New-Call $PRIMITIVE 'IsOverlappingActor' $true 250 1900
+Add-Pin $stillIn 'self' 'in' 'object' '' $PRIMITIVE
+Add-Pin $stillIn 'Other' 'in' 'object' '' $ACTOR
+Add-Pin $stillIn 'ReturnValue' 'out' 'bool'
+Connect (Comp 'Touch' $BOX 50 1900) 'Touch' $stillIn 'self'
+Connect (Player 50 2000) 'ReturnValue' $stillIn 'Other'
+$gone = New-Branch 450 1700
+Connect $stillIn 'ReturnValue' $gone 'Condition'
+$deaf = Flag-Input 'DisableInput' 750 1700
+Connect $leave 'then' $gone 'execute'
+Connect $gone 'else' $deaf 'execute'
+
+# ----- E by a standing flag: it breaks again, for good (2026-11-19) -----
+# Only a raised flag not yet broken, with the player at it. If it was the player's checkpoint, that is forgotten
+# (a fall goes back to the area's start). Raised stays true, so touching it never raises it again.
+$e = New-Node '/Script/InputBlueprintNodes.K2Node_EnhancedInputAction' @("InputAction=`"/Script/EnhancedInput.InputAction'/Game/Input/Actions/IA_UseItem.IA_UseItem'`"") 0 2300
+Add-Pin $e 'Started' 'out' 'exec'
+$notBroken = MathCall 'Not_PreBool' @('A') 'bool' '' 'bool' '' 200 2650
+Connect (Bool 'Broken' 50 2650) 'Broken' $notBroken 'A'
+$standing = Both (Bool 'Raised' 200 2550) 'Raised' $notBroken 'ReturnValue' 'BooleanAND' 400 2550
+$canBreak = New-Branch 300 2300
+Connect $standing 'ReturnValue' $canBreak 'Condition'
+$atFlag = New-Call $PRIMITIVE 'IsOverlappingActor' $true 450 2750
+Add-Pin $atFlag 'self' 'in' 'object' '' $PRIMITIVE
+Add-Pin $atFlag 'Other' 'in' 'object' '' $ACTOR
+Add-Pin $atFlag 'ReturnValue' 'out' 'bool'
+Connect (Comp 'Touch' $BOX 250 2750) 'Touch' $atFlag 'self'
+Connect (Player 250 2850) 'ReturnValue' $atFlag 'Other'
+$near = New-Branch 600 2300
+Connect $atFlag 'ReturnValue' $near 'Condition'
+$markBroken = SetSelf 'Broken' 'bool' 'true' 850 2300
+$cast2 = New-Node '/Script/BlueprintGraph.K2Node_DynamicCast' @("TargetType=`"$CHARACTER_BP`"") 1100 2300
+Add-Exec $cast2
+Add-Pin $cast2 'CastFailed' 'out' 'exec'
+Add-Pin $cast2 'Object' 'in' 'object' '' $OBJECT
+Add-Pin $cast2 'AsBP Third Person Character 1' 'out' 'object' '' $CHARACTER_BP
+Add-Pin $cast2 'bSuccess' 'out' 'bool'
+Connect (Player 900 2500) 'ReturnValue' $cast2 'Object'
+$current = New-VarGet 'ActiveFlag' $CHARACTER_BP 'object' '' $FLAG_BP 1300 2550
+Connect $cast2 'AsBP Third Person Character 1' $current 'self'
+$isMine = MathCall 'EqualEqual_ObjectObject' @('A', 'B') 'object' '' 'bool' '' 1550 2550
+(Get-Pin $isMine 'A').Obj = $OBJECT; (Get-Pin $isMine 'B').Obj = $OBJECT
+Connect $current 'ActiveFlag' $isMine 'A'
+$self2 = New-Node '/Script/BlueprintGraph.K2Node_Self' @() 1350 2700
+Add-Pin $self2 'self' 'out' 'object' '' $ACTOR
+Connect $self2 'self' $isMine 'B'
+$mine = New-Branch 1400 2300
+Connect $isMine 'ReturnValue' $mine 'Condition'
+$forget = New-VarSet 'ActiveFlag' $CHARACTER_BP 'object' $FLAG_BP 1700 2200
+Connect $cast2 'AsBP Third Person Character 1' $forget 'self'
+$fallOver = MoveTo 'Upper' $JOINT $BROKEN '0.35' 2050 2300
+Connect $e 'Started' $canBreak 'execute'
+Connect $canBreak 'then' $near 'execute'
+Connect $near 'then' $markBroken 'execute'
+Connect $markBroken 'then' $cast2 'execute'
+Connect $cast2 'then' $mine 'execute'
+Connect $mine 'then' $forget 'execute'
+Connect $forget 'then' $fallOver 'Move'
+Connect $mine 'else' $fallOver 'Move'
+Connect $cast2 'CastFailed' $fallOver 'Move'
+
 
 # ----- BreakFlag (kept for the character's old plant-a-flag graph) -----
 $breakEvent = New-Node '/Script/BlueprintGraph.K2Node_CustomEvent' @('CustomFunctionName="BreakFlag"') 0 1200

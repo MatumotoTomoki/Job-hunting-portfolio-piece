@@ -40,12 +40,14 @@ touch.set_editor_property("box_extent", unreal.Vector(70.0, 70.0, 110.0))
 touch.set_editor_property("relative_location", unreal.Vector(0.0, 0.0, 110.0))
 touch.set_collision_profile_name("OverlapOnlyPawn")
 defaults = unreal.get_default_object(bp.generated_class())
-try:
-    defaults.get_editor_property("Raised")
-except Exception:
-    if not pins.add_member_variable(bp, "Raised", pins.get_basic_type_by_name("bool")):
-        raise RuntimeError("Could not add Raised")
-    lines.append("BP_CheckpointFlag: Raised added")
+# Raised: stood up by a touch. Broken: knocked down again with E (2026-11-19) - for good.
+for name in ("Raised", "Broken"):
+    try:
+        defaults.get_editor_property(name)
+    except Exception:
+        if not pins.add_member_variable(bp, name, pins.get_basic_type_by_name("bool")):
+            raise RuntimeError("Could not add " + name)
+        lines.append("BP_CheckpointFlag: {} added".format(name))
 pins.compile_blueprint(bp)
 library.save_asset(FLAG, False)
 
