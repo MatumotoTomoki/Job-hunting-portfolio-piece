@@ -2,9 +2,10 @@ param([string]$OutDir)
 # Paste text for the machine tower gimmicks (components and variables from setup_area2_gimmicks.py):
 #   BP_SpinGear_EventGraph.txt      Tick: Pivot turns SpinSpeed degrees a second about Z.
 #   BP_ToggleSwitch_EventGraph.txt  touched (once at a time): the game instance's SwitchRed flips. Tick: the button
-#                                   shows red or blue.
+#                                   shows red or blue. A press clicks and bursts in the new colour (2026-11-20).
 #   BP_SwitchBlock_EventGraph.txt   Tick: solid (Solid seen and colliding) while SwitchRed == IsRed, else only the
-#                                   see-through Ghost; changed only when it has to.
+#                                   see-through Ghost; changed only when it has to. A change after the first plays
+#                                   FormSound + Form{Red,Blue} or VanishSound + Vanish{Red,Blue} (2026-11-20).
 #   BP_CageTrap_EventGraph.txt      the player walks into Trigger: held still, the cage drops on them from DropHeight,
 #                                   black, back at RespawnLocation facing RespawnYaw, the cage gone, the screen clears.
 #   BP_Gondola_EventGraph.txt       the player steps into the cabin: it leaves, travels TravelOffset over
@@ -101,6 +102,43 @@ function MoveTo($component, $componentPin, [double]$x, [double]$y) {
   Connect $component $componentPin $n 'Component'
   return $n
 }
+# Sounds and effects (setup_switch_effects.py, 2026-11-20), as gen_area_foundation.ps1's.
+$AUDIO_COMP = "/Script/CoreUObject.Class'/Script/Engine.AudioComponent'"
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+function SoundPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO_COMP 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function FxPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMP 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMP
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $name $null 'object' '' $EMITTER ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+# Begin Play part: the named sounds at SE Volume x Master Volume. Returns (first, last).
+function SoundVolumes([string[]]$names, [double]$x, [double]$y) {
+  $cast = GameInstance $x $y
+  $vol = New-Operator 'Multiply' 'Multiply_DoubleDouble' 'real' 'double' 'real' ($x + 250) ($y + 250)
+  (Get-Pin $vol 'ReturnValue').Sub = 'double'
+  Connect (GiGet $cast 'SE Volume' 'real' 'double' ($x + 50) ($y + 250)) 'SE Volume' $vol 'A'
+  Connect (GiGet $cast 'Master Volume' 'real' 'double' ($x + 50) ($y + 350)) 'Master Volume' $vol 'B'
+  $prev = $cast; $vx = $x + 350
+  foreach ($name in $names) {
+    $v = New-Call $AUDIO_COMP 'SetVolumeMultiplier' $false $vx $y
+    Add-Pin $v 'self' 'in' 'object' '' $AUDIO_COMP
+    Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+    Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($vx - 200) ($y + 200)) $name $v 'self'
+    Connect $vol 'ReturnValue' $v 'NewVolumeMultiplier'
+    Connect $prev 'then' $v 'execute'
+    $prev = $v; $vx += 300
+  }
+  return @($cast, $prev)
+}
 
 # ===== BP_SpinGear =========================================================================================
 Reset-Graph 100
@@ -135,12 +173,27 @@ $busy = SetSelf 'Busy' 'bool' 'true' 900 0
 $cast = GameInstance 1200 0
 $flip = GiSet $cast 'SwitchRed' 'bool' '' 1500 0
 Connect (Not (GiGet $cast 'SwitchRed' 'bool' '' 1250 250) 'SwitchRed' 1450 250) 'ReturnValue' $flip 'SwitchRed'
-$rest = Delay '0.4' 1800 0
-$free = SetSelf 'Busy' 'bool' 'false' 2050 0
+# "kachi... pon" and a burst in the colour now on (read after the flip).
+$click = SoundPlay 'ClickSound' 1800 0
+$nowRed = New-Branch 2100 0
+Connect (GiGet $cast 'SwitchRed' 'bool' '' 1950 250) 'SwitchRed' $nowRed 'Condition'
+$burstRed = FxPlay 'BurstRed' 2450 (-250)
+$burstBlue = FxPlay 'BurstBlue' 2450 250
+$rest = Delay '0.4' 2800 0
+$free = SetSelf 'Busy' 'bool' 'false' 3050 0
 Connect $pressed 'then' $busy 'execute'
 Chain @($busy, $cast)
 Connect $cast 'then' $flip 'execute'
-Chain @($flip, $rest, $free)
+Chain @($flip, $click, $nowRed)
+Connect $nowRed 'then' $burstRed 'execute'
+Connect $nowRed 'else' $burstBlue 'execute'
+Connect $burstRed 'then' $rest 'execute'
+Connect $burstBlue 'then' $rest 'execute'
+Chain @($rest, $free)
+# Begin Play: the sound's volume.
+$begin = Event 'ReceiveBeginPlay' 0 (-700)
+$volumes = SoundVolumes @('ClickSound') 300 (-700)
+Connect $begin 'then' $volumes[0] 'execute'
 # The button shows what is on.
 $tick = Event 'ReceiveTick' 0 700
 Add-Pin $tick 'DeltaSeconds' 'out' 'real' 'float'
@@ -177,16 +230,38 @@ Connect $wanted 'ReturnValue' $which 'Condition'
 Connect $tick 'then' $cast 'execute'
 Connect $cast 'then' $skip 'execute'
 Connect $skip 'else' $which 'execute'
+# A change after the first (Ready already set): "shuin" and motes gathering, or "fu" and motes scattering, in the
+# block's own colour. (Ready is read before it is set below.)
 foreach ($on in $true, $false) {
-  $y = if ($on) { -300 } else { 400 }
+  $y = if ($on) { -500 } else { 500 }
+  $kind = if ($on) { 'Form' } else { 'Vanish' }
   $collide = Collide (Comp 'Solid' $STATIC_MESH 1400 ($y + 200)) 'Solid' $(if ($on) { 'QueryAndPhysics' } else { 'NoCollision' }) 1550 $y
   $seen = Visible (Comp 'Solid' $STATIC_MESH 1700 ($y + 200)) 'Solid' $(if ($on) { 'true' } else { 'false' }) 1850 $y
   $ghostSeen = Visible (Comp 'Ghost' $STATIC_MESH 2000 ($y + 200)) 'Ghost' $(if ($on) { 'false' } else { 'true' }) 2150 $y
-  $shown = SetSelf 'Shown' 'bool' $(if ($on) { 'true' } else { 'false' }) 2450 $y
-  $ready = SetSelf 'Ready' 'bool' 'true' 2700 $y
+  $changed = New-Branch 2450 $y
+  Connect (New-VarGet 'Ready' $null 'bool' '' $null 2300 ($y + 200)) 'Ready' $changed 'Condition'
+  $sound = SoundPlay "${kind}Sound" 2750 $y
+  $red = New-Branch 3050 $y
+  Connect (New-VarGet 'IsRed' $null 'bool' '' $null 2900 ($y + 200)) 'IsRed' $red 'Condition'
+  $fxRed = FxPlay "${kind}Red" 3400 ($y - 200)
+  $fxBlue = FxPlay "${kind}Blue" 3400 ($y + 200)
+  $shown = SetSelf 'Shown' 'bool' $(if ($on) { 'true' } else { 'false' }) 3750 $y
+  $ready = SetSelf 'Ready' 'bool' 'true' 4000 $y
   Connect $which $(if ($on) { 'then' } else { 'else' }) $collide 'execute'
-  Chain @($collide, $seen, $ghostSeen, $shown, $ready)
+  Chain @($collide, $seen, $ghostSeen, $changed)
+  Connect $changed 'then' $sound 'execute'
+  Connect $changed 'else' $shown 'execute'
+  Connect $sound 'then' $red 'execute'
+  Connect $red 'then' $fxRed 'execute'
+  Connect $red 'else' $fxBlue 'execute'
+  Connect $fxRed 'then' $shown 'execute'
+  Connect $fxBlue 'then' $shown 'execute'
+  Chain @($shown, $ready)
 }
+# Begin Play: the sounds' volume.
+$begin = Event 'ReceiveBeginPlay' 0 (-1300)
+$volumes = SoundVolumes @('FormSound', 'VanishSound') 300 (-1300)
+Connect $begin 'then' $volumes[0] 'execute'
 Write-Graph 'BP_SwitchBlock_EventGraph.txt'
 
 # ===== BP_CageTrap =========================================================================================

@@ -7,8 +7,10 @@
 #   GI_UnlockAchievement.txt  the body of the function UnlockAchievement (input ID, Name, added by hand): LastAchievement
 #                             = ID; LoadAchievements; if ID is a known achievement not yet taken, it goes on
 #                             UnlockedAchievements (and FreeAchievementCount + 1 if it is a free one), the slot is
-#                             saved, and for now a Print String shows its name (the corner notice is step 2). An
-#                             unknown ID prints a warning.
+#                             saved, and its name joins AchievementQueue for the corner notice. An unknown ID prints
+#                             a warning.
+#   WBP_AchievementNotice_EventGraph.txt   the corner notice's graph (step 2; widget and variables from
+#                             setup_achievement_notice.py): see its section below.
 # Each body's first node is left for the user to wire from the function's entry (paste text cannot link to it).
 if (-not $OutDir) { throw 'OutDir is required' }
 $cageGen = Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_hell_cage.ps1'
@@ -218,7 +220,7 @@ Add-Pin $write 'ReturnValue' 'out' 'bool'
 ConstRef $write 'SlotName'
 Connect $cast2 $SAVE_OUT $write 'SaveGameObject'
 Connect $putCount 'then' $write 'execute'
-# for now: its name on screen (step 2 replaces this with the corner notice)
+# its name joins AchievementQueue: WBP_AchievementNotice shows it (step 2)
 $index = ArrayCall 'Array_Find' $true 3800 450
 Add-Pin $index 'TargetArray' 'in' 'name' '' $null $null 'Array'
 Add-Pin $index 'ItemToFind' 'in' 'name'
@@ -231,11 +233,161 @@ Add-Pin $nameItem 'Dimension 1' 'in' 'int' '' $null '0'
 Add-Pin $nameItem 'Output' 'out' 'text'
 Connect (SelfGet 'AchievementNames' 'text' 3850 350 'Array') 'AchievementNames' $nameItem 'Array'
 Connect $index 'ReturnValue' $nameItem 'Dimension 1'
-$nameText = New-Call $TEXTLIB 'Conv_TextToString' $true 4250 400
-Add-Pin $nameText 'InText' 'in' 'text'
-Add-Pin $nameText 'ReturnValue' 'out' 'string'
-ConstRef $nameText 'InText'
-Connect $nameItem 'Output' $nameText 'InText'
-$show = Print (Concat $null '実績解除: ' $nameText 'ReturnValue' 4450 300) 'ReturnValue' 4200 0
-Connect $write 'then' $show 'execute'
+$queue = ArrayCall 'Array_Add' $false 4250 0
+Add-Pin $queue 'TargetArray' 'in' 'text' '' $null $null 'Array'
+Add-Pin $queue 'NewItem' 'in' 'text'
+Add-Pin $queue 'ReturnValue' 'out' 'int'
+Connect (SelfGet 'AchievementQueue' 'text' 4050 250 'Array') 'AchievementQueue' $queue 'TargetArray'
+Connect $nameItem 'Output' $queue 'NewItem'
+Connect $write 'then' $queue 'execute'
 Write-Body 'GI_UnlockAchievement.txt' $setLast
+
+# ===== WBP_AchievementNotice ==================================================================================
+# Construct: invisible. Every frame (paused too: widgets keep ticking):
+#   showing: Age += InDeltaTime; past SHOW seconds it is done (invisible again); before that its opacity is
+#     clamp(min(Age / FADE_IN, (SHOW - Age) / FADE_OUT), 0, 1) and it slides in from SLIDE px to the right as it fades in;
+#   not showing and AchievementQueue has a name: NoticeText = the first name, which leaves the queue; Age 0, showing;
+#     NoticeSound at SE Volume x Master Volume.
+# The queue lives on the game instance, so a notice for an achievement taken just before a level change shows in the
+# next level's HUD.
+$USER_WIDGET = "/Script/CoreUObject.Class'/Script/UMG.UserWidget'"
+$TEXT_BLOCK = "/Script/CoreUObject.Class'/Script/UMG.TextBlock'"
+$GEOMETRY = "/Script/CoreUObject.ScriptStruct'/Script/SlateCore.Geometry'"
+$VECTOR2D = "/Script/CoreUObject.ScriptStruct'/Script/CoreUObject.Vector2D'"
+$SOUND_BASE = "/Script/CoreUObject.Class'/Script/Engine.SoundBase'"
+$SHOW = '4.0'
+$FADE_IN = '0.25'
+$FADE_OUT = '0.6'
+$SLIDE = '80.0'
+
+function Op($operation, $func, $a, $aPin, $b, $bPin, [double]$x, [double]$y, $outCat = 'real') {
+  $n = New-Operator $operation $func 'real' 'double' $outCat $x $y
+  if ($outCat -eq 'real') { (Get-Pin $n 'ReturnValue').Sub = 'double' }
+  if ($a) { Connect $a $aPin $n 'A' } else { (Get-Pin $n 'A').Default = $aPin }
+  if ($b) { Connect $b $bPin $n 'B' } else { (Get-Pin $n 'B').Default = $bPin }
+  return $n
+}
+# The fade and slide act on NoticeBox (the Border, Is Variable), never on the widget itself: Slate skips painting a
+# widget at opacity 0, and a user widget only ticks while it is painted, so a fully transparent self would never tick.
+$WIDGET = "/Script/CoreUObject.Class'/Script/UMG.Widget'"
+$BORDER = "/Script/CoreUObject.Class'/Script/UMG.Border'"
+function Box([double]$x, [double]$y) { New-VarGet 'NoticeBox' $null 'object' '' $BORDER $x $y }
+function Opacity([double]$x, [double]$y, $value = $null) {
+  $n = New-Call $WIDGET 'SetRenderOpacity' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $WIDGET
+  Add-Pin $n 'InOpacity' 'in' 'real' 'float' $null $value
+  Connect (Box ($x - 200) ($y + 150)) 'NoticeBox' $n 'self'
+  return $n
+}
+function WidgetEvent($name, [double]$x, [double]$y) {
+  $n = New-Node '/Script/BlueprintGraph.K2Node_Event' @("EventReference=(MemberParent=`"$USER_WIDGET`",MemberName=`"$name`")", 'bOverrideFunction=True') $x $y
+  Add-Pin $n 'then' 'out' 'exec'
+  return $n
+}
+function Queue($cast, [double]$x, [double]$y) {
+  $n = New-VarGet 'AchievementQueue' $GI_CLASS 'text' '' $null $x $y 'Array'
+  Connect $cast $GI_OUT $n 'self'
+  return $n
+}
+
+Reset-Graph 500
+$construct = WidgetEvent 'Construct' 0 -400
+$hidden = Opacity 300 -400 '0.0'
+Connect $construct 'then' $hidden 'execute'
+
+$tick = WidgetEvent 'Tick' 0 0
+Add-Pin $tick 'MyGeometry' 'out' 'struct' '' $GEOMETRY
+Add-Pin $tick 'InDeltaTime' 'out' 'real' 'float'
+$cast = GameInstance 300 0
+Connect $tick 'then' $cast 'execute'
+$showing = New-Branch 650 0
+Connect (SelfGet 'Showing' 'bool' 450 200) 'Showing' $showing 'Condition'
+Connect $cast 'then' $showing 'execute'
+
+# --- showing: age, fade, slide ---
+$older = SelfSet 'Age' 'real' 950 -300
+foreach ($pin in 'Age', 'Output_Get') { (Get-Pin $older $pin).Sub = 'double' }
+$sum = Op 'Add' 'Add_DoubleDouble' (New-VarGet 'Age' $null 'real' 'double' $null 650 -450) 'Age' $tick 'InDeltaTime' 850 -450
+Connect $sum 'ReturnValue' $older 'Age'
+Connect $showing 'then' $older 'execute'
+$done = New-Branch 1250 -300
+Connect (Op 'GreaterEqual' 'GreaterEqual_DoubleDouble' $older 'Output_Get' $null $SHOW 1150 -100 'bool') 'ReturnValue' $done 'Condition'
+Connect $older 'then' $done 'execute'
+$stop = SelfSet 'Showing' 'bool' 1550 -550 'None' 'false'
+Connect $done 'then' $stop 'execute'
+$gone = Opacity 1850 -550 '0.0'
+Connect $stop 'then' $gone 'execute'
+$rise = Op 'Divide' 'Divide_DoubleDouble' $older 'Output_Get' $null $FADE_IN 1400 50
+$left = Op 'Subtract' 'Subtract_DoubleDouble' $null $SHOW $older 'Output_Get' 1400 200
+$fall = Op 'Divide' 'Divide_DoubleDouble' $left 'ReturnValue' $null $FADE_OUT 1600 200
+$lower = New-Call $MATH 'FMin' $true 1800 100
+Add-Pin $lower 'A' 'in' 'real' 'double'
+Add-Pin $lower 'B' 'in' 'real' 'double'
+Add-Pin $lower 'ReturnValue' 'out' 'real' 'double'
+Connect $rise 'ReturnValue' $lower 'A'
+Connect $fall 'ReturnValue' $lower 'B'
+$alpha = New-Call $MATH 'FClamp' $true 2000 100
+Add-Pin $alpha 'Value' 'in' 'real' 'double'
+Add-Pin $alpha 'Min' 'in' 'real' 'double' $null '0.0'
+Add-Pin $alpha 'Max' 'in' 'real' 'double' $null '1.0'
+Add-Pin $alpha 'ReturnValue' 'out' 'real' 'double'
+Connect $lower 'ReturnValue' $alpha 'Value'
+$fadeTo = Opacity 1850 -250
+Connect $alpha 'ReturnValue' $fadeTo 'InOpacity'
+Connect $done 'else' $fadeTo 'execute'
+$away = Op 'Subtract' 'Subtract_DoubleDouble' $null '1.0' $alpha 'ReturnValue' 2200 200
+$offset = Op 'Multiply' 'Multiply_DoubleDouble' $away 'ReturnValue' $null $SLIDE 2400 200
+$where = New-Call $MATH 'MakeVector2D' $true 2600 200
+Add-Pin $where 'X' 'in' 'real' 'double'
+Add-Pin $where 'Y' 'in' 'real' 'double' $null '0.0'
+Add-Pin $where 'ReturnValue' 'out' 'struct' '' $VECTOR2D
+Connect $offset 'ReturnValue' $where 'X'
+$slide = New-Call $WIDGET 'SetRenderTranslation' $false 2200 -250
+Add-Pin $slide 'self' 'in' 'object' '' $WIDGET
+Add-Pin $slide 'Translation' 'in' 'struct' '' $VECTOR2D
+Connect (Box 2000 -100) 'NoticeBox' $slide 'self'
+Connect $where 'ReturnValue' $slide 'Translation'
+Connect $fadeTo 'then' $slide 'execute'
+
+# --- not showing: the next name, if any ---
+$waiting = New-Branch 950 500
+$length = ArrayCall 'Array_Length' $true 750 700
+Add-Pin $length 'TargetArray' 'in' 'text' '' $null $null 'Array'
+Add-Pin $length 'ReturnValue' 'out' 'int'
+Connect (Queue $cast 550 700) 'AchievementQueue' $length 'TargetArray'
+$any = New-Operator 'Greater' 'Greater_IntInt' 'int' '' 'bool' 900 700
+Connect $length 'ReturnValue' $any 'A'
+(Get-Pin $any 'B').Default = '0'
+Connect $any 'ReturnValue' $waiting 'Condition'
+Connect $showing 'else' $waiting 'execute'
+$first = New-Node '/Script/BlueprintGraph.K2Node_GetArrayItem' @() 1300 750
+Add-Pin $first 'Array' 'in' 'text' '' $null $null 'Array'
+Add-Pin $first 'Dimension 1' 'in' 'int' '' $null '0'
+Add-Pin $first 'Output' 'out' 'text'
+Connect (Queue $cast 1100 750) 'AchievementQueue' $first 'Array'
+$write = New-Call $TEXT_BLOCK 'SetText' $false 1300 500
+Add-Pin $write 'self' 'in' 'object' '' $TEXT_BLOCK
+Add-Pin $write 'InText' 'in' 'text'
+Connect (New-VarGet 'NoticeText' $null 'object' '' $TEXT_BLOCK 1100 650) 'NoticeText' $write 'self'
+Connect $first 'Output' $write 'InText'
+Connect $waiting 'then' $write 'execute'
+$take = ArrayCall 'Array_Remove' $false 1650 500
+Add-Pin $take 'TargetArray' 'in' 'text' '' $null $null 'Array'
+Add-Pin $take 'IndexToRemove' 'in' 'int' '' $null '0'
+Connect (Queue $cast 1450 750) 'AchievementQueue' $take 'TargetArray'
+Connect $write 'then' $take 'execute'
+$fresh = SelfSet 'Age' 'real' 1950 500 'None' '0.0'
+foreach ($pin in 'Age', 'Output_Get') { (Get-Pin $fresh $pin).Sub = 'double' }
+Connect $take 'then' $fresh 'execute'
+$start = SelfSet 'Showing' 'bool' 2250 500 'None' 'true'
+Connect $fresh 'then' $start 'execute'
+$volume = Op 'Multiply' 'Multiply_DoubleDouble' (GiGet $cast 'SE Volume' 'real' 'double' 2300 800) 'SE Volume' (GiGet $cast 'Master Volume' 'real' 'double' 2300 900) 'Master Volume' 2550 850
+$ding = New-Call $STATICS 'PlaySound2D' $false 2550 500
+Add-Pin $ding 'Sound' 'in' 'object' '' $SOUND_BASE
+Add-Pin $ding 'VolumeMultiplier' 'in' 'real' 'float'
+Add-Pin $ding 'PitchMultiplier' 'in' 'real' 'float' $null '1.0'
+Add-Pin $ding 'StartTime' 'in' 'real' 'float' $null '0.0'
+Connect (New-VarGet 'NoticeSound' $null 'object' '' $SOUND_BASE 2350 700) 'NoticeSound' $ding 'Sound'
+Connect $volume 'ReturnValue' $ding 'VolumeMultiplier'
+Connect $start 'then' $ding 'execute'
+Write-Body 'WBP_AchievementNotice_EventGraph.txt' $null
