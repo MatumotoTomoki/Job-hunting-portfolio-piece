@@ -10,6 +10,8 @@ param([string]$OutDir)
 #   E by a raised flag not yet Broken: Broken, it tips over again for good (Raised stays, so it never stands up
 #     again); if it was the player's ActiveFlag, that is cleared (falls go back to the area's start).
 #   BreakFlag (kept: the character's old plant-a-flag graph still calls it): the top snaps over, the flag is removed.
+#   Achievements (2026-11-21): raising adds the flag to GI RaisedFlags (ACH_FLAGS once FlagTotal are up); breaking it
+#     with E is ACH_BREAK_FLAG.
 if (-not $OutDir) { throw 'OutDir is required' }
 $lightGen = Get-Content -LiteralPath (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_heaven_light.ps1') -Encoding UTF8
 $cut = ($lightGen | Select-String -Pattern '^# ===== BP_LightBeam' | Select-Object -First 1).LineNumber - 1
@@ -92,8 +94,68 @@ Connect $touch 'then' $isPlayer 'execute'
 Connect $isPlayer 'then' $listen 'execute'
 Connect $listen 'then' $once 'execute'
 Connect $once 'else' $raised 'execute'
-Connect $raised 'then' $cast 'execute'
 Connect $cast 'then' $remember 'execute'
+# Achievements (2026-11-21, ACH_FLAGS): "<level>.<this flag>" goes on GI RaisedFlags once; all FlagTotal of them raised
+# -> ACH_FLAGS. Either way on to the cast.
+$gi = GameInstance 1100 (-300)
+Connect $raised 'then' $gi 'execute'
+$levelName = New-Call $STATICS 'GetCurrentLevelName' $false 1400 (-300)
+Add-Pin $levelName 'bRemovePrefixString' 'in' 'bool' '' $null 'true'
+Add-Pin $levelName 'ReturnValue' 'out' 'string'
+Connect $gi 'then' $levelName 'execute'
+$selfName = New-Call $SYSTEM 'GetObjectName' $true 1400 (-50)
+Add-Pin $selfName 'Object' 'in' 'object' '' $OBJECT
+Add-Pin $selfName 'ReturnValue' 'out' 'string'
+$selfForName = New-Node '/Script/BlueprintGraph.K2Node_Self' @() 1250 (-50)
+Add-Pin $selfForName 'self' 'out' 'object' '' $ACTOR
+Connect $selfForName 'self' $selfName 'Object'
+function Joined($a, $aPin, $b, $bPin, $bText, [double]$x, [double]$y) {
+  $n = New-Call $STRINGS 'Concat_StrStr' $true $x $y
+  Add-Pin $n 'A' 'in' 'string'
+  Add-Pin $n 'B' 'in' 'string' '' $null $bText
+  Add-Pin $n 'ReturnValue' 'out' 'string'
+  Connect $a $aPin $n 'A'
+  if ($b) { Connect $b $bPin $n 'B' }
+  return $n
+}
+$withDot = Joined $levelName 'ReturnValue' $null $null '.' 1650 (-150)
+$flagId = Joined $withDot 'ReturnValue' $selfName 'ReturnValue' $null 1850 (-100)
+$flagName = New-Call $STRINGS 'Conv_StringToName' $true 2050 (-100)
+Add-Pin $flagName 'InString' 'in' 'string'
+Add-Pin $flagName 'ReturnValue' 'out' 'name'
+Connect $flagId 'ReturnValue' $flagName 'InString'
+$addFlag = New-Call $ARRAYLIB 'Array_AddUnique' $false 2250 (-300) '/Script/BlueprintGraph.K2Node_CallArrayFunction'
+Add-Pin $addFlag 'TargetArray' 'in' 'name' '' $null $null 'Array'
+Add-Pin $addFlag 'NewItem' 'in' 'name'
+Add-Pin $addFlag 'ReturnValue' 'out' 'int'
+$flagsGet = New-VarGet 'RaisedFlags' $GI_CLASS 'name' '' $null 2050 (-200) 'Array'
+Connect $gi $GI_OUT $flagsGet 'self'
+Connect $flagsGet 'RaisedFlags' $addFlag 'TargetArray'
+Connect $flagName 'ReturnValue' $addFlag 'NewItem'
+Connect $levelName 'then' $addFlag 'execute'
+$flagsGet2 = New-VarGet 'RaisedFlags' $GI_CLASS 'name' '' $null 2300 (-50) 'Array'
+Connect $gi $GI_OUT $flagsGet2 'self'
+$howMany = New-Call $ARRAYLIB 'Array_Length' $true 2500 (-50) '/Script/BlueprintGraph.K2Node_CallArrayFunction'
+Add-Pin $howMany 'TargetArray' 'in' 'name' '' $null $null 'Array'
+Add-Pin $howMany 'ReturnValue' 'out' 'int'
+Connect $flagsGet2 'RaisedFlags' $howMany 'TargetArray'
+$allUp = New-Operator 'GreaterEqual' 'GreaterEqual_IntInt' 'int' '' 'bool' 2700 (-50)
+Connect $howMany 'ReturnValue' $allUp 'A'
+Connect (GiGet $gi 'FlagTotal' 'int' '' 2500 50) 'FlagTotal' $allUp 'B'
+$everyFlag = New-Branch 2600 (-300)
+Connect $allUp 'ReturnValue' $everyFlag 'Condition'
+Connect $addFlag 'then' $everyFlag 'execute'
+function Achieve($giCast, $id, [double]$x, [double]$y) {
+  $n = New-Call $GI_CLASS 'UnlockAchievement' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $GI_CLASS
+  Add-Pin $n 'ID' 'in' 'name' '' $null $id
+  Connect $giCast $GI_OUT $n 'self'
+  return $n
+}
+$flagsDone = Achieve $gi 'ACH_FLAGS' 2900 (-300)
+Connect $everyFlag 'then' $flagsDone 'execute'
+Connect $flagsDone 'then' $cast 'execute'
+Connect $everyFlag 'else' $cast 'execute'
 Connect $remember 'then' $standUp 'Move'
 
 # ----- the player walks away: stop listening to E -----
@@ -153,7 +215,12 @@ $fallOver = MoveTo 'Upper' $JOINT $BROKEN '0.35' 2050 2300
 Connect $e 'Started' $canBreak 'execute'
 Connect $canBreak 'then' $near 'execute'
 Connect $near 'then' $markBroken 'execute'
-Connect $markBroken 'then' $cast2 'execute'
+# Achievements (2026-11-21): breaking one's own flag is ACH_BREAK_FLAG.
+$gi2 = GameInstance 850 2000
+$selfBreak = Achieve $gi2 'ACH_BREAK_FLAG' 1100 2000
+Connect $markBroken 'then' $gi2 'execute'
+Connect $gi2 'then' $selfBreak 'execute'
+Connect $selfBreak 'then' $cast2 'execute'
 Connect $cast2 'then' $mine 'execute'
 Connect $mine 'then' $forget 'execute'
 Connect $forget 'then' $fallOver 'Move'

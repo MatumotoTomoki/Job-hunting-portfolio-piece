@@ -136,4 +136,66 @@ Connect $four 'ReturnValue' $everyArea 'Condition'
 Connect $areaUnlock 'then' $everyArea 'execute'
 Connect $everyArea 'then' (Unlock $cast 'ACH_COIN_ALL' 2000) 'execute'
 Save-Hook 'StarCoin_AreaCoins.txt'
-"$($ids.Count) hooks + 2 fall hooks + StarCoin_AreaCoins in $folder"
+
+# ----- items and flags (step 4b-2): "<level>.<this actor>" goes on a GI list once; the list full -> the achievement -----
+#   Item_Taken.txt   in each item BP (BP_Item, BP_Item2, BP_2jump), just before its Destroy Actor: also RunTookItem
+#   Flag_Raised.txt  in BP_CheckpointFlag, after Set Raised (the first touch)
+# Wire BOTH the Branch's False and Unlock Achievement's then on to the node that came next: paste text cannot link out,
+# and with False left open the rest of the flag/item graph stops until the list is full (the flag stopped rising, 11-21).
+function Collected($list, $total, $id, $tookItem) {
+  Reset-Graph 900
+  $cast = GameInstance 250 0
+  $first = $cast
+  if ($tookItem) {
+    $took = GiSet $cast 'RunTookItem' 'bool' '' 550 0 'true'
+    Connect $cast 'then' $took 'execute'
+    $first = $took
+  }
+  # GetCurrentLevelName has exec pins (a pure copy is pruned): it goes in the chain.
+  $level = New-Call $STATICS 'GetCurrentLevelName' $false 850 0
+  Add-Pin $level 'bRemovePrefixString' 'in' 'bool' '' $null 'true'
+  Add-Pin $level 'ReturnValue' 'out' 'string'
+  Connect $first 'then' $level 'execute'
+  $first = $level
+  $self = New-Node '/Script/BlueprintGraph.K2Node_Self' @() 600 550
+  Add-Pin $self 'self' 'out' 'object' '' $ACTOR
+  $objectName = Pure $SYSTEM 'GetObjectName' 800 550 @(,@('Object', 'object', $OBJECT)) 'string'
+  Connect $self 'self' $objectName 'Object'
+  $dot = Pure $STRINGS 'Concat_StrStr' 850 350 @(@('A', 'string'), @('B', 'string', $null, '.')) 'string'
+  ConstRef $dot @('A', 'B')
+  Connect $level 'ReturnValue' $dot 'A'
+  $whole = Pure $STRINGS 'Concat_StrStr' 1050 450 @(@('A', 'string'), @('B', 'string')) 'string'
+  ConstRef $whole @('A', 'B')
+  Connect $dot 'ReturnValue' $whole 'A'
+  Connect $objectName 'ReturnValue' $whole 'B'
+  $asName = Pure $STRINGS 'Conv_StringToName' 1250 450 @(,@('InString', 'string')) 'name'
+  ConstRef $asName @('InString')
+  Connect $whole 'ReturnValue' $asName 'InString'
+  $add = New-Call $ARRAYLIB 'Array_AddUnique' $false 1450 0 '/Script/BlueprintGraph.K2Node_CallArrayFunction'
+  Add-Pin $add 'TargetArray' 'in' 'name' '' $null $null 'Array'
+  Add-Pin $add 'NewItem' 'in' 'name'
+  Add-Pin $add 'ReturnValue' 'out' 'int'
+  $listGet = New-VarGet $list $GI_CLASS 'name' '' $null 1200 250 'Array'
+  Connect $cast $GI_OUT $listGet 'self'
+  Connect $listGet $list $add 'TargetArray'
+  Connect $asName 'ReturnValue' $add 'NewItem'
+  Connect $first 'then' $add 'execute'
+  $listGet2 = New-VarGet $list $GI_CLASS 'name' '' $null 1500 350 'Array'
+  Connect $cast $GI_OUT $listGet2 'self'
+  $length = New-Call $ARRAYLIB 'Array_Length' $true 1700 350 '/Script/BlueprintGraph.K2Node_CallArrayFunction'
+  Add-Pin $length 'TargetArray' 'in' 'name' '' $null $null 'Array'
+  Add-Pin $length 'ReturnValue' 'out' 'int'
+  Connect $listGet2 $list $length 'TargetArray'
+  $full = New-Operator 'GreaterEqual' 'GreaterEqual_IntInt' 'int' '' 'bool' 1900 350
+  Connect $length 'ReturnValue' $full 'A'
+  Connect (GiGet $cast $total 'int' '' 1700 500) $total $full 'B'
+  $done = New-Branch 1850 0
+  Connect $full 'ReturnValue' $done 'Condition'
+  Connect $add 'then' $done 'execute'
+  Connect $done 'then' (Unlock $cast $id 2150) 'execute'
+}
+Collected 'TakenItems' 'ItemTotal' 'ACH_ITEM_ALL' $true
+Save-Hook 'Item_Taken.txt'
+Collected 'RaisedFlags' 'FlagTotal' 'ACH_FLAGS' $false
+Save-Hook 'Flag_Raised.txt'
+"$($ids.Count) hooks + 2 fall hooks + StarCoin_AreaCoins + Item_Taken + Flag_Raised in $folder"

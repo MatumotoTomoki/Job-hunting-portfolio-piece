@@ -9,6 +9,7 @@
 #     the state: UnlockedAchievements (Name[]), FreeAchievementCount (int), AchievementsLoaded (bool),
 #       LastAchievement (Name: the one UnlockAchievement was last called with)
 #     the run's flags (reset when a run starts - step 4): RunFell, RunUsedFlag, RunTookItem (bool)
+#     collected (step 4b): TakenItems, RaisedFlags (Name[]: "<level>.<actor>"), ItemTotal, FlagTotal (int, set here)
 #     function graphs UnlockAchievement and LoadAchievements (empty: their bodies are pasted, see
 #       Generators/gen_achievements.ps1; UnlockAchievement's input ID (Name) is added by hand)
 # Safe to run again: existing variables keep their place, the list's defaults are rewritten. Editor closed:
@@ -56,6 +57,11 @@ ACHIEVEMENTS = [
     ("ACH_REWIND", "時を戻す者", "時間巻き戻しエリアを使う", "隠し", True, True),
     ("ACH_DANGER", "押すなよ", "危険ボタンを押す", "隠し", True, True),
 ]
+
+# ACH_ITEM_ALL / ACH_FLAGS: how many items (BP_Item, BP_Item2, BP_2jump) and checkpoint flags the four areas hold
+# (2026-11-21, check_coin_totals.py: items 0/1/1/1 after place_items.py, flags 1/1/2/4). Change them when more are placed.
+ITEM_TOTAL = 3
+FLAG_TOTAL = 8
 
 library = unreal.EditorAssetLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()
@@ -106,6 +112,8 @@ add_variables(gi_bp, GAME_INSTANCE, [
     ("AchievementKinds", "strings"), ("HiddenAchievements", "names"), ("FreeAchievements", "names"),
     ("UnlockedAchievements", "names"), ("FreeAchievementCount", "int"), ("AchievementsLoaded", "bool"),
     ("LastAchievement", "name"), ("RunFell", "bool"), ("RunUsedFlag", "bool"), ("RunTookItem", "bool"),
+    # step 4b: "<level>.<actor>" of every item picked up / flag raised this game, and how many there are in all
+    ("TakenItems", "names"), ("ItemTotal", "int"), ("RaisedFlags", "names"), ("FlagTotal", "int"),
 ])
 for graph_name in ("UnlockAchievement", "LoadAchievements"):
     if pins.find_graph(gi_bp, graph_name) is None:
@@ -120,6 +128,9 @@ gi.set_editor_property("AchievementDescriptions", [unreal.Text(a[2]) for a in AC
 gi.set_editor_property("AchievementKinds", [a[3] for a in ACHIEVEMENTS])
 gi.set_editor_property("HiddenAchievements", [unreal.Name(a[0]) for a in ACHIEVEMENTS if a[4]])
 gi.set_editor_property("FreeAchievements", [unreal.Name(a[0]) for a in ACHIEVEMENTS if a[5]])
+gi.set_editor_property("ItemTotal", ITEM_TOTAL)
+gi.set_editor_property("FlagTotal", FLAG_TOTAL)
+lines.append("ItemTotal {}, FlagTotal {}".format(ITEM_TOTAL, FLAG_TOTAL))
 library.save_asset(GAME_INSTANCE, False)
 lines.append("list: {} achievements, {} hidden, {} free".format(
     len(ACHIEVEMENTS), sum(1 for a in ACHIEVEMENTS if a[4]), sum(1 for a in ACHIEVEMENTS if a[5])))
