@@ -58,4 +58,82 @@ Reset-Graph 900
 $cast = GameInstance 250 0
 Connect $cast 'then' (GiSet $cast 'RunUsedFlag' 'bool' '' 600 0 'true') 'execute'
 Save-Hook 'Fall_UsedFlag.txt'
-"$($ids.Count) hooks + 2 fall hooks in $folder"
+
+# ----- BP_StarCoin, at the end of the pickup chain (after the last Set TakenInArea; step 4b) -----
+# Every coin of this area taken this run (TakenInArea >= AreaCoinTotal, counted in the area BP_AreaStart set up, an
+# LV_AreaN level): ACH_COIN_A<N>, N being the level name's 8th character. Then, with all four on UnlockedAchievements:
+# ACH_COIN_ALL.
+# As gen_achievements' Format-Pin: const-ref pins (the string library's inputs).
+function Format-Pin($p) {
+  $obj = if ($p.Obj) { "`"$($p.Obj)`"" } else { 'None' }
+  $ref = if ($p.PSObject.Properties['ConstRef'] -and $p.ConstRef) { 'True' } else { 'False' }
+  $s = "PinId=$($p.Id),PinName=`"$($p.Name)`","
+  if ($p.Dir -eq 'out') { $s += 'Direction="EGPD_Output",' }
+  $s += "PinType.PinCategory=`"$($p.Cat)`",PinType.PinSubCategory=`"$($p.Sub)`",PinType.PinSubCategoryObject=$obj,PinType.PinSubCategoryMemberReference=(),PinType.PinValueType=(),PinType.ContainerType=$($p.Container),PinType.bIsReference=$ref,PinType.bIsConst=$ref,PinType.bIsWeakPointer=False,PinType.bIsUObjectWrapper=False,PinType.bSerializeAsSinglePrecisionFloat=False,"
+  if ($null -ne $p.Default) { $s += "DefaultValue=`"$($p.Default)`"," }
+  if ($p.Links.Count) { $s += 'LinkedTo=(' + (($p.Links | ForEach-Object { "$_," }) -join '') + '),' }
+  $s += 'PersistentGuid=00000000000000000000000000000000,bHidden=False,bNotConnectable=False,bDefaultValueIsReadOnly=False,bDefaultValueIsIgnored=False,bAdvancedView=False,bOrphanedPin=False,'
+  return "   CustomProperties Pin ($s)"
+}
+function ConstRef($node, [string[]]$names) { foreach ($name in $names) { (Get-Pin $node $name) | Add-Member -NotePropertyName ConstRef -NotePropertyValue $true -Force } }
+function Pure($lib, $func, $x, $y, $inputs, $outCat) {
+  $n = New-Call $lib $func $true $x $y
+  foreach ($in in $inputs) { Add-Pin $n $in[0] 'in' $in[1] '' $in[2] $in[3] }
+  Add-Pin $n 'ReturnValue' 'out' $outCat
+  return $n
+}
+function BoolAnd($a, $aPin, $b, $bPin, $x, $y) {
+  $n = Pure $MATH 'BooleanAND' $x $y @(@('A', 'bool'), @('B', 'bool')) 'bool'
+  Connect $a $aPin $n 'A'
+  Connect $b $bPin $n 'B'
+  return $n
+}
+function HasTaken($cast, $id, $x, $y) {
+  $list = New-VarGet 'UnlockedAchievements' $GI_CLASS 'name' '' $null ($x - 250) $y 'Array'
+  Connect $cast $GI_OUT $list 'self'
+  $n = New-Call $ARRAYLIB 'Array_Contains' $true $x $y '/Script/BlueprintGraph.K2Node_CallArrayFunction'
+  Add-Pin $n 'TargetArray' 'in' 'name' '' $null $null 'Array'
+  Add-Pin $n 'ItemToFind' 'in' 'name' '' $null $id
+  Add-Pin $n 'ReturnValue' 'out' 'bool'
+  Connect $list 'UnlockedAchievements' $n 'TargetArray'
+  return $n
+}
+Reset-Graph 900
+$cast = GameInstance 250 0
+$area = GiGet $cast 'AreaLevel' 'name' '' 100 450
+$areaText = Pure $STRINGS 'Conv_NameToString' 300 450 @(,@('InName', 'name')) 'string'
+Connect $area 'AreaLevel' $areaText 'InName'
+$enough = New-Operator 'GreaterEqual' 'GreaterEqual_IntInt' 'int' '' 'bool' 550 250
+Connect (GiGet $cast 'TakenInArea' 'int' '' 350 250) 'TakenInArea' $enough 'A'
+Connect (GiGet $cast 'AreaCoinTotal' 'int' '' 350 350) 'AreaCoinTotal' $enough 'B'
+$here = New-Operator 'EqualEqual' 'EqualEqual_NameName' 'name' '' 'bool' 550 550
+Connect (GiGet $cast 'TakenLevel' 'name' '' 350 600) 'TakenLevel' $here 'A'
+Connect $area 'AreaLevel' $here 'B'
+$isArea = Pure $STRINGS 'StartsWith' 550 700 @(@('SourceString', 'string'), @('InPrefix', 'string', $null, 'LV_Area'), @('SearchCase', 'byte', "/Script/CoreUObject.Enum'/Script/CoreUObject.ESearchCase'", 'IgnoreCase')) 'bool'
+ConstRef $isArea @('SourceString', 'InPrefix')
+Connect $areaText 'ReturnValue' $isArea 'SourceString'
+$all = New-Branch 1000 0
+Connect (BoolAnd (BoolAnd $enough 'ReturnValue' $here 'ReturnValue' 800 350) 'ReturnValue' $isArea 'ReturnValue' 1000 450) 'ReturnValue' $all 'Condition'
+Connect $cast 'then' $all 'execute'
+$digit = Pure $STRINGS 'GetSubstring' 800 850 @(@('SourceString', 'string'), @('StartIndex', 'int', $null, '7'), @('Length', 'int', $null, '1')) 'string'
+ConstRef $digit @('SourceString')
+Connect $areaText 'ReturnValue' $digit 'SourceString'
+$idText = Pure $STRINGS 'Concat_StrStr' 1050 850 @(@('A', 'string', $null, 'ACH_COIN_A'), @('B', 'string')) 'string'
+ConstRef $idText @('A', 'B')
+Connect $digit 'ReturnValue' $idText 'B'
+$idName = Pure $STRINGS 'Conv_StringToName' 1300 850 @(,@('InString', 'string')) 'name'
+ConstRef $idName @('InString')
+Connect $idText 'ReturnValue' $idName 'InString'
+$areaUnlock = New-Call $GI_CLASS 'UnlockAchievement' $false 1300 0
+Add-Pin $areaUnlock 'self' 'in' 'object' '' $GI_CLASS
+Add-Pin $areaUnlock 'ID' 'in' 'name'
+Connect $cast $GI_OUT $areaUnlock 'self'
+Connect $idName 'ReturnValue' $areaUnlock 'ID'
+Connect $all 'then' $areaUnlock 'execute'
+$four = BoolAnd (BoolAnd (HasTaken $cast 'ACH_COIN_A1' 1500 300) 'ReturnValue' (HasTaken $cast 'ACH_COIN_A2' 1500 400) 'ReturnValue' 1750 350) 'ReturnValue' (BoolAnd (HasTaken $cast 'ACH_COIN_A3' 1500 500) 'ReturnValue' (HasTaken $cast 'ACH_COIN_A4' 1500 600) 'ReturnValue' 1750 550) 'ReturnValue' 1950 450
+$everyArea = New-Branch 1700 0
+Connect $four 'ReturnValue' $everyArea 'Condition'
+Connect $areaUnlock 'then' $everyArea 'execute'
+Connect $everyArea 'then' (Unlock $cast 'ACH_COIN_ALL' 2000) 'execute'
+Save-Hook 'StarCoin_AreaCoins.txt'
+"$($ids.Count) hooks + 2 fall hooks + StarCoin_AreaCoins in $folder"
