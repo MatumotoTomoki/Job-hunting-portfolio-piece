@@ -112,14 +112,18 @@ def audio(bp, name, sound, z):
     return a
 
 
-def emitter(bp, name, effect, z):
+SWITCH_FX_SCALE = 3.0   # 1.0 looked a little small in play; the user set these by hand (2026-11-21)
+BLOCK_FX_SCALE = 5.0
+
+
+def emitter(bp, name, effect, z, scale):
     fx = add(bp, emitter_class, name)
     fx.set_editor_property("relative_location", unreal.Vector(0.0, 0.0, z))
     fx.set_editor_property("Effect", effect)
     fx.set_editor_property("IsLooping", False)
     fx.set_editor_property("auto_activate", False)
     fx.set_editor_property("absolute_scale", True)
-    fx.set_editor_property("relative_scale3d", unreal.Vector(1.0, 1.0, 1.0))
+    fx.set_editor_property("relative_scale3d", unreal.Vector(scale, scale, scale))
     return fx
 
 
@@ -127,7 +131,7 @@ def emitter(bp, name, effect, z):
 switch = unreal.load_asset(DIR + "/BP_ToggleSwitch")
 audio(switch, "ClickSound", sounds["S_SwitchClick"], 36.0)
 for colour in ("Red", "Blue"):
-    emitter(switch, "Burst" + colour, effects["SwitchBurst" + colour], 40.0)
+    emitter(switch, "Burst" + colour, effects["SwitchBurst" + colour], 40.0, SWITCH_FX_SCALE)
 pins.compile_blueprint(switch)
 library.save_asset(DIR + "/BP_ToggleSwitch", False)
 
@@ -137,7 +141,7 @@ audio(block, "FormSound", sounds["S_BlockForm"], 0.0)
 audio(block, "VanishSound", sounds["S_BlockVanish"], 0.0)
 for kind, effect_kind in (("Form", "BlockForm"), ("Vanish", "BlockVanish")):
     for colour in ("Red", "Blue"):
-        emitter(block, kind + colour, effects[effect_kind + colour], 0.0)
+        emitter(block, kind + colour, effects[effect_kind + colour], 0.0, BLOCK_FX_SCALE)
 pins.compile_blueprint(block)
 library.save_asset(DIR + "/BP_SwitchBlock", False)
 
