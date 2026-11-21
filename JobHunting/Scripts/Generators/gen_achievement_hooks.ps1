@@ -198,4 +198,91 @@ Collected 'TakenItems' 'ItemTotal' 'ACH_ITEM_ALL' $true
 Save-Hook 'Item_Taken.txt'
 Collected 'RaisedFlags' 'FlagTotal' 'ACH_FLAGS' $false
 Save-Hook 'Flag_Raised.txt'
-"$($ids.Count) hooks + 2 fall hooks + StarCoin_AreaCoins + Item_Taken + Flag_Raised in $folder"
+
+# ----- step 4c: counters for the course achievements (setup_achievement_courses.py) -----
+#   Count_Fall.txt    the character's fall check, after Set RunFell (Fall_FirstFall): GI FallCount + 1
+#   Count_SunHit.txt  BP_TowerSun, the Branch "player within HitRadius" True, before the GrabCharge branch: SunHitCount + 1
+function CountUp($name) {
+  Reset-Graph 900
+  $cast = GameInstance 250 0
+  $set = GiSet $cast $name 'int' '' 750 0
+  $plus = New-Operator 'Add' 'Add_IntInt' 'int' '' 'int' 550 250
+  Connect (GiGet $cast $name 'int' '' 350 250) $name $plus 'A'
+  (Get-Pin $plus 'B').Default = '1'
+  Connect $plus 'ReturnValue' $set $name
+  Connect $cast 'then' $set 'execute'
+}
+CountUp 'FallCount'
+Save-Hook 'Count_Fall.txt'
+CountUp 'SunHitCount'
+Save-Hook 'Count_SunHit.txt'
+
+# ----- BP_CourseGate's whole Event Graph (Scripts/BP_CourseGate_EventGraph.txt) -----
+# The player entering Box: a start gate (IsGoal off) makes AchievementId the GI's CourseId and notes FallCount and
+# SunHitCount; a goal gate unlocks AchievementId if that course is the one running and, as asked (CheckFalls,
+# CheckSunHits), no fall / sun hit came since. Either way the goal ends the course (CourseId None).
+$BOX_CLASS = "/Script/CoreUObject.Class'/Script/Engine.BoxComponent'"
+Reset-Graph 100
+$enter = New-Node '/Script/BlueprintGraph.K2Node_Event' @("EventReference=(MemberParent=`"$ACTOR`",MemberName=`"ReceiveActorBeginOverlap`")", 'bOverrideFunction=True') 0 0
+Add-Pin $enter 'then' 'out' 'exec'
+Add-Pin $enter 'OtherActor' 'out' 'object' '' $ACTOR
+$inBox = New-Call $PRIMITIVE 'IsOverlappingActor' $true 250 250
+Add-Pin $inBox 'self' 'in' 'object' '' $PRIMITIVE
+Add-Pin $inBox 'Other' 'in' 'object' '' $ACTOR
+Add-Pin $inBox 'ReturnValue' 'out' 'bool'
+Connect (New-VarGet 'Box' $null 'object' '' $BOX_CLASS 50 250) 'Box' $inBox 'self'
+Connect (Player 50 350) 'ReturnValue' $inBox 'Other'
+$isPlayer = New-Branch 300 0
+Connect $inBox 'ReturnValue' $isPlayer 'Condition'
+Connect $enter 'then' $isPlayer 'execute'
+$cast = GameInstance 600 0
+Connect $isPlayer 'then' $cast 'execute'
+$goal = New-Branch 900 0
+Connect (New-VarGet 'IsGoal' $null 'bool' '' $null 750 200) 'IsGoal' $goal 'Condition'
+Connect $cast 'then' $goal 'execute'
+function MyId($x, $y) { New-VarGet 'AchievementId' $null 'name' '' $null $x $y }
+# start
+$startId = GiSet $cast 'CourseId' 'name' '' 1200 400
+Connect (MyId 1000 600) 'AchievementId' $startId 'CourseId'
+$startFalls = GiSet $cast 'CourseFalls' 'int' '' 1500 400
+Connect (GiGet $cast 'FallCount' 'int' '' 1300 600) 'FallCount' $startFalls 'CourseFalls'
+$startHits = GiSet $cast 'CourseHits' 'int' '' 1800 400
+Connect (GiGet $cast 'SunHitCount' 'int' '' 1600 600) 'SunHitCount' $startHits 'CourseHits'
+Connect $goal 'else' $startId 'execute'
+Chain @($startId, $startFalls, $startHits)
+# goal
+function Same($aName, $bName, [double]$x, [double]$y) {
+  $n = New-Operator 'EqualEqual' 'EqualEqual_IntInt' 'int' '' 'bool' $x $y
+  Connect (GiGet $cast $aName 'int' '' ($x - 200) $y) $aName $n 'A'
+  Connect (GiGet $cast $bName 'int' '' ($x - 200) ($y + 80)) $bName $n 'B'
+  return $n
+}
+function SkipOr($checkName, $same, [double]$x, [double]$y) {
+  $not = Pure $MATH 'Not_PreBool' $x $y @(,@('A', 'bool')) 'bool'
+  Connect (New-VarGet $checkName $null 'bool' '' $null ($x - 200) $y) $checkName $not 'A'
+  $or = Pure $MATH 'BooleanOR' ($x + 200) $y @(@('A', 'bool'), @('B', 'bool')) 'bool'
+  Connect $not 'ReturnValue' $or 'A'
+  Connect $same 'ReturnValue' $or 'B'
+  return $or
+}
+$running = New-Operator 'EqualEqual' 'EqualEqual_NameName' 'name' '' 'bool' 1300 -350
+Connect (GiGet $cast 'CourseId' 'name' '' 1100 -350) 'CourseId' $running 'A'
+Connect (MyId 1100 -270) 'AchievementId' $running 'B'
+$noFall = SkipOr 'CheckFalls' (Same 'FallCount' 'CourseFalls' 1300 -550) 1500 -550
+$noHit = SkipOr 'CheckSunHits' (Same 'SunHitCount' 'CourseHits' 1300 -750) 1500 -750
+$clean = BoolAnd (BoolAnd $running 'ReturnValue' $noFall 'ReturnValue' 1900 -450) 'ReturnValue' $noHit 'ReturnValue' 2100 -550
+$made = New-Branch 1500 -150
+Connect $clean 'ReturnValue' $made 'Condition'
+Connect $goal 'then' $made 'execute'
+$award = New-Call $GI_CLASS 'UnlockAchievement' $false 1800 -150
+Add-Pin $award 'self' 'in' 'object' '' $GI_CLASS
+Add-Pin $award 'ID' 'in' 'name'
+Connect $cast $GI_OUT $award 'self'
+Connect (MyId 1600 0) 'AchievementId' $award 'ID'
+Connect $made 'then' $award 'execute'
+$over = GiSet $cast 'CourseId' 'name' '' 2100 -150 'None'
+Connect $award 'then' $over 'execute'
+$over2 = GiSet $cast 'CourseId' 'name' '' 1800 50 'None'
+Connect $made 'else' $over2 'execute'
+Write-Graph 'BP_CourseGate_EventGraph.txt'
+"$($ids.Count) hooks + 2 fall hooks + StarCoin_AreaCoins + Item_Taken + Flag_Raised + 2 counters in $folder"
