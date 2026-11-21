@@ -41,7 +41,7 @@ ACHIEVEMENTS = [
     ("ACH_HELL", "地獄へようこそ", "地獄に落ちる", "失敗", False, True),
     ("ACH_HELL_BACK", "地獄からの生還", "地獄から戻る", "失敗", False, True),
     ("ACH_WRONG_CAGE", "選択を誤った", "鳥籠で外れを選ぶ", "失敗", False, True),
-    ("ACH_SUN_GRAB", "お日さまに捕まった", "大塔の太陽に捕まってカゴに入れられる", "失敗", False, True),
+    ("ACH_SUN_GRAB", "お日さまに捕まった", "暗い塔の太陽に捕まってカゴに入れられる", "失敗", False, True),
     ("ACH_THREAD", "糸が切れた", "蜘蛛の糸が切れて落ちる", "失敗", False, True),
     ("ACH_SO_CLOSE", "あと一歩", "ゴールのすぐ手前から落ちる", "失敗", False, True),
     ("ACH_NO_FALL", "落ちない者", "一度も落ちずにクリアする", "腕前", False, False),
