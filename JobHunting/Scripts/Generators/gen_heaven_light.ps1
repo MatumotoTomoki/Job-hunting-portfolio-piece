@@ -7,7 +7,8 @@ param([string]$OutDir)
 #                                   Lit and overlapping Probe, else the other way round.
 #   BP_LightShard_EventGraph.txt    BP_StarCoin's graph without the coin counting: spins, taken by the player (Grab) it
 #                                   spins up, rises, shrinks and is destroyed; its id goes on the run's TakenCoinIds,
-#                                   so it stays gone after a trip to hell.
+#                                   so it stays gone after a trip to hell. Taken: IdleFx off, GetFx, GetSound played
+#                                   at its place (2026-11-21).
 #   BP_Iwato_EventGraph.txt         Begin Play: Sun, Sky = the level's directional and sky light. Tick: Counter shows how
 #                                   many of Shard1..3 are gone; once all three are, Opened: the Lever is pulled (Pulled,
 #                                   PulledAt = now) and, more than 1.5 s into the level, the view cuts to ShowCamera for
@@ -389,14 +390,41 @@ Connect (Comp 'Grab' $SPHERE 250 1250) 'Grab' $overlap 'self'
 Connect (Player 200 1350) 'ReturnValue' $overlap 'Other'
 Connect $overlap 'ReturnValue' $isPlayer 'Condition'
 $got = SetSelf 'Collected' 'bool' 'true' 800 1000
-$cast = GameInstance 1300 1000
-$keep = GiSet $cast 'TakenCoinIds' 'string' '' 1600 1000
-Connect (Concat (GiGet $cast 'TakenCoinIds' 'string' '' 1350 1250) 'TakenCoinIds' (New-VarGet 'CoinId' $null 'string' '' $null 1350 1350) 'CoinId' 1550 1250) 'ReturnValue' $keep 'TakenCoinIds'
+# The waiting glints stop, the pick-up burst, then "kiran" played at its place (outliving the shard; 2026-11-21,
+# setup_shard_effects.py).
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+$SOUND_BASE = "/Script/CoreUObject.Class'/Script/Engine.SoundBase'"
+$idleOff = New-Call $ACTOR_COMP 'Deactivate' $false 1050 1000
+Add-Pin $idleOff 'self' 'in' 'object' '' $ACTOR_COMP
+Connect (New-VarGet 'IdleFx' $null 'object' '' $EMITTER 850 1200) 'IdleFx' $idleOff 'self'
+$burst = New-Call $ACTOR_COMP 'Activate' $false 1300 1000
+Add-Pin $burst 'self' 'in' 'object' '' $ACTOR_COMP
+Add-Pin $burst 'bReset' 'in' 'bool' '' $null 'true'
+Connect (New-VarGet 'GetFx' $null 'object' '' $EMITTER 1100 1200) 'GetFx' $burst 'self'
+$cast = GameInstance 1800 1000
+$keep = GiSet $cast 'TakenCoinIds' 'string' '' 2100 1000
+Connect (Concat (GiGet $cast 'TakenCoinIds' 'string' '' 1850 1250) 'TakenCoinIds' (New-VarGet 'CoinId' $null 'string' '' $null 1850 1350) 'CoinId' 2050 1250) 'ReturnValue' $keep 'TakenCoinIds'
+$ring = New-Call $STATICS 'PlaySoundAtLocation' $false 2450 1000
+Add-Pin $ring 'Sound' 'in' 'object' '' $SOUND_BASE
+Add-Pin $ring 'Location' 'in' 'struct' '' $VECTOR
+Add-Pin $ring 'Rotation' 'in' 'struct' '' $ROTATOR '0, 0, 0'
+Add-Pin $ring 'VolumeMultiplier' 'in' 'real' 'float'
+Add-Pin $ring 'PitchMultiplier' 'in' 'real' 'float' $null '1.0'
+Add-Pin $ring 'StartTime' 'in' 'real' 'float' $null '0.0'
+Connect (New-VarGet 'GetSound' $null 'object' '' $SOUND_BASE 2250 1450) 'GetSound' $ring 'Sound'
+$shardAt = New-Call $ACTOR 'K2_GetActorLocation' $true 2250 1550
+Add-Pin $shardAt 'self' 'in' 'object' '' $ACTOR
+Add-Pin $shardAt 'ReturnValue' 'out' 'struct' '' $VECTOR
+Connect $shardAt 'ReturnValue' $ring 'Location'
+$vol = Op 'Multiply' 'Multiply_DoubleDouble' (GiGet $cast 'SE Volume' 'real' 'double' 2050 1650) 'SE Volume' (GiGet $cast 'Master Volume' 'real' 'double' 2050 1750) 'Master Volume' 2250 1700
+Connect $vol 'ReturnValue' $ring 'VolumeMultiplier'
 Connect $touch 'then' $once 'execute'
 Connect $once 'else' $isPlayer 'execute'
 Connect $isPlayer 'then' $got 'execute'
-Connect $got 'then' $cast 'execute'
+Chain @($got, $idleOff, $burst, $cast)
 Connect $cast 'then' $keep 'execute'
+Connect $keep 'then' $ring 'execute'
 # Begin Play: CoinId = "|<level>.<this shard's name>|"; gone already if it is on the run's list.
 $begin = Event 'ReceiveBeginPlay' 0 1800
 $level2 = LevelName 300 1800
