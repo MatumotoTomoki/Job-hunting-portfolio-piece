@@ -1,5 +1,7 @@
 ﻿# Draws the pause-menu row labels and the selection arrow in the same style as T_PauseTitle.png
 # (white body, green scarf outline). Images are 2x the widget size so they stay crisp.
+# -Only T_Label_Achievements draws just that label (and no arrow), leaving the other PNGs untouched.
+param([string[]]$Only)
 Add-Type -AssemblyName System.Drawing
 
 $FontName = "HGMaruGothicMPRO"
@@ -14,8 +16,10 @@ $ArrowHeight = 80 * $Scale
 $Labels = @(
     @{ Name = "T_Label_Volume"; Text = "音量" },
     @{ Name = "T_Label_SE"; Text = "SE" },
+    @{ Name = "T_Label_Achievements"; Text = "実績" },
     @{ Name = "T_Label_Quit"; Text = "ゲームをやめる" }
 )
+if ($Only) { $Labels = @($Labels | Where-Object { $Only -contains $_.Name }) }
 
 $ScarfGreen = [System.Drawing.Color]::FromArgb(255, 38, 102, 52)
 $DarkGreen = [System.Drawing.Color]::FromArgb(255, 20, 60, 30)
@@ -102,6 +106,8 @@ foreach ($label in $Labels) {
     Draw-Styled $canvas[1] $path
     Save-Canvas $canvas[0] $canvas[1] $label.Name
 }
+
+if ($Only -and ($Only -notcontains "T_Arrow")) { return }
 
 # Chunky rounded arrow pointing right, with a small halo-gold sparkle.
 $canvas = New-Canvas $ArrowWidth $ArrowHeight

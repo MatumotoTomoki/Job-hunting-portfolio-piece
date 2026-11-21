@@ -100,7 +100,23 @@ Connect (Real 'StartDelay' 4550 (-400)) 'StartDelay' $ramp 'Duration'
 $jets = Start-Emitter 'RiseFx' 4950 (-600)
 $crackle = Sound-Play 'SparkSound' 5250 (-600)
 Connect $onRing 'then' $go 'execute'
-Chain @($go, $at, $hold, $view, $soundCast)
+# Silence for the ride (setup_gear_exit_mute.py, 2026-11-20): every sound but the gear's goes to 0 as the player steps
+# on; popped just before the next level opens. The controller's input is off too, so the pause menu can't open while
+# the game is silent (pausing under such a mix left the BGM dead at the gear arrival).
+$SOUND_MIX = "/Script/CoreUObject.Class'/Script/Engine.SoundMix'"
+function Sound-Mix($func, [double]$x, [double]$y) {
+  $n = New-Call $STATICS $func $false $x $y
+  Add-Pin $n 'InSoundMixModifier' 'in' 'object' '' $SOUND_MIX
+  Connect (New-VarGet 'ExitMix' $null 'object' '' $SOUND_MIX ($x - 200) ($y + 200)) 'ExitMix' $n 'InSoundMixModifier'
+  return $n
+}
+$freeze = New-Call $ACTOR 'DisableInput' $false 1400 (-900)
+Add-Pin $freeze 'self' 'in' 'object' '' $ACTOR
+Add-Pin $freeze 'PlayerController' 'in' 'object' '' $CONTROLLER
+Connect (Controller 1200 (-700)) 'ReturnValue' $freeze 'self'
+Connect (Controller 1200 (-600)) 'ReturnValue' $freeze 'PlayerController'
+$hush = Sound-Mix 'PushSoundMixModifier' 1700 (-900)
+Chain @($go, $at, $hold, $freeze, $hush, $view, $soundCast)
 Connect $soundCast 'then' $volumes[0] 'execute'
 Chain (@($volumes) + @($clunk, $hiss, $spin, $puff, $ramp, $jets, $crackle))
 
@@ -221,5 +237,6 @@ Connect $top 'then' $once 'execute'
 Connect $once 'else' $leaving 'execute'
 Chain @($leaving, $cast)
 Connect $cast 'then' $saved[0] 'execute'
-Chain @($saved[1], $moving, $arrival, $dark, $wait, $open)
+$unhush = Sound-Mix 'PopSoundMixModifier' 5850 (-250)
+Chain @($saved[1], $moving, $arrival, $dark, $wait, $unhush, $open)
 Write-Graph 'BP_GearExit_EventGraph.txt'
