@@ -16,7 +16,11 @@ param([string]$OutDir)
 #                                   sets the sun's rotation and brightness and the sky light's intensity between Dark* and Bright*.
 if (-not $OutDir) { throw 'OutDir is required' }
 $cageGen = Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_hell_cage.ps1'
-$defs = Get-Content -LiteralPath $cageGen -Encoding UTF8 | Select-Object -Skip 10 -First 172
+# Its helpers: from 'param' + header to the first graph (by marker, not a line count - its header grows).
+$cageLines = Get-Content -LiteralPath $cageGen -Encoding UTF8
+$cageStart = ($cageLines | Select-String -Pattern '^\$helperFile' | Select-Object -First 1).LineNumber - 1
+$cageEnd = ($cageLines | Select-String -Pattern '^# ===== 1\.' | Select-Object -First 1).LineNumber - 2
+$defs = $cageLines[$cageStart..$cageEnd]
 . ([ScriptBlock]::Create(($defs -join "`n")))
 # gen_hell_cage's helpers again with typed coordinates: untyped, a negative y arrives as text and -600 + 200
 # becomes -600200 (the GetGameInstance node of BP_ChimeJewel landed 600 000 units up).

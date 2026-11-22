@@ -2,9 +2,7 @@
 # Paste text for the heaven-or-hell cage pair (variables and assets from setup_hell_cage.py):
 #   BP_BirdcageDoor_Blender_EventGraph.txt  the cage graph as exported (bp_export/cage.txt), plus one branch: once the
 #       screen is black and the cage has risen, a ToHell cage saves the run's state and opens HellLevel instead of
-#       carrying the player to its Destination. Sounds and effect spliced in (setup_cage_effects.py, 2026-11-22):
-#       Begin Play sets their volume; the door's creak as it swings (DoorSound), the slam as it shuts on the player
-#       (LockSound), the haul up (RiseSound), the set-down at the destination (LandSound + LandFx).
+#       carrying the player to its Destination.
 #   BP_CagePair_EventGraph.txt  Begin Play: the run's HellSeed (picked by the first pair to start) decides, by its
 #       PairId'th bit, whether CageA or CageB is the hell one. Back from hell (ReturnFromHell, same PairId): the item
 #       effects come back and the player stands at the right cage's Destination as the screen clears.
@@ -184,6 +182,10 @@ function Write-Graph($file, [string[]]$extraNames = @(), [string]$prefix = '') {
 }
 
 # ===== 1. The cage: one branch after the cage has risen into the dark ======================================
+# (Header lines above are counted by other generators - Skip 10 -First 172 - so notes go here, not there.)
+# Sounds and effect spliced in too (setup_cage_effects.py, 2026-11-22): Begin Play sets their volume; the door's
+# creak as it swings (DoorSound), the slam as it shuts on the player (LockSound), the haul up (RiseSound), the
+# set-down at the destination (LandSound + LandFx).
 $export = Get-Content -LiteralPath (Join-Path $OutDir 'bp_export\cage.txt') -Raw -Encoding UTF8
 $export = [regex]::Replace($export, ' ExportPath="[^"]*"', '')
 $RISE_THEN = 'K2Node_CallFunction_145 DAD13812773841D08F3946BCCC4F8E4C'      # MoveComponentTo (the cage rises) 'then'
