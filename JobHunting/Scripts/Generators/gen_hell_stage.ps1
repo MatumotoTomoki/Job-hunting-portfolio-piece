@@ -3,7 +3,9 @@ param([string]$OutDir)
 #   BP_HellLava_EventGraph.txt  the player sinking into KillZone is sent back to RespawnLocation.
 #   BP_FlameJet_EventGraph.txt  the eruption loop (StartDelay, then Fire flares for WarnSeconds, the Column stands and
 #       Burning is on for BurnSeconds, then OffSeconds of nothing), and on Tick: Burning and the player in HitBox ->
-#       sent back.
+#       sent back. Sounds and effects (setup_flame_effects.py, 2026-11-22): Begin Play sets their volume (SE x Master);
+#       flaring - WarnSound; the column out - EruptSound, RoarSound (looping), EruptFx; gone - RoarSound fades, SmokeFx;
+#       the player caught - HurtSound.
 # Sent back: once at a time (Busy), input off, the screen goes black, the player stops and stands at RespawnLocation
 # facing +X, the screen clears, input back on.
 if (-not $OutDir) { throw 'OutDir is required' }
@@ -50,12 +52,15 @@ function PlayerIn($boxName, $x, $y) {
   Connect (Player ($x - 250) ($y + 100)) 'ReturnValue' $n 'Other'
   return $n
 }
-# Sends the player back to RespawnLocation; returns the entry branch (wire into 'execute').
-function SendBack($x, $y) {
+# Sends the player back to RespawnLocation; returns the entry branch (wire into 'execute'). With $hurtSound (an
+# AudioComponent's name), that is played once as the player is caught (BP_FlameJet, 2026-11-22).
+function SendBack($x, $y, $hurtSound = $null) {
   $busy = New-Branch $x $y
   Connect (New-VarGet 'Busy' $null 'bool' '' $null ($x - 150) ($y + 200)) 'Busy' $busy 'Condition'
   $lock = SetSelf 'Busy' 'true' ($x + 250) $y
   $noInput = InputCall 'DisableInput' ($x + 500) $y
+  $steps = @($lock)
+  if ($hurtSound) { $steps += SoundPlay $hurtSound ($x + 250) ($y + 450) }
   # Too hot: the player shoots straight up (any run or fall cancelled), and is seen flying before the screen goes black.
   $hop = New-Call $CHARACTER 'LaunchCharacter' $false ($x + 750) ($y - 400)
   Add-Pin $hop 'self' 'in' 'object' '' $CHARACTER
@@ -95,8 +100,33 @@ function SendBack($x, $y) {
   $input = InputCall 'EnableInput' ($x + 2900) $y
   $unlock = SetSelf 'Busy' 'false' ($x + 3150) $y
   Connect $busy 'else' $lock 'execute'
-  Chain @($lock, $noInput, $hop, $fly, $dark, $wait, $stop, $place, $face, $clear, $input, $unlock)
+  Chain ($steps + @($noInput, $hop, $fly, $dark, $wait, $stop, $place, $face, $clear, $input, $unlock))
   return $busy
+}
+# Sounds and effects (setup_flame_effects.py, 2026-11-22). Positive coordinates only here: these helpers take them
+# untyped, and a negative y arrives as text (-250 + 200 becomes -250200).
+$AUDIO_COMP = "/Script/CoreUObject.Class'/Script/Engine.AudioComponent'"
+function SoundPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO_COMP 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function SoundFade($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO_COMP 'FadeOut' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $n 'FadeOutDuration' 'in' 'real' 'float' $null '0.25'
+  Add-Pin $n 'FadeVolumeLevel' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function FxPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMPONENT 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMPONENT
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $name $null 'object' '' $EMITTER ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
 }
 
 # ===== BP_HellLava =========================================================================================
@@ -126,24 +156,48 @@ function Jet($on, $x, $y) {
   return $n
 }
 $begin = Event 'ReceiveBeginPlay' 0 0
+# Begin Play: the sounds at SE Volume x Master Volume first (2026-11-22).
+$cast = GameInstance 300 1600
+$vol = New-Operator 'Multiply' 'Multiply_DoubleDouble' 'real' 'double' 'real' 600 1850
+(Get-Pin $vol 'ReturnValue').Sub = 'double'
+Connect (GiGet $cast 'SE Volume' 'real' 'double' 350 1850) 'SE Volume' $vol 'A'
+Connect (GiGet $cast 'Master Volume' 'real' 'double' 350 1950) 'Master Volume' $vol 'B'
+$prev = $cast; $vx = 750
+foreach ($name in 'WarnSound', 'EruptSound', 'RoarSound', 'HurtSound') {
+  $v = New-Call $AUDIO_COMP 'SetVolumeMultiplier' $false $vx 1600
+  Add-Pin $v 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($vx - 200) 1800) $name $v 'self'
+  Connect $vol 'ReturnValue' $v 'NewVolumeMultiplier'
+  Connect $prev 'then' $v 'execute'
+  $prev = $v; $vx += 300
+}
 $first = Seconds 'StartDelay' 300 0
+Connect $begin 'then' $cast 'execute'
+Connect $prev 'then' $first 'execute'
+Connect $cast 'CastFailed' $first 'execute'
 $flare = New-Call $ACTOR_COMPONENT 'Activate' $false 600 0
 Add-Pin $flare 'self' 'in' 'object' '' $ACTOR_COMPONENT
 Add-Pin $flare 'bReset' 'in' 'bool' '' $null 'true'
 Connect (Comp 'Fire' $EMITTER 400 200) 'Fire' $flare 'self'
+$warnSound = SoundPlay 'WarnSound' 900 300
 $warn = Seconds 'WarnSeconds' 900 0
 $show = Jet $true 1200 0
+$eruptSound = SoundPlay 'EruptSound' 1200 300
+$roar = SoundPlay 'RoarSound' 1500 300
+$eruptFx = FxPlay 'EruptFx' 1800 300
 $burning = SetSelf 'Burning' 'true' 1500 0
 $burn = Seconds 'BurnSeconds' 1800 0
 $hide = Jet $false 2100 0
+$hush = SoundFade 'RoarSound' 2100 300
+$smokeFx = FxPlay 'SmokeFx' 2400 300
 $cool = SetSelf 'Burning' 'false' 2400 0
 $out = New-Call $ACTOR_COMPONENT 'Deactivate' $false 2700 0
 Add-Pin $out 'self' 'in' 'object' '' $ACTOR_COMPONENT
 Connect (Comp 'Fire' $EMITTER 2500 200) 'Fire' $out 'self'
 $off = Seconds 'OffSeconds' 3000 0
-Connect $begin 'then' $first 'execute'
 Connect $first 'then' $flare 'execute'
-Chain @($flare, $warn, $show, $burning, $burn, $hide, $cool, $out, $off)
+Chain @($flare, $warnSound, $warn, $show, $eruptSound, $roar, $eruptFx, $burning, $burn, $hide, $hush, $smokeFx, $cool, $out, $off)
 Connect $off 'then' $flare 'execute'
 # Every frame: burning and the player in the fire.
 $tick = Event 'ReceiveTick' 0 700
@@ -154,5 +208,5 @@ Connect $tick 'then' $hot 'execute'
 $caught = New-Branch 600 700
 Connect (PlayerIn 'HitBox' 450 950) 'ReturnValue' $caught 'Condition'
 Connect $hot 'then' $caught 'execute'
-Connect $caught 'then' (SendBack 900 700) 'execute'
+Connect $caught 'then' (SendBack 900 700 'HurtSound') 'execute'
 Write-Graph 'BP_FlameJet_EventGraph.txt'
