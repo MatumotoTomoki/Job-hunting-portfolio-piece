@@ -107,10 +107,31 @@ $putBack = New-VarSet 'ElapsedTime' $CHAR1 'real' $null 3900 0
 (Get-Pin $putBack 'ElapsedTime').Sub = 'double'; (Get-Pin $putBack 'Output_Get').Sub = 'double'
 Connect $char 'AsBP Third Person Character 1' $putBack 'self'
 Connect (Real 'ClearTime' 3700 250) 'ClearTime' $putBack 'ElapsedTime'
+# As the view cuts to the gate: the doors' sound and the light's (setup_gate_sounds.py), 2D, SE Volume x Master Volume.
+$SOUND_BASE = "/Script/CoreUObject.Class'/Script/Engine.SoundBase'"
+$soundGi = GameInstance 2350 -600
+$soundVol = Op 'Multiply' 'Multiply_DoubleDouble' (GiGet $soundGi 'SE Volume' 'real' 'double' 2400 -350) 'SE Volume' (GiGet $soundGi 'Master Volume' 'real' 'double' 2400 -250) 'Master Volume' 2650 -300
+function Play2D($asset, [double]$x, [double]$y) {
+  $n = New-Call $STATICS 'PlaySound2D' $false $x $y
+  Add-Pin $n 'Sound' 'in' 'object' '' $SOUND_BASE
+  (Get-Pin $n 'Sound') | Add-Member DefaultObject "/Game/ThirdPerson/Blueprints/Gimmicks/Heaven/$asset.$asset"
+  Add-Pin $n 'VolumeMultiplier' 'in' 'real' 'float'
+  Add-Pin $n 'PitchMultiplier' 'in' 'real' 'float' $null '1.0'
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect $soundVol 'ReturnValue' $n 'VolumeMultiplier'
+  return $n
+}
+$doorSound = Play2D 'S_GateOpen' 2650 -600
+$lightSound = Play2D 'S_GateLight' 2950 -600
+Connect $soundGi 'then' $doorSound 'execute'
+Connect $doorSound 'then' $lightSound 'execute'
+Connect $soundGi 'CastFailed' $waitOpen 'execute'
+Connect $lightSound 'then' $waitOpen 'execute'
 Connect $isPlayer 'then' $started 'execute'
 Chain @($started, $startedAt, $char)
 Connect $char 'then' $clearTime 'execute'
-Chain @($clearTime, $noInput, $toGate, $waitOpen, $toPlayer, $waitWalk, $whiteOut, $waitWhite, $putBack)
+Chain @($clearTime, $noInput, $toGate, $soundGi)
+Chain @($waitOpen, $toPlayer, $waitWalk, $whiteOut, $waitWhite, $putBack)
 
 # ----- the clear-time achievements -----
 $gi = GameInstance 4200 0
