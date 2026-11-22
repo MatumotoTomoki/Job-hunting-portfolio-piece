@@ -2,7 +2,9 @@
 # Paste text for the heaven-or-hell cage pair (variables and assets from setup_hell_cage.py):
 #   BP_BirdcageDoor_Blender_EventGraph.txt  the cage graph as exported (bp_export/cage.txt), plus one branch: once the
 #       screen is black and the cage has risen, a ToHell cage saves the run's state and opens HellLevel instead of
-#       carrying the player to its Destination.
+#       carrying the player to its Destination. Sounds and effect spliced in (setup_cage_effects.py, 2026-11-22):
+#       Begin Play sets their volume; the door's creak as it swings (DoorSound), the slam as it shuts on the player
+#       (LockSound), the haul up (RiseSound), the set-down at the destination (LandSound + LandFx).
 #   BP_CagePair_EventGraph.txt  Begin Play: the run's HellSeed (picked by the first pair to start) decides, by its
 #       PairId'th bit, whether CageA or CageB is the hell one. Back from hell (ReturnFromHell, same PairId): the item
 #       effects come back and the player stands at the right cage's Destination as the screen clears.
@@ -201,7 +203,8 @@ $pairId = GiSet $cast 'HellPairId' 'int' '' 4200 400
 Connect (New-VarGet 'PairId' $null 'int' '' $null 4000 650) 'PairId' $pairId 'HellPairId'
 $fromHell = GiSet $cast 'ReturnFromHell' 'bool' '' 4500 400 'false'
 $returnTo = GiSet $cast 'ReturnLevel' 'name' '' 4800 400
-$levelName = New-Call $STATICS 'GetCurrentLevelName' $true 4300 900
+# (Not pure: pasted as pure it was pruned for its unwired exec pins and ReturnLevel was left None - 2026-11-22.)
+$levelName = New-Call $STATICS 'GetCurrentLevelName' $false 4300 900
 Add-Pin $levelName 'bRemovePrefixString' 'in' 'bool' '' $null 'true'
 Add-Pin $levelName 'ReturnValue' 'out' 'string'
 $asName = New-Call $STRINGS 'Conv_StringToName' $true 4600 900
@@ -213,9 +216,81 @@ Connect $asName 'ReturnValue' $returnTo 'ReturnLevel'
 $open = OpenLevel 5100 400
 Connect (New-VarGet 'HellLevel' $null 'name' '' $null 4900 650) 'HellLevel' $open 'LevelName'
 Connect $cast 'then' $saved[0] 'execute'
-Chain @($saved[1], $pairId, $fromHell, $returnTo, $open)
+Chain @($saved[1], $pairId, $fromHell, $levelName, $returnTo, $open)
 $export = $export.Replace("LinkedTo=($CARRY_EXEC,)", "LinkedTo=($($toHell.Name) $((Get-Pin $toHell 'execute').Id),)")
 $export = $export.Replace("LinkedTo=($RISE_THEN,)", "LinkedTo=($($toHell.Name) $((Get-Pin $toHell 'else').Id),)")
+# --- Sounds and effect (setup_cage_effects.py, 2026-11-22), spliced into the exported graph's exec wires ---
+$AUDIO_COMP = "/Script/CoreUObject.Class'/Script/Engine.AudioComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+function SoundPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO_COMP 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function FxPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMP 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMP
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $name $null 'object' '' $EMITTER ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+# Puts the chain $nodes (first 'execute' ... last 'then') on the exported node's exec output $pinName: it now runs
+# them, then whatever that output ran before (if anything).
+function Splice($nodeName, $pinName, [object[]]$nodes) {
+  $block = [regex]::Match($script:export, "(?ms)^Begin Object Class=\S+ Name=`"$nodeName`".*?^End Object")
+  if (-not $block.Success) { throw "cage.txt changed: no $nodeName" }
+  $line = [regex]::Match($block.Value, "CustomProperties Pin \(PinId=(\w+),PinName=`"$pinName`",[^\r\n]*")
+  if (-not $line.Success -or $line.Value -notmatch 'Direction="EGPD_Output"') { throw "cage.txt changed: no $nodeName.$pinName" }
+  $pinId = $line.Groups[1].Value
+  $first = $nodes[0]; $last = $nodes[-1]
+  Chain $nodes
+  $firstIn = Get-Pin $first 'execute'
+  $firstIn.Links.Add("$nodeName $pinId")
+  $newLine = $line.Value
+  $old = [regex]::Match($line.Value, 'LinkedTo=\(([^)]*)\)')
+  if ($old.Success) {
+    $targets = @($old.Groups[1].Value -split ',' | Where-Object { $_ })
+    if ($targets.Count -ne 1) { throw "$nodeName.$pinName has $($targets.Count) links" }
+    (Get-Pin $last 'then').Links.Add($targets[0])
+    $newLine = $newLine.Replace($old.Value, "LinkedTo=($($first.Name) $($firstIn.Id),)")
+    # The old target now hears from the chain's end instead.
+    $script:export = $script:export.Replace("$nodeName $pinId,", "$($last.Name) $((Get-Pin $last 'then').Id),")
+  } else {
+    $newLine = $newLine.Replace(',PersistentGuid=', ",LinkedTo=($($first.Name) $($firstIn.Id),),PersistentGuid=")
+  }
+  $script:export = $script:export.Replace($line.Value, $newLine)
+}
+$script:export = $export
+# Begin Play, after Home is noted: the sounds at SE Volume x Master Volume.
+$volCast = GameInstance 1200 2600
+$vol = New-Operator 'Multiply' 'Multiply_DoubleDouble' 'real' 'double' 'real' 1500 2850
+(Get-Pin $vol 'ReturnValue').Sub = 'double'
+Connect (GiGet $volCast 'SE Volume' 'real' 'double' 1250 2850) 'SE Volume' $vol 'A'
+Connect (GiGet $volCast 'Master Volume' 'real' 'double' 1250 2950) 'Master Volume' $vol 'B'
+$volumes = @($volCast); $vx = 1650
+foreach ($name in 'DoorSound', 'LockSound', 'RiseSound', 'LandSound') {
+  $v = New-Call $AUDIO_COMP 'SetVolumeMultiplier' $false $vx 2600
+  Add-Pin $v 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($vx - 200) 2800) $name $v 'self'
+  Connect $vol 'ReturnValue' $v 'NewVolumeMultiplier'
+  $volumes += $v; $vx += 300
+}
+Splice 'K2Node_VariableSet_190' 'then' $volumes
+# The door swinging as the player comes and goes, and opening at the destination. (Not as it shuts on the player:
+# the LockSound 1 s on is that door, and two clangs a second apart sounded wrong - 2026-11-22.)
+Splice 'K2Node_CallFunction_110' 'then' @(SoundPlay 'DoorSound' 1600 3200)
+Splice 'K2Node_CallFunction_153' 'then' @(SoundPlay 'DoorSound' 2200 3200)
+# Shut (1 s on): the slam and the latch.
+Splice 'K2Node_CallFunction_143' 'then' @(SoundPlay 'LockSound' 2500 3200)
+# Hauled up into the dark.
+Splice 'K2Node_CallFunction_144' 'then' @(SoundPlay 'RiseSound' 2800 3200)
+# Set down at the destination: the thud and the dust.
+Splice 'K2Node_CallFunction_151' 'then' @((SoundPlay 'LandSound' 3100 3200), (FxPlay 'LandFx' 3400 3200))
+$export = $script:export
 if (-not $export.EndsWith("`n")) { $export += "`r`n" }
 Write-Graph 'BP_BirdcageDoor_Blender_EventGraph.txt' @() $export
 
