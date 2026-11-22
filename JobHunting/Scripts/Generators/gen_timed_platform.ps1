@@ -1,6 +1,9 @@
 param([string]$OutDir)
 # Generates the Ctrl+V-pasteable Event Graph of BP_TimedPlatform: after StartDelay, repeat forever: stay VisibleSeconds,
 # fade out over FadeSeconds and stop carrying the player, stay gone HiddenSeconds, fade back in and carry again.
+# Sounds and effects (setup_timed_effects.py, 2026-11-22): Begin Play sets their volume (SE x Master). Both mark the
+# moment the player's footing changes (the user): gone after fading out - VanishSound + VanishFx; solid again after
+# fading in - AppearSound + AppearFx.
 
 # Reuse the node helpers (constants + functions) from the height BGM generator.
 $helperFile = (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_height_bgm.ps1')
@@ -88,10 +91,60 @@ function New-FadeLoop($startValue, $direction, $doneOperation, $doneFunction, $d
   return @($start, $doneBranch)
 }
 
+# Sounds and effects (setup_timed_effects.py, 2026-11-22). (Typed coordinates: untyped, a negative y arrives as
+# text and -250 + 200 becomes -250200.)
+$EMITTER_COMP = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$COMPONENT_CLASS = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+$GI_OUT = 'AsBP My Game Instance'
+function SoundPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function FxPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $COMPONENT_CLASS 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $COMPONENT_CLASS
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $name $null 'object' '' $EMITTER_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+
 $begin = New-Node '/Script/BlueprintGraph.K2Node_Event' @("EventReference=(MemberParent=`"$ACTOR`",MemberName=`"ReceiveBeginPlay`")", 'bOverrideFunction=True') 0 0
 Add-Pin $begin 'then' 'out' 'exec'
+# Begin Play: the sounds at SE Volume x Master Volume, then on as before.
+$gi = New-Call $STATICS 'GetGameInstance' $true 50 -500
+Add-Pin $gi 'ReturnValue' 'out' 'object' '' $GAMEINST
+$cast = New-Node '/Script/BlueprintGraph.K2Node_DynamicCast' @("TargetType=`"$GI_CLASS`"") 300 -700
+Add-Exec $cast
+Add-Pin $cast 'CastFailed' 'out' 'exec'
+Add-Pin $cast 'Object' 'in' 'object' '' $OBJECT
+Add-Pin $cast $GI_OUT 'out' 'object' '' $GI_CLASS
+Add-Pin $cast 'bSuccess' 'out' 'bool'
+Connect $gi 'ReturnValue' $cast 'Object'
+Connect $begin 'then' $cast 'execute'
+$seVol = New-VarGet 'SE Volume' $GI_CLASS 'real' 'double' $null 350 -450
+Connect $cast $GI_OUT $seVol 'self'
+$masterVol = New-VarGet 'Master Volume' $GI_CLASS 'real' 'double' $null 350 -350
+Connect $cast $GI_OUT $masterVol 'self'
+$vol = New-Operator 'Multiply' 'Multiply_DoubleDouble' 'real' 'double' 'real' 600 -450
+(Get-Pin $vol 'ReturnValue').Sub = 'double'
+Connect $seVol 'SE Volume' $vol 'A'
+Connect $masterVol 'Master Volume' $vol 'B'
+$prev = $cast; $vx = 750
+foreach ($name in 'VanishSound', 'AppearSound') {
+  $v = New-Call $AUDIO 'SetVolumeMultiplier' $false $vx -700
+  Add-Pin $v 'self' 'in' 'object' '' $AUDIO
+  Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO ($vx - 200) -500) $name $v 'self'
+  Connect $vol 'ReturnValue' $v 'NewVolumeMultiplier'
+  Connect $prev 'then' $v 'execute'
+  $prev = $v; $vx += 300
+}
 $startDelay = New-Wait 'StartDelay' 300 0
-Connect $begin 'then' $startDelay 'execute'
+Connect $prev 'then' $startDelay 'execute'
+Connect $cast 'CastFailed' $startDelay 'execute'
 
 # --- Visible, then fade out and drop the player ----------------------------------------
 $visible = New-Wait 'VisibleSeconds' 700 0
@@ -101,8 +154,13 @@ Connect $visible 'then' $fadeOut[0] 'execute'
 $rowY = 900
 $passThrough = New-SetSolid 'NoCollision' 300 $rowY
 Connect $fadeOut[1] 'then' $passThrough 'execute'
+# Gone: the cue that it can no longer be stood on (the user, 2026-11-22).
+$vanishSound = SoundPlay 'VanishSound' 650 ($rowY - 350)
+$vanishFx = FxPlay 'VanishFx' 950 ($rowY - 350)
+Connect $passThrough 'then' $vanishSound 'execute'
+Connect $vanishSound 'then' $vanishFx 'execute'
 $hide = New-SetShown 'false' 650 $rowY
-Connect $passThrough 'then' $hide 'execute'
+Connect $vanishFx 'then' $hide 'execute'
 
 # --- Gone, then fade back in and carry the player again ---------------------------------
 $hidden = New-Wait 'HiddenSeconds' 1050 $rowY
@@ -114,7 +172,12 @@ Connect $show 'then' $fadeIn[0] 'execute'
 $rowY = 1800
 $solid = New-SetSolid 'QueryAndPhysics' 300 $rowY
 Connect $fadeIn[1] 'then' $solid 'execute'
-Connect $solid 'then' $visible 'execute'
+# Solid again: the cue that it can be stood on (the user, 2026-11-22).
+$appearSound = SoundPlay 'AppearSound' 650 $rowY
+$appearFx = FxPlay 'AppearFx' 950 $rowY
+Connect $solid 'then' $appearSound 'execute'
+Connect $appearSound 'then' $appearFx 'execute'
+Connect $appearFx 'then' $visible 'execute'
 
 $sb = [System.Text.StringBuilder]::new()
 foreach ($n in $script:nodes) {

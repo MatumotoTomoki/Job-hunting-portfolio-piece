@@ -10,6 +10,9 @@
 #       still; the thread is red once HeldFor > 60 % of HoldSeconds. Jump pressed (not held from before): let go,
 #       launched 450 the camera's way + 520 up + the thread's motion (up to 900). HeldFor >= HoldSeconds > 0: let go,
 #       the thread snaps (hidden, Broken) and is back RespawnSeconds later.
+#   Sounds and effects (setup_thread_effects.py, 2026-11-22): Begin Play sets their volume (SE x Master). Caught hold:
+#   At moved to the player, GrabSound + GrabFx. Turned red (WasFraying was not): FraySound. Snapped: At to LastPoint,
+#   SnapSound + SnapFx. Back: ReturnSound + ReturnFx at the top.
 if (-not $OutDir) { throw 'OutDir is required' }
 $lightGen = Get-Content -LiteralPath (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_heaven_light.ps1') -Encoding UTF8
 $cut = ($lightGen | Select-String -Pattern '^# ===== BP_LightBeam' | Select-Object -First 1).LineNumber - 1
@@ -108,6 +111,53 @@ function Not($node, $pin, [double]$x, [double]$y) {
   return $n
 }
 
+# Sounds and effects (setup_thread_effects.py, 2026-11-22).
+$AUDIO_COMP = "/Script/CoreUObject.Class'/Script/Engine.AudioComponent'"
+$EMITTER = "/Script/CoreUObject.Class'/Script/Effekseer.EffekseerEmitterComponent'"
+$ACTOR_COMP = "/Script/CoreUObject.Class'/Script/Engine.ActorComponent'"
+function SoundPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $AUDIO_COMP 'Play' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $AUDIO_COMP
+  Add-Pin $n 'StartTime' 'in' 'real' 'float' $null '0.0'
+  Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+function FxPlay($name, [double]$x, [double]$y) {
+  $n = New-Call $ACTOR_COMP 'Activate' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $ACTOR_COMP
+  Add-Pin $n 'bReset' 'in' 'bool' '' $null 'true'
+  Connect (New-VarGet $name $null 'object' '' $EMITTER ($x - 200) ($y + 200)) $name $n 'self'
+  return $n
+}
+# The named sounds at SE Volume x Master Volume. Returns (cast, last).
+function SoundVolumes([string[]]$names, [double]$x, [double]$y) {
+  $cast = GameInstance $x $y
+  $vol = Op 'Multiply' 'Multiply_DoubleDouble' (GiGet $cast 'SE Volume' 'real' 'double' ($x + 50) ($y + 250)) 'SE Volume' (GiGet $cast 'Master Volume' 'real' 'double' ($x + 50) ($y + 350)) 'Master Volume' ($x + 250) ($y + 250)
+  $prev = $cast; $vx = $x + 350
+  foreach ($name in $names) {
+    $v = New-Call $AUDIO_COMP 'SetVolumeMultiplier' $false $vx $y
+    Add-Pin $v 'self' 'in' 'object' '' $AUDIO_COMP
+    Add-Pin $v 'NewVolumeMultiplier' 'in' 'real' 'float'
+    Connect (New-VarGet $name $null 'object' '' $AUDIO_COMP ($vx - 200) ($y + 200)) $name $v 'self'
+    Connect $vol 'ReturnValue' $v 'NewVolumeMultiplier'
+    Connect $prev 'then' $v 'execute'
+    $prev = $v; $vx += 300
+  }
+  return @($cast, $prev)
+}
+# At (the sounds and effects of the hand) moved to a point.
+function AtPoint($where, $wherePin, [double]$x, [double]$y) {
+  $n = New-Call $SCENE 'K2_SetWorldLocation' $false $x $y
+  Add-Pin $n 'self' 'in' 'object' '' $SCENE
+  Add-Pin $n 'NewLocation' 'in' 'struct' '' $VECTOR
+  Add-Pin $n 'bSweep' 'in' 'bool' '' $null 'false'
+  Add-Pin $n 'SweepHitResult' 'out' 'struct' '' $HIT
+  Add-Pin $n 'bTeleport' 'in' 'bool' '' $null 'true'
+  Connect (Comp 'At' $SCENE ($x - 200) ($y + 200)) 'At' $n 'self'
+  Connect $where $wherePin $n 'NewLocation'
+  return $n
+}
+
 Reset-Graph 100
 # ----- Begin Play: stretch to Length -----
 $begin = Event 'ReceiveBeginPlay' 0 0
@@ -128,7 +178,10 @@ Add-Pin $zoneSize 'bUpdateOverlaps' 'in' 'bool' '' $null 'true'
 Connect (Comp 'Zone' $BOX 1700 200) 'Zone' $zoneSize 'self'
 Connect $extent 'ReturnValue' $zoneSize 'InBoxExtent'
 $l3 = RelLocation 'Zone' $BOX $pos 2200 0
-Connect $begin 'then' $s1 'execute'
+$volumes = SoundVolumes @('GrabSound', 'FraySound', 'SnapSound', 'ReturnSound') 300 (-600)
+Connect $begin 'then' $volumes[0] 'execute'
+Connect $volumes[1] 'then' $s1 'execute'
+Connect $volumes[0] 'CastFailed' $s1 'execute'
 Chain @($s1, $l1, $s2, $l2, $zoneSize, $l3)
 
 # ----- Tick -----
@@ -229,7 +282,10 @@ Connect $playerAt 'ReturnValue' $mark 'LastPoint'
 $fly = MoveMode 'MOVE_Flying' 3400 2600
 $stop1 = Still 3700 2600
 Connect $grab 'then' $hold1 'execute'
-Chain @($hold1, $held0, $setT, $was, $mark, $fly, $stop1)
+$grabAt = AtPoint $playerAt 'ReturnValue' 4000 2600
+$grabSound = SoundPlay 'GrabSound' 4300 2600
+$grabFx = FxPlay 'GrabFx' 4600 2600
+Chain @($hold1, $held0, $setT, $was, $mark, $fly, $stop1, $grabAt, $grabSound, $grabFx)
 
 # ----- holding -----
 $distance = New-Call $MATH 'Vector_Distance' $true 1000 1500
@@ -324,7 +380,18 @@ $leap = New-Branch 3800 1200
 Connect $fresh 'ReturnValue' $leap 'Condition'
 Connect $setT2 'then' $mark2 'execute'
 # (Decide on the jump before JumpWas takes this frame's state, or a press never counts.)
-Chain @($mark2, $place, $stop2, $red, $white, $leap)
+Chain @($mark2, $place, $stop2, $red, $white)
+# Just turned red: the strain sound (WasFraying remembers the last tick).
+$newlyRed = New-Branch 3500 800
+Connect (Both $fraying 'ReturnValue' (Not (Bool 'WasFraying' 3300 600) 'WasFraying' 3450 600) 'ReturnValue' 'BooleanAND' 3600 600) 'ReturnValue' $newlyRed 'Condition'
+$fraySound = SoundPlay 'FraySound' 3800 800
+$wasRed = SetSelf 'WasFraying' 'bool' $null 4100 800
+Connect $fraying 'ReturnValue' $wasRed 'WasFraying'
+Connect $white 'then' $newlyRed 'execute'
+Connect $newlyRed 'then' $fraySound 'execute'
+Connect $fraySound 'then' $wasRed 'execute'
+Connect $newlyRed 'else' $wasRed 'execute'
+Connect $wasRed 'then' $leap 'execute'
 # Let go with a leap.
 $let = SetSelf 'Holding' 'bool' 'false' 4100 1000
 $when = SetReal 'ReleasedAt' 4400 1000
@@ -379,5 +446,10 @@ Connect (Real 'RespawnSeconds' 6050 1950) 'RespawnSeconds' $wait 'Duration'
 $back = SetSelf 'Broken' 'bool' 'false' 6500 1700
 $showW = Visible 'Thread' 'true' 6800 1700
 Connect $snap 'then' $let2 'execute'
-Chain @($let2, $when2, $fall2, $gone, $hideW, $hideR, $wait, $back, $showW)
+$snapAt = AtPoint (Vec 'LastPoint' 5050 2100) 'LastPoint' 5200 2300
+$snapSound = SoundPlay 'SnapSound' 5500 2300
+$snapFx = FxPlay 'SnapFx' 5800 2300
+$returnSound = SoundPlay 'ReturnSound' 7100 1700
+$returnFx = FxPlay 'ReturnFx' 7400 1700
+Chain @($let2, $when2, $fall2, $snapAt, $snapSound, $snapFx, $gone, $hideW, $hideR, $wait, $back, $showW, $returnSound, $returnFx)
 Write-Graph 'BP_SpiderThread_EventGraph.txt'
