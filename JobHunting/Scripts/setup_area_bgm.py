@@ -29,6 +29,7 @@ AREA_BGM = {
     "/Game/LV_Secret": BGM + "BGM_Secret",
     "/Game/LV_Secret2": BGM + "BGM_Secret",   # (until hidden area 2 has its own track)
     "/Game/LV_Secret3": BGM + "BGM_Secret",   # (until hidden area 3 has its own track)
+    "/Game/LV_Secret4": BGM + "BGM_Secret",   # (until hidden area 4 has its own track)
 }
 library = unreal.EditorAssetLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()
