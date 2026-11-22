@@ -1,6 +1,1 @@
-SM_Ruins_A: 70 pieces, 14600 vertices
-SM_Ruins_B: 5 pieces, 880 vertices
-SM_Ruins_C: 10 pieces, 1680 vertices
-SM_Ruins_D: 66 pieces, 11712 vertices
-SM_Ruins_E: 11 pieces, 616 vertices
-SM_Ruins_F: 10 pieces, 1800 vertices
+SM_SecretRuins_A: 76 pieces, 15496 vertices

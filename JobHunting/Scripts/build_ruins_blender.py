@@ -32,6 +32,14 @@ TEX = 1024
 TILE = 2.0          # metres of surface per texture tile
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+# Optional (hidden stage 1's broken town, 2026-11-22): --layout <json in OUT_DIR> --prefix <mesh name prefix>.
+LAYOUT, PREFIX = "area1_layout.json", "SM_Ruins_"
+if "--layout" in args:
+    LAYOUT = args[args.index("--layout") + 1]
+    args = args[:args.index("--layout")] + args[args.index("--layout") + 2:]
+if "--prefix" in args:
+    PREFIX = args[args.index("--prefix") + 1]
+    args = args[:args.index("--prefix")] + args[args.index("--prefix") + 2:]
 SECTIONS = [a.upper() for a in args] or ["A"]
 
 
@@ -368,7 +376,7 @@ def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     os.makedirs(OUT_DIR, exist_ok=True)
     make_textures()
-    rows = json.load(open(os.path.join(OUT_DIR, "area1_layout.json"), encoding="utf-8"))
+    rows = json.load(open(os.path.join(OUT_DIR, LAYOUT), encoding="utf-8"))
     report = []
     for letter in SECTIONS:
         builder = Builder()
@@ -380,7 +388,7 @@ def main():
                 continue
             dress(builder, row, rng)
             count += 1
-        name = "SM_Ruins_" + letter
+        name = PREFIX + letter
         obj = builder.finish(name)
         bpy.ops.object.select_all(action="DESELECT")
         obj.select_set(True)
