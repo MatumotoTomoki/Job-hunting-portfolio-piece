@@ -39,6 +39,15 @@ TILE = 2.0
 B = 22610.0
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+# Optional (hidden area 4's crumbled gate, 2026-11-23): --skip <piece indices, comma separated> leaves those pieces out
+# of the art; --prefix <mesh name prefix> instead of SM_Heaven_ (and its json).
+SKIP, PREFIX = set(), "SM_Heaven_"
+if "--skip" in args:
+    SKIP = {int(v) for v in args[args.index("--skip") + 1].split(",")}
+    args = args[:args.index("--skip")] + args[args.index("--skip") + 2:]
+if "--prefix" in args:
+    PREFIX = args[args.index("--prefix") + 1]
+    args = args[:args.index("--prefix")] + args[args.index("--prefix") + 2:]
 PREVIEW = None
 if "--preview" in args:
     i = args.index("--preview")
@@ -805,13 +814,15 @@ def main():
         builder = Builder()
         names = {}
         for index, piece in by_section.get(number, []):
+            if index in SKIP:
+                continue
             name = dress(builder, piece, index, route)
             if name:
                 names[name] = names.get(name, 0) + 1
-        name = "SM_Heaven_" + number
+        name = PREFIX + number
         obj = builder.finish(name)
         export(obj, name)
-        with open(os.path.join(OUT_DIR, "heaven_art_" + number + ".json"), "w", encoding="utf-8") as out:
+        with open(os.path.join(OUT_DIR, ("heaven_art_" if PREFIX == "SM_Heaven_" else PREFIX) + number + ".json"), "w", encoding="utf-8") as out:
             json.dump({"replaces": sorted(names)}, out)
         report.append("{}: {}, {} vertices".format(name, ", ".join("{} {}".format(k, v) for k, v in sorted(names.items())), len(obj.data.vertices)))
     with open(os.path.join(OUT_DIR, "heaven_art_build.txt"), "w", encoding="utf-8") as out:

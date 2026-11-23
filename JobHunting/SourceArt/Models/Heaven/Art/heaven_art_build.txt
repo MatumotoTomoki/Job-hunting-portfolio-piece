@@ -1,1 +1,1 @@
-SM_Heaven_6: Gate Lintel 1, Gate Pillar 2, Island 8, 18096 vertices
+SM_SecretHeaven_6: Gate Lintel 1, Gate Pillar 2, 1194 vertices

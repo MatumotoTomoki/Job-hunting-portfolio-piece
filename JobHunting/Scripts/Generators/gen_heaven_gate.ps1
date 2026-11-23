@@ -1,4 +1,6 @@
-param([string]$OutDir)
+﻿param([string]$OutDir, [switch]$Secret)
+# -Secret: BP_SecretGate_EventGraph.txt for the hidden stages' last gate (LV_Secret4, 2026-11-23): the same show, but
+#   the ending is ACH_SECRET_CLEAR and, 4 s on, back to LV_Title - no clear screen, no main achievements, no best time.
 # Paste text for BP_HeavenGate (setup_heaven_gate.py; area 4's ending, 2026-11-22):
 #   Touch (the player walks into Trigger, once): Started, StartedAt = now, ClearTime = the character's ElapsedTime;
 #     the player's input off, the view cuts to ShowCamera; OpenSeconds + 0.6 s later back to the player (they walk
@@ -133,7 +135,18 @@ Connect $char 'then' $clearTime 'execute'
 Chain @($clearTime, $noInput, $toGate, $soundGi)
 Chain @($waitOpen, $toPlayer, $waitWalk, $whiteOut, $waitWhite, $putBack)
 
-# ----- the clear-time achievements -----
+if ($Secret) {
+  # ----- the hidden stages' end: their own achievement, then back to the title -----
+  $gi = GameInstance 4200 0
+  Connect $putBack 'then' $gi 'execute'
+  $clear = Unlock $gi 'ACH_SECRET_CLEAR' 4500 0
+  Connect $gi 'then' $clear 'execute'
+  $rest = Delay '4.0' 4800 0
+  Connect $clear 'then' $rest 'execute'
+  $title = OpenLevel 5100 0
+  (Get-Pin $title 'LevelName').Default = 'LV_Title'
+  Connect $rest 'then' $title 'execute'
+} else {# ----- the clear-time achievements -----
 $gi = GameInstance 4200 0
 Connect $putBack 'then' $gi 'execute'
 $clear = Unlock $gi 'ACH_CLEAR' 4500 0
@@ -192,6 +205,8 @@ Add-Pin $write 'UserIndex' 'in' 'int' '' $null '0'
 Add-Pin $write 'ReturnValue' 'out' 'bool'
 Connect $save 'AsBP Height Save' $write 'SaveGameObject'
 Connect $setBest 'then' $write 'execute'
+
+}
 
 # ===== Tick =====
 $tick = Event 'ReceiveTick' 0 1200
@@ -261,4 +276,4 @@ Connect $forward 'ReturnValue' $walk 'WorldDirection'
 Connect $going 'then' $turnL 'execute'
 Chain @($turnL, $turnR, $glow, $shine, $walking)
 Connect $walking 'then' $walk 'execute'
-Write-Graph 'BP_HeavenGate_EventGraph.txt'
+Write-Graph $(if ($Secret) { 'BP_SecretGate_EventGraph.txt' } else { 'BP_HeavenGate_EventGraph.txt' })
