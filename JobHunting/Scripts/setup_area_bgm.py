@@ -3,7 +3,7 @@
 #              (BP_AreaBgm_EventGraph.txt, Generators/gen_area_bgm.ps1) makes the player controller's HeightBgmList
 #              just that track at Begin Play, so the controller's height-BGM Tick plays it (crossfading from the last).
 #   One BP_AreaBgm in each area level (AREA_BGM below), set to its track; an existing one is reused and re-set.
-# Every area gets its own free track (IMPORT_BGM, imported first); secret still has the old GameBgm.
+# Every area and the hidden stage get their own free track (IMPORT_BGM, imported first).
 # To change a track, edit AREA_BGM and run again.
 # Levels are opened and saved one by one, so save your work first. Run it in the editor's Output Log (Python):
 #   exec(open(r'C:\Git\Job-hunting-portfolio-piece\JobHunting\Scripts\setup_area_bgm.py', encoding='utf-8').read())
@@ -16,17 +16,20 @@ BGM = "/Game/Sound/BGM/"
 # Free tracks (OpenTracks, formerly DOVA-SYNDROME; in-game use OK, don't hand out the files themselves):
 #   BGM_Ruins = "古代遺跡" (ancient ruins), BGM_Tower = "機械仕掛けの地底世界" (Mechanical Underground World),
 #   BGM_Sky = "空中都市" (Aerial city), all マニーラ; BGM_Heaven = "神秘の世界" (なつこらーじゅ),
-#   BGM_Hell = "闇に潜めし者" (マニーラ, loop version).
+#   BGM_Hell = "闇に潜めし者" (マニーラ, loop version), BGM_Secret = "天空" (the hidden stage, chosen by the user 11-22).
 # Decoded by decode_audio_blender.py --stereo, silence trimmed by trim_bgm_silence.ps1 (Ruins/Tower/Sky at
 # -Threshold 100, cutting the reverb tail so the loop has no gap); imported looping.
-IMPORT_BGM = ["BGM_Ruins", "BGM_Tower", "BGM_Sky", "BGM_Heaven", "BGM_Hell"]
+IMPORT_BGM = ["BGM_Ruins", "BGM_Tower", "BGM_Sky", "BGM_Heaven", "BGM_Hell", "BGM_Secret"]
 AREA_BGM = {
     "/Game/LV_Area1_Ruins": BGM + "BGM_Ruins",
     "/Game/LV_Area2_Tower": BGM + "BGM_Tower",
     "/Game/LV_Area3_Sky": BGM + "BGM_Sky",
     "/Game/LV_Area4_Heaven": BGM + "BGM_Heaven",
     "/Game/LV_Hell": BGM + "BGM_Hell",
-    "/Game/LV_Secret": BGM + "GameBgm_Cue",
+    "/Game/LV_Secret": BGM + "BGM_Secret",
+    "/Game/LV_Secret2": BGM + "BGM_Secret",   # (until hidden area 2 has its own track)
+    "/Game/LV_Secret3": BGM + "BGM_Secret",   # (until hidden area 3 has its own track)
+    "/Game/LV_Secret4": BGM + "BGM_Secret",   # (until hidden area 4 has its own track)
 }
 library = unreal.EditorAssetLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()

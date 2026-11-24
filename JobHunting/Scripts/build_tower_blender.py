@@ -46,6 +46,16 @@ if "--preview" in args:
     i = args.index("--preview")
     PREVIEW = (args[i + 1], [float(v) for v in args[i + 2].split(",")], [float(v) for v in args[i + 3].split(",")])
     args = args[:i] + args[i + 4:]
+# Optional (hidden area 2's broken engine room, 2026-11-22): --layout <json in OUT_DIR> --prefix <mesh name prefix>.
+# With --layout only the section meshes are written (no wall gears, lamps or seal lid: area 2's own stay as they are).
+LAYOUT, PREFIX = "area2_layout.json", "SM_Tower_"
+if "--layout" in args:
+    LAYOUT = args[args.index("--layout") + 1]
+    args = args[:args.index("--layout")] + args[args.index("--layout") + 2:]
+if "--prefix" in args:
+    PREFIX = args[args.index("--prefix") + 1]
+    args = args[:args.index("--prefix")] + args[args.index("--prefix") + 2:]
+EXTRAS = LAYOUT == "area2_layout.json"
 SECTIONS = [a.upper() for a in args] or ["A"]
 
 
@@ -1053,12 +1063,12 @@ def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     os.makedirs(OUT_DIR, exist_ok=True)
     make_textures()
-    rows = json.load(open(os.path.join(OUT_DIR, "area2_layout.json"), encoding="utf-8"))
+    rows = json.load(open(os.path.join(OUT_DIR, LAYOUT), encoding="utf-8"))
     report = []
     built = []
     sunk = sink_shared_tops(rows)
     report.append("tops sunk 2 cm under a shared top: " + ", ".join(sorted(sunk)))
-    if "A" in SECTIONS:
+    if "A" in SECTIONS and EXTRAS:
         seal_lid()
         report.append(SEAL_LID + ".fbx (the opening seal's half)")
     for letter in SECTIONS:
@@ -1074,11 +1084,14 @@ def main():
             builder.begin(row, z0, z1)
             name = dress(builder, row, rows)
             kinds[name] = kinds.get(name, 0) + 1
-        name = "SM_Tower_" + letter
+        name = PREFIX + letter
         obj = builder.finish(name)
         built.append((letter, obj))
         export(obj, name)
         report.append("{}: {} pieces ({}), {} vertices".format(name, sum(kinds.values()), ", ".join("{} {}".format(k, v) for k, v in sorted(kinds.items())), len(obj.data.vertices)))
+        if not EXTRAS:
+            builder.lamps.bm.free()
+            continue
         report.append(build_gears(letter, builder.gears))
         lamps_path = os.path.join(OUT_DIR, "SM_TowerLamps_" + letter + ".fbx")
         if os.path.exists(lamps_path):
