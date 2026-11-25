@@ -17,6 +17,7 @@ $Labels = @(
     @{ Name = "T_Label_Volume"; Text = "音量" },
     @{ Name = "T_Label_SE"; Text = "SE" },
     @{ Name = "T_Label_Achievements"; Text = "実績" },
+    @{ Name = "T_Label_Reset"; Text = "リセット" },
     @{ Name = "T_Label_Title"; Text = "タイトルに戻る" },
     @{ Name = "T_Label_Quit"; Text = "ゲームをやめる" }
 )
