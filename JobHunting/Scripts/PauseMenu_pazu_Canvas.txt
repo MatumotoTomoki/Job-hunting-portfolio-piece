@@ -1,0 +1,304 @@
+Begin Object Class=/Script/UMG.CanvasPanel Name="CanvasPanel_85" ExportPath="/Script/UMG.CanvasPanel'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85'"
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_0" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_0'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_1" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_1'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_2" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_2'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_9" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_9'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_10" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_10'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_3" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_3'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_4" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_4'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_7" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_7'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_8" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_8'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_11" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_11'"
+   End Object
+   Begin Object Class=/Script/UMG.CanvasPanelSlot Name="CanvasPanelSlot_5" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_5'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_0" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_0'"
+      LayoutData=(Offsets=(Top=20.000000,Right=512.000000,Bottom=128.000000),Anchors=(Minimum=(X=0.500000,Y=0.000000),Maximum=(X=0.500000,Y=0.000000)),Alignment=(X=0.500000,Y=0.000000))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.VerticalBox'VerticalBox_0'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_1" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_1'"
+      LayoutData=(Offsets=(Left=200.000000,Top=-260.000000,Right=300.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_0'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_2" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_2'"
+      LayoutData=(Offsets=(Left=200.000000,Top=-100.000000,Right=300.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_3'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_9" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_9'"
+      LayoutData=(Offsets=(Left=200.000000,Top=60.000000,Right=300.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_5'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_10" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_10'"
+      LayoutData=(Offsets=(Left=200.000000,Top=220.000000,Right=300.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_Title'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_3" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_3'"
+      LayoutData=(Offsets=(Left=200.000000,Top=380.000000,Right=300.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_1'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_4" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_4'"
+      LayoutData=(Offsets=(Top=-260.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_2'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_7" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_7'"
+      LayoutData=(Offsets=(Top=-100.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_Se'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_8" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_8'"
+      LayoutData=(Offsets=(Top=60.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_4'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_11" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_11'"
+      LayoutData=(Offsets=(Top=220.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox_TitleArrow'"
+   End Object
+   Begin Object Name="CanvasPanelSlot_5" ExportPath="/Script/UMG.CanvasPanelSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.CanvasPanel_85.CanvasPanelSlot_5'"
+      LayoutData=(Offsets=(Top=380.000000,Bottom=80.000000),Anchors=(Minimum=(X=0.000000,Y=0.500000),Maximum=(X=0.000000,Y=0.500000)))
+      Parent="/Script/UMG.CanvasPanel'CanvasPanel_85'"
+      Content="/Script/UMG.HorizontalBox'HorizontalBox'"
+   End Object
+   Slots(0)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_0'"
+   Slots(1)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_1'"
+   Slots(2)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_2'"
+   Slots(3)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_9'"
+   Slots(4)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_10'"
+   Slots(5)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_3'"
+   Slots(6)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_4'"
+   Slots(7)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_7'"
+   Slots(8)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_8'"
+   Slots(9)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_11'"
+   Slots(10)="/Script/UMG.CanvasPanelSlot'CanvasPanelSlot_5'"
+   bExpandedInDesigner=True
+End Object
+Begin Object Class=/Script/UMGEditor.WidgetSlotPair Name="WidgetSlotPair_0" ExportPath="/Script/UMGEditor.WidgetSlotPair'/Engine/Transient.WidgetSlotPair_0'"
+   WidgetName="CanvasPanel_85"
+End Object
+Begin Object Class=/Script/UMG.VerticalBox Name="VerticalBox_0" ExportPath="/Script/UMG.VerticalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.VerticalBox_0'"
+   Begin Object Class=/Script/UMG.VerticalBoxSlot Name="VerticalBoxSlot_0" ExportPath="/Script/UMG.VerticalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.VerticalBox_0.VerticalBoxSlot_0'"
+   End Object
+   Begin Object Name="VerticalBoxSlot_0" ExportPath="/Script/UMG.VerticalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.VerticalBox_0.VerticalBoxSlot_0'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.VerticalBox'VerticalBox_0'"
+      Content="/Script/UMG.Image'Image_116'"
+   End Object
+   Slots(0)="/Script/UMG.VerticalBoxSlot'VerticalBoxSlot_0'"
+   bExpandedInDesigner=True
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image_116" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image_116'"
+   Brush=(ImageType=FullColor,ImageSize=(X=1024.000000,Y=256.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_PauseTitle.T_PauseTitle'")
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_0" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_0'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_0.HorizontalBoxSlot_3'"
+   End Object
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_0.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_0.HorizontalBoxSlot_3'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_0'"
+      Content="/Script/UMG.Image'Image_312'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_0.HorizontalBoxSlot_1'"
+      Size=(SizeRule=Fill)
+      HorizontalAlignment=HAlign_Right
+      VerticalAlignment=VAlign_Bottom
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_0'"
+      Content="/Script/UMG.TextBlock'VolumeValueText'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_3'"
+   Slots(1)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bExpandedInDesigner=True
+   DisplayLabel="HorizontalBox_0"
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image_312" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image_312'"
+   Brush=(ImageType=FullColor,ImageSize=(X=300.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Label_Volume.T_Label_Volume'")
+End Object
+Begin Object Class=/Script/UMG.TextBlock Name="VolumeValueText" ExportPath="/Script/UMG.TextBlock'/Game/UI/pa-zu.pa-zu:WidgetTree.VolumeValueText'"
+   Text=NSLOCTEXT("[DD7F2252FC4812EA6A71DC31FBBB6492]", "75A0C27A441EFE31F573CEA5135F7A32", "10")
+   Font=(Size=50.000000)
+   bIsVariable=True
+   DisplayLabel="VolumeValueText"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_3" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_3'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_3.HorizontalBoxSlot_3'"
+   End Object
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_3.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_3.HorizontalBoxSlot_3'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_3'"
+      Content="/Script/UMG.Image'Image'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_3.HorizontalBoxSlot_1'"
+      Size=(SizeRule=Fill)
+      HorizontalAlignment=HAlign_Right
+      VerticalAlignment=VAlign_Bottom
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_3'"
+      Content="/Script/UMG.TextBlock'SeVolumeValueText'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_3'"
+   Slots(1)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bExpandedInDesigner=True
+   DisplayLabel="HorizontalBox_3"
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image'"
+   Brush=(ImageType=FullColor,ImageSize=(X=300.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Label_SE.T_Label_SE'")
+End Object
+Begin Object Class=/Script/UMG.TextBlock Name="SeVolumeValueText" ExportPath="/Script/UMG.TextBlock'/Game/UI/pa-zu.pa-zu:WidgetTree.SeVolumeValueText'"
+   Text=NSLOCTEXT("[DD7F2252FC4812EA6A71DC31FBBB6492]", "75A0C27A441EFE31F573CEA5135F7A32", "10")
+   Font=(Size=50.000000)
+   bIsVariable=True
+   DisplayLabel="SeVolumeValueText"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_5" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_5'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_5.HorizontalBoxSlot_3'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_5.HorizontalBoxSlot_3'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_5'"
+      Content="/Script/UMG.Image'Image_2'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_3'"
+   bExpandedInDesigner=True
+   DisplayLabel="HorizontalBox_5"
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image_2" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image_2'"
+   Brush=(ImageType=FullColor,ImageSize=(X=300.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Label_Achievements.T_Label_Achievements'")
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_Title" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Title'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Title.HorizontalBoxSlot_3'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Title.HorizontalBoxSlot_3'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_Title'"
+      Content="/Script/UMG.Image'Image_Title'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_3'"
+   bExpandedInDesigner=True
+   DisplayLabel="HorizontalBox_Title"
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image_Title" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image_Title'"
+   Brush=(ImageType=FullColor,ImageSize=(X=498.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Label_Title.T_Label_Title'")
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_1" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_1'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_2" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_2'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_2" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_2'"
+      HorizontalAlignment=HAlign_Center
+      VerticalAlignment=VAlign_Center
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_1'"
+      Content="/Script/UMG.Image'Image_1'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_2'"
+   bExpandedInDesigner=True
+End Object
+Begin Object Class=/Script/UMG.Image Name="Image_1" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.Image_1'"
+   Brush=(ImageType=FullColor,ImageSize=(X=498.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Label_Quit.T_Label_Quit'")
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_2" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_2'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_3'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_3" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_3'"
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_2'"
+      Content="/Script/UMG.Image'ArrowVolume'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_3'"
+   bExpandedInDesigner=True
+End Object
+Begin Object Class=/Script/UMG.Image Name="ArrowVolume" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.ArrowVolume'"
+   Brush=(ImageType=FullColor,ImageSize=(X=100.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Arrow.T_Arrow'")
+   DisplayLabel="ArrowVolume"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_Se" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Se'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Se.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_Se.HorizontalBoxSlot_1'"
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_Se'"
+      Content="/Script/UMG.Image'ArrowSe'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bIsVariable=True
+   bExpandedInDesigner=True
+   Visibility=Visible
+   DisplayLabel="HorizontalBox_Se"
+End Object
+Begin Object Class=/Script/UMG.Image Name="ArrowSe" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.ArrowSe'"
+   Brush=(ImageType=FullColor,ImageSize=(X=100.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Arrow.T_Arrow'")
+   Visibility=Hidden
+   DisplayLabel="ArrowSe"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_4" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_4'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_4.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_4.HorizontalBoxSlot_1'"
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_4'"
+      Content="/Script/UMG.Image'ArrowAchievements'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bIsVariable=True
+   bExpandedInDesigner=True
+   Visibility=Visible
+   DisplayLabel="HorizontalBox_4"
+End Object
+Begin Object Class=/Script/UMG.Image Name="ArrowAchievements" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.ArrowAchievements'"
+   Brush=(ImageType=FullColor,ImageSize=(X=100.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Arrow.T_Arrow'")
+   Visibility=Hidden
+   DisplayLabel="ArrowAchievements"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox_TitleArrow" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_TitleArrow'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_TitleArrow.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox_TitleArrow.HorizontalBoxSlot_1'"
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox_TitleArrow'"
+      Content="/Script/UMG.Image'ArrowTitle'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bIsVariable=True
+   bExpandedInDesigner=True
+   Visibility=Visible
+   DisplayLabel="HorizontalBox_TitleArrow"
+End Object
+Begin Object Class=/Script/UMG.Image Name="ArrowTitle" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.ArrowTitle'"
+   Brush=(ImageType=FullColor,ImageSize=(X=100.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Arrow.T_Arrow'")
+   Visibility=Hidden
+   DisplayLabel="ArrowTitle"
+End Object
+Begin Object Class=/Script/UMG.HorizontalBox Name="HorizontalBox" ExportPath="/Script/UMG.HorizontalBox'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox'"
+   Begin Object Class=/Script/UMG.HorizontalBoxSlot Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox.HorizontalBoxSlot_1'"
+   End Object
+   Begin Object Name="HorizontalBoxSlot_1" ExportPath="/Script/UMG.HorizontalBoxSlot'/Game/UI/pa-zu.pa-zu:WidgetTree.HorizontalBox.HorizontalBoxSlot_1'"
+      Parent="/Script/UMG.HorizontalBox'HorizontalBox'"
+      Content="/Script/UMG.Image'ArrowQuit'"
+   End Object
+   Slots(0)="/Script/UMG.HorizontalBoxSlot'HorizontalBoxSlot_1'"
+   bExpandedInDesigner=True
+   DisplayLabel="HorizontalBox"
+End Object
+Begin Object Class=/Script/UMG.Image Name="ArrowQuit" ExportPath="/Script/UMG.Image'/Game/UI/pa-zu.pa-zu:WidgetTree.ArrowQuit'"
+   Brush=(ImageType=FullColor,ImageSize=(X=100.000000,Y=80.000000),ResourceObject="/Script/Engine.Texture2D'/Game/UI/画像/T_Arrow.T_Arrow'")
+   Visibility=Hidden
+   DisplayLabel="ArrowQuit"
+End Object

@@ -7,7 +7,9 @@ import os
 import unreal
 
 FOLDER = "/Game/UI/画像"
-NAME = "T_Label_Achievements"
+# Any other label too (11-25: タイトルに戻る): set LABEL first, e.g.
+#   LABEL='T_Label_Title'; exec(open(r"<full path>\import_pause_achievement_label.py", encoding="utf-8").read())
+NAME = globals().get("LABEL", "T_Label_Achievements")
 SOURCE = os.path.join(unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()), "Scripts", "Art", NAME + ".png")
 
 if not os.path.exists(SOURCE):
