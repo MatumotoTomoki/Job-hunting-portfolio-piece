@@ -11,7 +11,7 @@ param([string]$OutDir)
 #     again); if it was the player's ActiveFlag, that is cleared (falls go back to the area's start).
 #   BreakFlag (kept: the character's old plant-a-flag graph still calls it): the top snaps over, the flag is removed.
 #   Achievements (2026-11-21): raising adds the flag to GI RaisedFlags (ACH_FLAGS once FlagTotal are up); breaking it
-#     with E is ACH_BREAK_FLAG.
+#     with E is ACH_BREAK_FLAG. Only flags in LV_Area* levels go on RaisedFlags (11-25: the hidden stages' don't count).
 if (-not $OutDir) { throw 'OutDir is required' }
 $lightGen = Get-Content -LiteralPath (Join-Path $(if ($PSScriptRoot) { ($GenDir = $PSScriptRoot) } else { $GenDir }) 'gen_heaven_light.ps1') -Encoding UTF8
 $cut = ($lightGen | Select-String -Pattern '^# ===== BP_LightBeam' | Select-Object -First 1).LineNumber - 1
@@ -132,7 +132,18 @@ $flagsGet = New-VarGet 'RaisedFlags' $GI_CLASS 'name' '' $null 2050 (-200) 'Arra
 Connect $gi $GI_OUT $flagsGet 'self'
 Connect $flagsGet 'RaisedFlags' $addFlag 'TargetArray'
 Connect $flagName 'ReturnValue' $addFlag 'NewItem'
-Connect $levelName 'then' $addFlag 'execute'
+# Only the four areas' flags count (the user, 2026-11-25: the hidden stages' flags are left out of ACH_FLAGS).
+$isArea = New-Call $STRINGS 'StartsWith' $true 1650 (-450)
+Add-Pin $isArea 'SourceString' 'in' 'string'
+Add-Pin $isArea 'InPrefix' 'in' 'string' '' $null 'LV_Area'
+Add-Pin $isArea 'SearchCase' 'in' 'byte' '' "/Script/CoreUObject.Enum'/Script/CoreUObject.ESearchCase'" 'IgnoreCase'
+Add-Pin $isArea 'ReturnValue' 'out' 'bool'
+foreach ($pin in 'SourceString', 'InPrefix') { (Get-Pin $isArea $pin) | Add-Member -NotePropertyName ConstRef -NotePropertyValue $true -Force }
+Connect $levelName 'ReturnValue' $isArea 'SourceString'
+$counts = New-Branch 1900 (-300)
+Connect $isArea 'ReturnValue' $counts 'Condition'
+Connect $levelName 'then' $counts 'execute'
+Connect $counts 'then' $addFlag 'execute'
 $flagsGet2 = New-VarGet 'RaisedFlags' $GI_CLASS 'name' '' $null 2300 (-50) 'Array'
 Connect $gi $GI_OUT $flagsGet2 'self'
 $howMany = New-Call $ARRAYLIB 'Array_Length' $true 2500 (-50) '/Script/BlueprintGraph.K2Node_CallArrayFunction'
@@ -156,6 +167,7 @@ $flagsDone = Achieve $gi 'ACH_FLAGS' 2900 (-300)
 Connect $everyFlag 'then' $flagsDone 'execute'
 Connect $flagsDone 'then' $cast 'execute'
 Connect $everyFlag 'else' $cast 'execute'
+Connect $counts 'else' $cast 'execute'
 Connect $remember 'then' $standUp 'Move'
 
 # ----- the player walks away: stop listening to E -----

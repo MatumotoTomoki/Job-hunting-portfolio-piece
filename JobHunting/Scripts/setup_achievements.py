@@ -56,7 +56,18 @@ ACHIEVEMENTS = [
     ("ACH_LEDGE", "崖っぷち", "崖につかまって登る", "隠し", True, True),
     ("ACH_REWIND", "時を戻す者", "時間巻き戻しエリアを使う", "隠し", True, True),
     ("ACH_DANGER", "押すなよ", "危険ボタンを押す", "隠し", True, True),
+    # entering each hidden stage (2026-11-25): AchievementHooks/AreaStart_EnterSecret.txt in BP_AreaStart
+    ("ACH_ENTER_S1", "禁じられた扉の先", "崩れたエリア1にたどり着く", "隠し", True, False),
+    ("ACH_ENTER_S2", "崩れた塔へ", "崩れたエリア2にたどり着く", "隠し", True, False),
+    ("ACH_ENTER_S3", "崩れた空へ", "崩れたエリア3にたどり着く", "隠し", True, False),
+    ("ACH_ENTER_S4", "崩れた天へ", "崩れたエリア4にたどり着く", "隠し", True, False),
     ("ACH_SECRET_CLEAR", "崩れた天を越えて", "隠しステージをすべて越える", "隠し", True, False),   # (LV_Secret4's gate, 2026-11-23)
+    # the hidden stages' star coins (2026-11-24; LV_Secret, LV_Secret2..4 hold 8 / 5 / 7 / 11): StarCoin_AreaCoins.txt
+    ("ACH_COIN_S1", "崩れた遺跡の宝", "崩れたエリア1のスターコインを全部集める", "隠し", True, False),
+    ("ACH_COIN_S2", "崩れた塔の宝", "崩れたエリア2のスターコインを全部集める", "隠し", True, False),
+    ("ACH_COIN_S3", "崩れた空の宝", "崩れたエリア3のスターコインを全部集める", "隠し", True, False),
+    ("ACH_COIN_S4", "崩れた天の宝", "崩れたエリア4のスターコインを全部集める", "隠し", True, False),
+    ("ACH_COIN_SECRET_ALL", "落ちた星を拾う者", "崩れたエリアすべてのスターコインを全部集める", "隠し", True, False),
 ]
 
 # ACH_ITEM_ALL / ACH_FLAGS: how many items (BP_Item, BP_Item2, BP_2jump) and checkpoint flags the four areas hold

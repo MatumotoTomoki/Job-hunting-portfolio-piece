@@ -120,6 +120,9 @@ def build(base, jump_z, gravity, walk, plat):
     start = r.block(x0, x0 + 900.0, LY - 450.0, LY + 450.0, top - 300.0, top, "iron", "Hall Fragment")
     r.jump("gondola -> hall fragment", gondola, start, 0.0, HARD)
     r.add("sign", x0 + 300.0, LY + 500.0, top + 380.0, 180.0, "The hall hangs upside down")
+    # A switch on the way in (the user, 2026-11-24), so the red and blue blocks can be set right again after a fall.
+    # (place_secret2_hall_switch.py put the same one into the built level.)
+    r.add("switch", x0 + 300.0, LY - 200.0, top)
     RISE = 900.0
     x_start = start[2]
     zones = (
