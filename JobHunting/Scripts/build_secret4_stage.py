@@ -150,7 +150,8 @@ for actor in actors.get_all_level_actors():
     label, path = actor.get_actor_label(), str(actor.get_folder_path())
     kind = actor.get_class().get_name()
     if (path.startswith("Area4/Sky") or path.startswith("Area4/Achievements") or label in secret4_collapse.REMOVE
-            or kind == "BP_FallCatcher_C"):
+            or label == "A4 251 Fall Catcher"):     # area 4's own big catcher only (a new one is built); the upside-down
+                                                    # zones' ceiling catchers stay (11-25: all were taken out by mistake)
         actors.destroy_actor(actor)
         removed += 1
         continue
