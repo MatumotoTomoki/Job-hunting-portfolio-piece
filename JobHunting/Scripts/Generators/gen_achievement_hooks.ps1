@@ -112,9 +112,48 @@ Connect $area 'AreaLevel' $here 'B'
 $isArea = Pure $STRINGS 'StartsWith' 550 700 @(@('SourceString', 'string'), @('InPrefix', 'string', $null, 'LV_Area'), @('SearchCase', 'byte', "/Script/CoreUObject.Enum'/Script/CoreUObject.ESearchCase'", 'IgnoreCase')) 'bool'
 ConstRef $isArea @('SourceString', 'InPrefix')
 Connect $areaText 'ReturnValue' $isArea 'SourceString'
+# (2026-11-24) the hidden stages too: LV_Secret, LV_Secret2..4 -> ACH_COIN_S1..S4, then ACH_COIN_SECRET_ALL.
+$isSecret = Pure $STRINGS 'StartsWith' 550 -300 @(@('SourceString', 'string'), @('InPrefix', 'string', $null, 'LV_Secret'), @('SearchCase', 'byte', "/Script/CoreUObject.Enum'/Script/CoreUObject.ESearchCase'", 'IgnoreCase')) 'bool'
+ConstRef $isSecret @('SourceString', 'InPrefix')
+Connect $areaText 'ReturnValue' $isSecret 'SourceString'
+$either = Pure $MATH 'BooleanOR' 800 600 @(@('A', 'bool'), @('B', 'bool')) 'bool'
+Connect $isArea 'ReturnValue' $either 'A'
+Connect $isSecret 'ReturnValue' $either 'B'
 $all = New-Branch 1000 0
-Connect (BoolAnd (BoolAnd $enough 'ReturnValue' $here 'ReturnValue' 800 350) 'ReturnValue' $isArea 'ReturnValue' 1000 450) 'ReturnValue' $all 'Condition'
+Connect (BoolAnd (BoolAnd $enough 'ReturnValue' $here 'ReturnValue' 800 350) 'ReturnValue' $either 'ReturnValue' 1000 450) 'ReturnValue' $all 'Condition'
 Connect $cast 'then' $all 'execute'
+$whichKind = New-Branch 1150 0
+Connect $isArea 'ReturnValue' $whichKind 'Condition'
+Connect $all 'then' $whichKind 'execute'
+# The hidden stage's number: the 10th character of the level name with a "1" on the end ("LV_Secret" + "1" -> "1",
+# "LV_Secret3" + "1" -> "3").
+$padded = Pure $STRINGS 'Concat_StrStr' 1050 -500 @(@('A', 'string'), @('B', 'string', $null, '1')) 'string'
+ConstRef $padded @('A', 'B')
+Connect $areaText 'ReturnValue' $padded 'A'
+$sDigit = Pure $STRINGS 'GetSubstring' 1300 -500 @(@('SourceString', 'string'), @('StartIndex', 'int', $null, '9'), @('Length', 'int', $null, '1')) 'string'
+ConstRef $sDigit @('SourceString')
+Connect $padded 'ReturnValue' $sDigit 'SourceString'
+$sIdText = Pure $STRINGS 'Concat_StrStr' 1550 -500 @(@('A', 'string', $null, 'ACH_COIN_S'), @('B', 'string')) 'string'
+ConstRef $sIdText @('A', 'B')
+Connect $sDigit 'ReturnValue' $sIdText 'B'
+$sIdName = Pure $STRINGS 'Conv_StringToName' 1800 -500 @(,@('InString', 'string')) 'name'
+ConstRef $sIdName @('InString')
+Connect $sIdText 'ReturnValue' $sIdName 'InString'
+$secretUnlock = New-Call $GI_CLASS 'UnlockAchievement' $false 1500 -300
+Add-Pin $secretUnlock 'self' 'in' 'object' '' $GI_CLASS
+Add-Pin $secretUnlock 'ID' 'in' 'name'
+Connect $cast $GI_OUT $secretUnlock 'self'
+Connect $sIdName 'ReturnValue' $secretUnlock 'ID'
+Connect $whichKind 'else' $secretUnlock 'execute'
+$fourSecret = BoolAnd (BoolAnd (HasTaken $cast 'ACH_COIN_S1' 1700 -900) 'ReturnValue' (HasTaken $cast 'ACH_COIN_S2' 1700 -800) 'ReturnValue' 1950 -850) 'ReturnValue' (BoolAnd (HasTaken $cast 'ACH_COIN_S3' 1700 -700) 'ReturnValue' (HasTaken $cast 'ACH_COIN_S4' 1700 -600) 'ReturnValue' 1950 -650) 'ReturnValue' 2150 -750
+$everySecret = New-Branch 1900 -300
+Connect $fourSecret 'ReturnValue' $everySecret 'Condition'
+Connect $secretUnlock 'then' $everySecret 'execute'
+$secretAll = New-Call $GI_CLASS 'UnlockAchievement' $false 2200 -300
+Add-Pin $secretAll 'self' 'in' 'object' '' $GI_CLASS
+Add-Pin $secretAll 'ID' 'in' 'name' '' $null 'ACH_COIN_SECRET_ALL'
+Connect $cast $GI_OUT $secretAll 'self'
+Connect $everySecret 'then' $secretAll 'execute'
 $digit = Pure $STRINGS 'GetSubstring' 800 850 @(@('SourceString', 'string'), @('StartIndex', 'int', $null, '7'), @('Length', 'int', $null, '1')) 'string'
 ConstRef $digit @('SourceString')
 Connect $areaText 'ReturnValue' $digit 'SourceString'
@@ -129,13 +168,46 @@ Add-Pin $areaUnlock 'self' 'in' 'object' '' $GI_CLASS
 Add-Pin $areaUnlock 'ID' 'in' 'name'
 Connect $cast $GI_OUT $areaUnlock 'self'
 Connect $idName 'ReturnValue' $areaUnlock 'ID'
-Connect $all 'then' $areaUnlock 'execute'
+Connect $whichKind 'then' $areaUnlock 'execute'
 $four = BoolAnd (BoolAnd (HasTaken $cast 'ACH_COIN_A1' 1500 300) 'ReturnValue' (HasTaken $cast 'ACH_COIN_A2' 1500 400) 'ReturnValue' 1750 350) 'ReturnValue' (BoolAnd (HasTaken $cast 'ACH_COIN_A3' 1500 500) 'ReturnValue' (HasTaken $cast 'ACH_COIN_A4' 1500 600) 'ReturnValue' 1750 550) 'ReturnValue' 1950 450
 $everyArea = New-Branch 1700 0
 Connect $four 'ReturnValue' $everyArea 'Condition'
 Connect $areaUnlock 'then' $everyArea 'execute'
 Connect $everyArea 'then' (Unlock $cast 'ACH_COIN_ALL' 2000) 'execute'
 Save-Hook 'StarCoin_AreaCoins.txt'
+
+# ----- BP_AreaStart, Begin Play, after Set AreaCoinTotal (2026-11-25): in a hidden stage, ACH_ENTER_S<N> -----
+# N as in StarCoin_AreaCoins ("LV_Secret" + "1" -> 1). Wire: Set AreaCoinTotal.then -> this Cast; the Branch's False
+# AND Unlock Achievement's then -> the Branch (ChangingArea) that Set AreaCoinTotal led to before.
+Reset-Graph 900
+$cast = GameInstance 250 0
+$where = Pure $STRINGS 'Conv_NameToString' 300 300 @(,@('InName', 'name')) 'string'
+Connect (GiGet $cast 'AreaLevel' 'name' '' 100 300) 'AreaLevel' $where 'InName'
+$inSecret = Pure $STRINGS 'StartsWith' 550 300 @(@('SourceString', 'string'), @('InPrefix', 'string', $null, 'LV_Secret'), @('SearchCase', 'byte', "/Script/CoreUObject.Enum'/Script/CoreUObject.ESearchCase'", 'IgnoreCase')) 'bool'
+ConstRef $inSecret @('SourceString', 'InPrefix')
+Connect $where 'ReturnValue' $inSecret 'SourceString'
+$secretHere = New-Branch 600 0
+Connect $inSecret 'ReturnValue' $secretHere 'Condition'
+Connect $cast 'then' $secretHere 'execute'
+$padded = Pure $STRINGS 'Concat_StrStr' 550 500 @(@('A', 'string'), @('B', 'string', $null, '1')) 'string'
+ConstRef $padded @('A', 'B')
+Connect $where 'ReturnValue' $padded 'A'
+$number = Pure $STRINGS 'GetSubstring' 800 500 @(@('SourceString', 'string'), @('StartIndex', 'int', $null, '9'), @('Length', 'int', $null, '1')) 'string'
+ConstRef $number @('SourceString')
+Connect $padded 'ReturnValue' $number 'SourceString'
+$enterText = Pure $STRINGS 'Concat_StrStr' 1050 500 @(@('A', 'string', $null, 'ACH_ENTER_S'), @('B', 'string')) 'string'
+ConstRef $enterText @('A', 'B')
+Connect $number 'ReturnValue' $enterText 'B'
+$enterName = Pure $STRINGS 'Conv_StringToName' 1300 500 @(,@('InString', 'string')) 'name'
+ConstRef $enterName @('InString')
+Connect $enterText 'ReturnValue' $enterName 'InString'
+$enterUnlock = New-Call $GI_CLASS 'UnlockAchievement' $false 950 0
+Add-Pin $enterUnlock 'self' 'in' 'object' '' $GI_CLASS
+Add-Pin $enterUnlock 'ID' 'in' 'name'
+Connect $cast $GI_OUT $enterUnlock 'self'
+Connect $enterName 'ReturnValue' $enterUnlock 'ID'
+Connect $secretHere 'then' $enterUnlock 'execute'
+Save-Hook 'AreaStart_EnterSecret.txt'
 
 # ----- items and flags (step 4b-2): "<level>.<this actor>" goes on a GI list once; the list full -> the achievement -----
 #   Item_Taken.txt   in each item BP (BP_Item, BP_Item2, BP_2jump), just before its Destroy Actor: also RunTookItem
